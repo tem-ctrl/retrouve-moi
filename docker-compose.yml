@@ -41,7 +41,7 @@ services:
     container_name: rm-ui
     restart: unless-stopped
     env_file:
-      - .env
+      - ./ui/.env
 
     labels:
       - traefik.enable=true
@@ -140,7 +140,7 @@ services:
     working_dir: /var/www
 
     env_file:
-      - .env
+      - ./api/.env
 
     volumes:
       - ./api:/var/www
@@ -169,7 +169,7 @@ services:
     command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
 
     env_file:
-      - .env
+      - ./api/.env
 
     volumes:
       - ./api:/var/www
@@ -197,7 +197,7 @@ services:
       done"
 
     env_file:
-      - .env
+      - ./api/.env
 
     volumes:
       - ./api:/var/www
