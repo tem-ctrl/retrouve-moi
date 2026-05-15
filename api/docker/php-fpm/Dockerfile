@@ -66,7 +66,7 @@ COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Keep the image-provided FPM global config intact and add pool overrides separately
-COPY ./docker/common/php-fpm/conf.d/*.conf /usr/local/etc/php-fpm.d/
+COPY ./docker/php-fpm/conf.d/*.conf /usr/local/etc/php-fpm.d/
 
 # Copy the application code and dependencies from the build stage
 COPY --from=builder /var/www /var/www
