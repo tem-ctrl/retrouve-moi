@@ -1,11 +1,8 @@
-version: "3.9"
-
 services:
 
   traefik:
     image: traefik:v3.1
-    container_name: retrouve-traefik
-
+    container_name: rm-traefik
     restart: unless-stopped
 
     command:
@@ -41,15 +38,10 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
-
-    container_name: retrouve-ui
-
+    container_name: rm-ui
     restart: unless-stopped
-
-    environment:
-      NODE_ENV: production
-      NEXT_TELEMETRY_DISABLED: 1
-      NEXT_PUBLIC_API_URL: https://api.retrouve-moi.com
+    env_file:
+      - .env
 
     labels:
       - traefik.enable=true
@@ -92,9 +84,7 @@ services:
 
   nginx:
     image: nginx:1.27-alpine
-
-    container_name: retrouve-nginx
-
+    container_name: rm-nginx
     restart: unless-stopped
 
     depends_on:
@@ -144,17 +134,13 @@ services:
   php:
     build:
       context: ./api
-      dockerfile: Dockerfile
-
-    container_name: retrouve-php
-
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: rm-php
     restart: unless-stopped
-
     working_dir: /var/www
 
-    environment:
-      APP_ENV: production
-      APP_DEBUG: false
+    env_file:
+      - .env
 
     volumes:
       - ./api:/var/www
@@ -176,19 +162,14 @@ services:
   queue:
     build:
       context: ./api
-      dockerfile: Dockerfile
-
-    container_name: retrouve-queue
-
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: rm-queue
     restart: unless-stopped
-
     working_dir: /var/www
-
     command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
 
-    environment:
-      APP_ENV: production
-      APP_DEBUG: false
+    env_file:
+      - .env
 
     volumes:
       - ./api:/var/www
@@ -204,12 +185,9 @@ services:
   scheduler:
     build:
       context: ./api
-      dockerfile: Dockerfile
-
-    container_name: retrouve-scheduler
-
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: rm-scheduler
     restart: unless-stopped
-
     working_dir: /var/www
 
     command: >
@@ -218,9 +196,8 @@ services:
       sleep 60;
       done"
 
-    environment:
-      APP_ENV: production
-      APP_DEBUG: false
+    env_file:
+      - .env
 
     volumes:
       - ./api:/var/www
@@ -234,11 +211,8 @@ services:
 
   redis:
     image: redis:7-alpine
-
-    container_name: retrouve-redis
-
+    container_name: rm-redis
     restart: unless-stopped
-
     command: redis-server --appendonly yes
 
     volumes:
@@ -255,9 +229,8 @@ services:
 
   db:
     image: mysql:8.4
-
-    container_name: retrouve-db
-
+    context: ./api
+    container_name: rm-db
     restart: unless-stopped
 
     command:
@@ -265,11 +238,8 @@ services:
       - --innodb-buffer-pool-size=256M
       - --max-connections=200
 
-    environment:
-      MYSQL_DATABASE: retrouve
-      MYSQL_USER: retrouve
-      MYSQL_PASSWORD: strongpassword
-      MYSQL_ROOT_PASSWORD: superrootpassword
+    env_file:
+      - .env
 
     volumes:
       - mysql_data:/var/lib/mysql
