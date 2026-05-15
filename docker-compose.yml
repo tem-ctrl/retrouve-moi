@@ -45,7 +45,7 @@ services:
 
     labels:
       - traefik.enable=true
-      - traefik.docker.network=web
+      - traefik.docker.network=report-missing_web
 
       # Router
       - traefik.http.routers.ui.rule=Host(`retrouve-moi.com`) || Host(`www.retrouve-moi.com`)
@@ -98,7 +98,7 @@ services:
 
     labels:
       - traefik.enable=true
-      - traefik.docker.network=web
+      - traefik.docker.network=report-missing_web
 
       # Router
       - traefik.http.routers.api.rule=Host(`api.retrouve-moi.com`)
