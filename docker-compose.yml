@@ -91,13 +91,11 @@ services:
 
       # # Internal nginx port
       # - "traefik.http.services.api.loadbalancer.server.port=80"
-      - "traefik.enable=true"
 
+      - "traefik.enable=true"
       - "traefik.docker.network=report-missing_web"
 
-      - "traefik.http.routers.api-http.rule=Host(`api.retrouve-moi.com`)"
-      - "traefik.http.routers.api-http.entrypoints=web"
-
+      # SINGLE ROUTER ONLY
       - "traefik.http.routers.api.rule=Host(`api.retrouve-moi.com`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls=true"
