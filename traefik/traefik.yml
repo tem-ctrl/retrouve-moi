@@ -22,6 +22,11 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: retrouve-moi.com
+            sans:
+              - www.retrouve-moi.com
+          - main: api.retrouve-moi.com
 
 certificatesResolvers:
   letsencrypt:
