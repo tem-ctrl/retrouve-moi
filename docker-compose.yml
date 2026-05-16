@@ -65,8 +65,7 @@ services:
 
   nginx:
     build:
-      context: ./api
-      dockerfile: docker/nginx/Dockerfile
+      context: ./api/docker/nginx/
     container_name: rm-nginx
     restart: unless-stopped
 
@@ -214,13 +213,8 @@ services:
       - --innodb-buffer-pool-size=256M
       - --max-connections=200
 
-    ports:
-      - "${DB_PORT}:3306"
-    environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - ./api/.env
 
     volumes:
       - mysql_data:/var/lib/mysql
