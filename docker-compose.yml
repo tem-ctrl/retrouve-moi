@@ -1,7 +1,7 @@
 services:
 
   traefik:
-    image: traefik:v3.7
+    image: traefik:v2.11
 
     container_name: rm-traefik
 
