@@ -65,7 +65,8 @@ services:
 
   nginx:
     build:
-      context: ./api/docker/nginx/
+      context: ./api
+      dockerfile: docker/nginx/Dockerfile
     container_name: rm-nginx
     restart: unless-stopped
 
@@ -135,28 +136,28 @@ services:
     networks:
       - internal
 
-  # queue:
-  #   build:
-  #     context: ./api
-  #     dockerfile: docker/php-fpm/Dockerfile
-  #   container_name: rm-queue
-  #   restart: unless-stopped
-  #   working_dir: /var/www
-  #   command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
+  queue:
+    build:
+      context: ./api
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: rm-queue
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
 
-  #   env_file:
-  #     - ./api/.env
+    env_file:
+      - ./api/.env
 
-  #   volumes:
-  #     - ./api:/var/www
-  #     - laravel_storage:/var/www/storage
+    volumes:
+      - ./api:/var/www
+      - laravel_storage:/var/www/storage
 
-  #   depends_on:
-  #     - php
-  #     - redis
+    depends_on:
+      - php
+      - redis
 
-  #   networks:
-  #     - internal
+    networks:
+      - internal
 
   scheduler:
     build:
@@ -213,8 +214,13 @@ services:
       - --innodb-buffer-pool-size=256M
       - --max-connections=200
 
-    env_file:
-      - ./api/.env
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
 
     volumes:
       - mysql_data:/var/lib/mysql
