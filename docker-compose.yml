@@ -162,7 +162,6 @@ services:
       - ./api/.env
 
     volumes:
-      - ./api:/var/www
       - laravel_storage:/var/www/storage
 
     depends_on:
@@ -190,7 +189,6 @@ services:
       - ./api/.env
 
     volumes:
-      - ./api:/var/www
       - laravel_storage:/var/www/storage
 
     depends_on:
