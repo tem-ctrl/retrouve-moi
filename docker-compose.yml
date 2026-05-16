@@ -212,8 +212,6 @@ services:
     env_file:
       - ./api/.env
 
-    volumes:
-      - mysql-data:/var/lib/mysql
     networks:
       - internal
     healthcheck:
