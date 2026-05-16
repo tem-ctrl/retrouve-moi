@@ -21,10 +21,7 @@ entryPoints:
     asDefault: true
     http:
       tls:
-        certResolver: letsEncrypt
-      middlewares:
-        - no-www@file
-
+        certResolver: letsencrypt
 
 certificatesResolvers:
   letsencrypt:
@@ -43,9 +40,6 @@ providers:
     exposedByDefault: false
     watch: true
     network: "web"
-  file:
-    directory: "/etc/traefik/dynamic"
-    watch: true
 
 accessLog:
   #filePath: "/var/log/access.log"
