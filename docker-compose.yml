@@ -1,12 +1,9 @@
 services:
 
   traefik:
-    image: traefik:v2.11
-
+    image: traefik:v3.7
     container_name: rm-traefik
-
     restart: unless-stopped
-
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
