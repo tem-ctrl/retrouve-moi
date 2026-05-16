@@ -1,7 +1,7 @@
 services:
 
   traefik:
-    image: traefik:v2.11
+    image: traefik:v3.7
 
     container_name: rm-traefik
 
@@ -65,17 +65,18 @@ services:
 
   nginx:
     build:
-      context: ./api/docker/nginx/
+      context: ./api
+      dockerfile: ./docker/nginx/Dockerfile
     container_name: rm-nginx
     restart: unless-stopped
 
     depends_on:
-      - php
+      - php-fpm
 
     volumes:
       - ./api:/var/www
       - laravel_storage:/var/www/storage
-      - ./api/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./api/docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
 
     labels:
       - "traefik.enable=true"
@@ -107,33 +108,43 @@ services:
       web:
         aliases:
           - api
-  php:
+
+  php-fpm:
     build:
       context: ./api
-      dockerfile: docker/php-fpm/Dockerfile
-    container_name: rm-php
+      dockerfile: ./docker/php-fpm/Dockerfile
+      target: production
     restart: unless-stopped
-    working_dir: /var/www
-
+    volumes:
+      - laravel_storage:/var/www/storage
     env_file:
       - ./api/.env
-
-    volumes:
-      - ./api:/var/www
-      - laravel_storage:/var/www/storage
-
-    depends_on:
-      - db
-      - redis
-
-    healthcheck:
-      test: ["CMD", "php", "-v"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
     networks:
       - internal
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  php-cli:
+    build:
+      context: ./api
+      dockerfile: ./docker/php-cli/Dockerfile
+    tty: true
+    stdin_open: true
+    env_file:
+      - ./api/.env
+    networks:
+      - internal
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - laravel_storage:/var/www/storage
 
   queue:
     build:
@@ -152,7 +163,7 @@ services:
       - laravel_storage:/var/www/storage
 
     depends_on:
-      - php
+      - php-fpm
       - redis
 
     networks:
@@ -180,7 +191,7 @@ services:
       - laravel_storage:/var/www/storage
 
     depends_on:
-      - php
+      - php-fpm
 
     networks:
       - internal
@@ -203,9 +214,9 @@ services:
     networks:
       - internal
 
-  db:
+  mysql:
     image: mysql:8.0.45
-    container_name: rm-db
+    container_name: rm-mysql
     user: mysql
     restart: unless-stopped
     env_file:
