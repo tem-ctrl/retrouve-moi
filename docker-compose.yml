@@ -110,6 +110,7 @@ services:
           - api
 
   php-fpm:
+    container_name: rm-php-fpm
     build:
       context: ./api
       dockerfile: ./docker/php-fpm/Dockerfile
@@ -122,7 +123,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      test: ["CMD-SHELL", "pidof php-fpm || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -131,6 +132,7 @@ services:
         condition: service_healthy
 
   php-cli:
+    container_name: rm-php-cli
     build:
       context: ./api
       dockerfile: ./docker/php-cli/Dockerfile
