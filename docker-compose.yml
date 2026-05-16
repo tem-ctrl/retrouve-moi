@@ -104,9 +104,9 @@ services:
       retries: 3
 
     networks:
-      - web
-      - internal
-
+      web:
+        aliases:
+          - api
   php:
     build:
       context: ./api
