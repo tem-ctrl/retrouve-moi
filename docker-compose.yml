@@ -204,30 +204,26 @@ services:
       - internal
 
   db:
-    image: mysql:8.4.9
+    mysql:
+    image: mysql:8.0.45
     container_name: rm-db
     user: mysql
     restart: unless-stopped
-
-    command:
-      - --default-authentication-plugin=mysql_native_password
-      - --innodb-buffer-pool-size=256M
-      - --max-connections=200
-
     env_file:
       - ./api/.env
 
     volumes:
-      - mysql_data:/var/lib/mysql
-
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
+      - mysql-data:/var/lib/mysql
     networks:
       - internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
 
 volumes:
   mysql_data:
