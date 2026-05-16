@@ -22,7 +22,7 @@ RUN npm install && npm run build
 FROM nginx:alpine
 
 # Copy custom Nginx configuration
-COPY ./docker/nginx/nginx.conf /etc/nginx/default.conf
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy Laravel's public assets from the builder stage
 COPY --from=builder /var/www/public /var/www/public
