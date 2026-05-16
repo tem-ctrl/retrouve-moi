@@ -43,8 +43,16 @@ services:
     labels:
       - "traefik.enable=true"
 
+      # HTTP
+      - "traefik.http.routers.ui-http.rule=Host(`retrouve-moi.com`)"
+      - "traefik.http.routers.ui-http.entrypoints=web"
+
+      # HTTPS
       - "traefik.http.routers.ui.rule=Host(`retrouve-moi.com`)"
-      - "traefik.http.routers.ui.entrypoints=web"
+      - "traefik.http.routers.ui.entrypoints=websecure"
+      - "traefik.http.routers.ui.tls=true"
+      - "traefik.http.routers.ui.tls.certresolver=letsencrypt"
+
       - "traefik.http.services.ui.loadbalancer.server.port=3000"
 
     networks:
