@@ -1,0 +1,11 @@
+http:
+  routers:
+    api:
+      rule: Host(`api.retrouve-moi.com`)
+      entryPoints:
+        - websecure
+      service: nginx@docker
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: api.retrouve-moi.com

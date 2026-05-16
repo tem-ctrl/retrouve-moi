@@ -26,18 +26,15 @@ entryPoints:
           - main: retrouve-moi.com
             sans:
               - www.retrouve-moi.com
-          - main: api.retrouve-moi.com
+              - api.retrouve-moi.com
 
 certificatesResolvers:
   letsencrypt:
-    # Enable ACME (Let's Encrypt): automatic SSL.
     acme:
-      # Email address used for registration.
       email: gilbertemgoua@gmail.com
-      # File or key used for certificates storage.
       storage: /letsencrypt/acme.json
-      # Use a TLS-ALPN-01 ACME challenge. Optional (but recommended)
-      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: web
 
 providers:
   providersThrottleDuration: 10s
@@ -45,6 +42,9 @@ providers:
     exposedByDefault: false
     watch: true
     network: "web"
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
 
 accessLog:
   #filePath: "/var/log/access.log"
