@@ -204,7 +204,6 @@ services:
       - internal
 
   db:
-    mysql:
     image: mysql:8.0.45
     container_name: rm-db
     user: mysql
