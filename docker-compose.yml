@@ -67,8 +67,6 @@ services:
     image: nginx:1.27-alpine
     container_name: rm-nginx
     restart: unless-stopped
-    build:
-      context: ./api/docker/nginx
 
     depends_on:
       - php
