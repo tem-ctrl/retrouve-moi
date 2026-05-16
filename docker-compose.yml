@@ -44,16 +44,20 @@ services:
       - "traefik.enable=true"
 
       # HTTP
-      - "traefik.http.routers.ui-http.rule=Host(`retrouve-moi.com`)"
+      - "traefik.http.routers.ui-http.rule=Host(`retrouve-moi.com`) || Host(`www.retrouve-moi.com`)"
       - "traefik.http.routers.ui-http.entrypoints=web"
 
       # HTTPS
-      - "traefik.http.routers.ui.rule=Host(`retrouve-moi.com`)"
+      - "traefik.http.routers.ui.rule=Host(`retrouve-moi.com`) || Host(`www.retrouve-moi.com`)"
       - "traefik.http.routers.ui.entrypoints=websecure"
       - "traefik.http.routers.ui.tls=true"
       - "traefik.http.routers.ui.tls.certresolver=letsencrypt"
 
       - "traefik.http.services.ui.loadbalancer.server.port=3000"
+
+      # Redirect HTTP to HTTPS
+      - "traefik.http.middlewares.redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.ui-http.middlewares=redirect"
 
     networks:
       - web
