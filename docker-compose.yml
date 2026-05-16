@@ -135,28 +135,28 @@ services:
     networks:
       - internal
 
-  queue:
-    build:
-      context: ./api
-      dockerfile: docker/php-fpm/Dockerfile
-    container_name: rm-queue
-    restart: unless-stopped
-    working_dir: /var/www
-    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
+  # queue:
+  #   build:
+  #     context: ./api
+  #     dockerfile: docker/php-fpm/Dockerfile
+  #   container_name: rm-queue
+  #   restart: unless-stopped
+  #   working_dir: /var/www
+  #   command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --queue=default
 
-    env_file:
-      - ./api/.env
+  #   env_file:
+  #     - ./api/.env
 
-    volumes:
-      - ./api:/var/www
-      - laravel_storage:/var/www/storage
+  #   volumes:
+  #     - ./api:/var/www
+  #     - laravel_storage:/var/www/storage
 
-    depends_on:
-      - php
-      - redis
+  #   depends_on:
+  #     - php
+  #     - redis
 
-    networks:
-      - internal
+  #   networks:
+  #     - internal
 
   scheduler:
     build:
