@@ -108,6 +108,7 @@ services:
       web:
         aliases:
           - api
+      internal:
 
   php-fpm:
     container_name: rm-php-fpm
