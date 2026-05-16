@@ -64,7 +64,8 @@ services:
       - web
 
   nginx:
-    image: nginx:1.27-alpine
+    build:
+      context: ./api/docker/nginx/
     container_name: rm-nginx
     restart: unless-stopped
 
@@ -104,7 +105,7 @@ services:
       - "traefik.http.services.api.loadbalancer.server.port=80"
 
     healthcheck:
-      test: ["CMD-SHELL", "nginx -t || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
       timeout: 10s
       retries: 3
