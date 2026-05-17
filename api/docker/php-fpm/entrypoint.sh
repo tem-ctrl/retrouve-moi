@@ -1,18 +1,23 @@
 #!/bin/sh
 
-# Exit on error
 set -e
 
-# Initialize storage directory if it doesn't exist
-if [ ! -d /var/www/storage ]; then
-    cp -r /var/www/storage-init /var/www/storage
-    chown -R www-data:www-data /var/www/storage
+if [ ! -d /var/www/storage/framework ]; then
+    cp -r /var/www/storage-init/. /var/www/storage/
 fi
 
-# Run Laravel-specific initialization
+mkdir -p /var/www/storage/framework/cache/data \
+    /var/www/storage/framework/sessions \
+    /var/www/storage/framework/views \
+    /var/www/storage/logs \
+    /var/www/bootstrap/cache
+
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+php artisan config:clear
+php artisan migrate --force --no-interaction
 php artisan config:cache
 php artisan route:cache
 php artisan event:cache
 
-# Execute the original command (php-fpm by default)
 exec "$@"
