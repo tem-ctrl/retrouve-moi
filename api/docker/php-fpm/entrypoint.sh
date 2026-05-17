@@ -24,4 +24,4 @@ runuser -u www-data -- php artisan config:cache
 runuser -u www-data -- php artisan route:cache
 runuser -u www-data -- php artisan event:cache
 
-exec runuser -u www-data -- php-fpm
+exec php-fpm
