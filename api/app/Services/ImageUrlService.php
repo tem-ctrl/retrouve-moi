@@ -15,6 +15,6 @@ class ImageUrlService
             return null;
         }
 
-        return URL::to($imagePath);
+        return URL::to($imagePath, [], true);
     }
 }
