@@ -40,6 +40,7 @@ services:
     volumes:
       - ./api:/var/www
       - laravel_storage:/var/www/storage
+      - uploads:/var/www/public/uploads
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
@@ -58,6 +59,7 @@ services:
     restart: unless-stopped
     volumes:
       - laravel_storage:/var/www/storage
+      - uploads:/var/www/public/uploads
     env_file:
       - ./api/.env
     networks:
@@ -87,6 +89,7 @@ services:
         condition: service_healthy
     volumes:
       - laravel_storage:/var/www/storage
+      - uploads:/var/www/public/uploads
 
   # queue:
   #   build:
@@ -129,6 +132,7 @@ services:
 
     volumes:
       - laravel_storage:/var/www/storage
+      - uploads:/var/www/public/uploads
 
     depends_on:
       - php-fpm
@@ -177,6 +181,7 @@ volumes:
   mysql_data:
   redis_data:
   laravel_storage:
+  uploads:
 
 networks:
   web:
