@@ -1,0 +1,16 @@
+http:
+  routers:
+    laravel:
+      rule: Host(`api.retrouve-moi.com`)
+      entryPoints:
+        - websecure
+      service: laravel-nginx
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    laravel-nginx:
+      loadBalancer:
+        servers:
+          - url: http://rm-nginx:80
+        passHostHeader: true

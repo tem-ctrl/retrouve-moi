@@ -42,6 +42,9 @@ providers:
     exposedByDefault: false
     watch: true
     network: "web"
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
 
 accessLog:
   #filePath: "/var/log/access.log"
