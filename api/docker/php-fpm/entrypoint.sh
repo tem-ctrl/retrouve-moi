@@ -16,12 +16,12 @@ mkdir -p /var/www/storage/framework/cache/data \
     /var/www/public/uploads/mp \
     /var/www/public/uploads/s
 
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public/uploads
 
-php artisan config:clear
-php artisan migrate --force --no-interaction
-php artisan config:cache
-php artisan route:cache
-php artisan event:cache
+runuser -u www-data -- php artisan config:clear
+runuser -u www-data -- php artisan migrate --force --no-interaction
+runuser -u www-data -- php artisan config:cache
+runuser -u www-data -- php artisan route:cache
+runuser -u www-data -- php artisan event:cache
 
-exec "$@"
+exec runuser -u www-data -- php-fpm

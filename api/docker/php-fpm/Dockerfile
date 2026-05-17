@@ -77,10 +77,7 @@ WORKDIR /var/www
 # Ensure correct permissions
 RUN chown -R www-data:www-data /var/www
 
-# Switch to the non-privileged user to run the application
-USER www-data
-
-# Change the default command to run the entrypoint script
+# Entrypoint runs as root to fix volume permissions, then drops to www-data for php-fpm
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Expose port 9000 and start php-fpm server
