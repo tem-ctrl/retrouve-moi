@@ -16,7 +16,7 @@ services:
       - web
 
   ui:
-    image: "ghcr.io/${GITHUB_USERNAME}/report-missing:latest"
+    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-nextjs:latest"
     env_file:
       - ./ui/.env
     container_name: rm-ui
@@ -30,9 +30,7 @@ services:
       - web
 
   nginx:
-    build:
-      context: ./api
-      dockerfile: ./docker/nginx/Dockerfile
+    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-nginx:latest"
     container_name: rm-nginx
     restart: unless-stopped
     depends_on:
@@ -51,11 +49,8 @@ services:
       - internal
 
   php-fpm:
+    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-php-fpm:latest"
     container_name: rm-php-fpm
-    build:
-      context: ./api
-      dockerfile: ./docker/php-fpm/Dockerfile
-      target: production
     restart: unless-stopped
     volumes:
       - laravel_storage:/var/www/storage
@@ -72,24 +67,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
-  php-cli:
-    container_name: rm-php-cli
-    build:
-      context: ./api
-      dockerfile: ./docker/php-cli/Dockerfile
-    tty: true
-    stdin_open: true
-    env_file:
-      - ./api/.env
-    networks:
-      - internal
-    depends_on:
-      mysql:
-        condition: service_healthy
-    volumes:
-      - laravel_storage:/var/www/storage
-      - uploads:/var/www/public/uploads
 
   # queue:
   #   build:
@@ -114,9 +91,7 @@ services:
   #     - internal
 
   scheduler:
-    build:
-      context: ./api
-      dockerfile: docker/php-fpm/Dockerfile
+    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-php-fpm:latest"
     container_name: rm-scheduler
     restart: unless-stopped
     working_dir: /var/www
