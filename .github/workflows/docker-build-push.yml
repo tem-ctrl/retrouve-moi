@@ -3,7 +3,7 @@ name: Build and Push Docker Images to Github Container Registry
 on:
   push:
     branches:
-      - prod
+      - main
   workflow_dispatch:
     inputs:
       image_tag:
@@ -167,7 +167,7 @@ jobs:
           echo "✅ Docker image built and pushed to GHCR successfully!"
           echo ""
           echo "📦 Next.js Image:"
-          echo "   ghcr.io/${{ env.IMAGE_NAME }}:latest"
+          echo "   ghcr.io/${{ env.IMAGE_NAME }}-nextjs:latest"
           echo ""
           echo "📦 Nginx Image:"
           echo "   ghcr.io/${{ env.IMAGE_NAME }}-nginx:latest"
