@@ -40,7 +40,7 @@ services:
       - laravel_storage:/var/www/storage
       - uploads:/var/www/public/uploads
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
+      test: ["CMD", "curl", "-I", "https://api.retrouve-moi.com/up"]
       interval: 30s
       timeout: 10s
       retries: 3
