@@ -1,61 +1,31 @@
 import { env } from '@/lib/env';
 import { API_ROUTES } from '@/lib/routes';
 import { MissingPerson, User, LostItem, Sighting } from '@/types';
+import { ApiCollection } from '@/types/api';
 import { Filters } from '@/types/api-routes';
 
 export const buildApiEndpoint = (route: string) => `${env.NEXT_PUBLIC_API_URL}${route}`;
-
-// Helper to extract data array from API response (handles both wrapped and unwrapped responses)
-export const extractDataArray = (response: unknown): unknown[] => {
-  // If response is already an array, return it
-  if (Array.isArray(response)) {
-    return response;
-  }
-  // If response is an object with a data property that's an array, return that
-  if (response && typeof response === 'object' && 'data' in response) {
-    const data = (response as Record<string, unknown>).data;
-    if (Array.isArray(data)) {
-      return data;
-    }
-  }
-  // If response is an object with a results property that's an array, return that
-  if (response && typeof response === 'object' && 'results' in response) {
-    const results = (response as Record<string, unknown>).results;
-    if (Array.isArray(results)) {
-      return results;
-    }
-  }
-  // If response is an object with items property that's an array, return that
-  if (response && typeof response === 'object' && 'items' in response) {
-    const items = (response as Record<string, unknown>).items;
-    if (Array.isArray(items)) {
-      return items;
-    }
-  }
-  // Otherwise return empty array as fallback
-  return [];
-};
 
 // Helper functions for API calls
 export const apiClient = {
   // Missing Persons
   async getMissingPersons(filters?: Filters): Promise<MissingPerson[]> {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS(filters)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.collection(filters)), {
       cache: 'no-store',
     });
     if (!response.ok) throw new Error('Failed to fetch missing persons');
-    const data = await response.json();
-    return extractDataArray(data) as MissingPerson[];
+    const body: ApiCollection<MissingPerson> = await response.json();
+    return body.data;
   },
 
   async getMissingPerson(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.DETAILS(id)));
+    const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.byId(id)));
     if (!response.ok) throw new Error('Failed to fetch missing person');
     return response.json();
   },
 
   async createMissingPerson(data: MissingPerson) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.missing_persons), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.collection()), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -65,7 +35,7 @@ export const apiClient = {
   },
 
   async updateMissingPerson(id: number, data: Partial<MissingPerson>) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.byId(id)), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -75,7 +45,7 @@ export const apiClient = {
   },
 
   async deleteMissingPerson(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.byId(id)), {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete missing person');
@@ -84,22 +54,22 @@ export const apiClient = {
 
   // Lost Items
   async getLostItems(filters?: Filters): Promise<LostItem[]> {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.FILTERS(filters)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.lostItems.collection(filters)), {
       cache: 'no-store',
     });
     if (!response.ok) throw new Error('Failed to fetch lost items');
-    const data = await response.json();
-    return extractDataArray(data) as LostItem[];
+    const body: ApiCollection<LostItem> = await response.json();
+    return body.data;
   },
 
   async getLostItem(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.DETAILS(id)));
+    const response = await fetch(buildApiEndpoint(API_ROUTES.lostItems.byId(id)));
     if (!response.ok) throw new Error('Failed to fetch lost item');
     return response.json();
   },
 
   async createLostItem(data: LostItem) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.lost_items), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.lostItems.collection()), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -109,7 +79,7 @@ export const apiClient = {
   },
 
   async updateLostItem(id: number, data: Partial<LostItem>) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.lostItems.byId(id)), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -119,7 +89,7 @@ export const apiClient = {
   },
 
   async deleteLostItem(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.lostItems.byId(id)), {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete lost item');
@@ -129,15 +99,19 @@ export const apiClient = {
   // Sightings
   async getSightings(missingPersonId: number, filters?: Filters): Promise<Sighting[]> {
     const response = await fetch(
-      buildApiEndpoint(API_ROUTES.SIGHTINGS.FILTERS(missingPersonId, filters)),
+      buildApiEndpoint(API_ROUTES.sightings.list(missingPersonId, filters)),
     );
     if (!response.ok) throw new Error('Failed to fetch sightings');
-    const data = await response.json();
-    return extractDataArray(data) as Sighting[];
+    // TODO: SightingController@index currently has no JsonResource and
+    // returns the bare Eloquent collection unwrapped, unlike every other
+    // index endpoint (see types/api.ts). Update it to wrap the response in
+    // { data } like MissingPerson/LostItem/User for this to work correctly.
+    const body: ApiCollection<Sighting> = await response.json();
+    return body.data;
   },
 
   async createSighting(data: Sighting) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.sightings), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.sightings.create), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -148,19 +122,19 @@ export const apiClient = {
 
   // Users
   async getUser(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(id)));
+    const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(id)));
     if (!response.ok) throw new Error('Failed to fetch user');
     return response.json();
   },
 
   async getUserByEmail(email: string) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.BY_EMAIL(email)));
+    const response = await fetch(buildApiEndpoint(API_ROUTES.users.collection({ email })));
     if (!response.ok) throw new Error('Failed to fetch user');
     return response.json();
   },
 
   async createUser(data: User) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.users), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.users.collection()), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -170,7 +144,7 @@ export const apiClient = {
   },
 
   async updateUser(id: number, data: Partial<User>) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(id)), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -180,7 +154,7 @@ export const apiClient = {
   },
 
   async deleteUser(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(id)), {
+    const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(id)), {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete user');

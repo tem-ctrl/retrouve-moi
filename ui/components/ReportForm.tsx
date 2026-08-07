@@ -114,7 +114,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
       fd.append('reporter_email', data.reporter_email || '');
       fd.append('user_id', user?.id ? String(user.id) : '');
 
-      const response = await fetch(buildApiEndpoint(API_ROUTES.missing_persons), {
+      const response = await fetch(buildApiEndpoint(API_ROUTES.missingPersons.collection()), {
         method: 'POST',
         body: fd,
       });

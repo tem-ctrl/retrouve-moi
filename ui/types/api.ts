@@ -39,7 +39,11 @@ export interface ApiCollection<T> {
  *   PATCH  /sightings/:id  -> ApiResource<Sighting>   (manually wrapped)
  *   DELETE /sightings/:id  -> 204 No Content
  * Do not assume { data } for every Sighting endpoint — index/store are the
- * two exceptions across the whole API.
+ * two exceptions across the whole API today. `apiClient.getSightings` in
+ * lib/api-client.ts already codes against the *correct*, consistent
+ * ApiCollection<Sighting> shape (with a TODO to update the backend to
+ * match) rather than permanently accommodating this inconsistency — expect
+ * that one call site to be broken until SightingController@index is fixed.
  */
 
 /**

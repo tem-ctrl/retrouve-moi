@@ -6,4 +6,6 @@ export interface Filters {
   offset?: number;
   report_type?: string;
   user_id?: number;
+  email?: string;
+  missingPersonId?: number;
 }
