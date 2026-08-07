@@ -1,10 +1,9 @@
+import { env } from '@/lib/env';
 import { API_ROUTES } from '@/lib/routes';
 import { MissingPerson, User, LostItem, Sighting } from '@/types';
 import { Filters } from '@/types/api-routes';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.retrouve-moi.com/api';
-
-export const buildApiEndpoint = (route: string) => `${API_BASE_URL}${route}`;
+export const buildApiEndpoint = (route: string) => `${env.NEXT_PUBLIC_API_URL}${route}`;
 
 // Helper to extract data array from API response (handles both wrapped and unwrapped responses)
 export const extractDataArray = (response: unknown): unknown[] => {

@@ -59,7 +59,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            NODE_VERSION=24.13.0-slim
+            NODE_VERSION=24.18.0-slim
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'https://api.retrouve-moi.com/api' }}
 
   build-and-push-php-fpm:
     runs-on: ubuntu-latest
