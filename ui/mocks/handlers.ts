@@ -40,6 +40,14 @@ export const handlers = [
     return HttpResponse.json({ data: sightingFixtures });
   }),
 
+  http.post(endpoint('/missing-persons'), () => {
+    return HttpResponse.json({ data: { ...missingPersonFixtures[0], id: 999 } }, { status: 201 });
+  }),
+
+  http.post(endpoint('/lost-items'), () => {
+    return HttpResponse.json({ data: { ...lostItemFixtures[0], id: 999 } }, { status: 201 });
+  }),
+
   http.get(endpoint('/users/:id'), ({ params }) => {
     const user = userFixtures.find((u) => String(u.id) === params.id);
     if (!user) {
