@@ -284,6 +284,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                 <label htmlFor="avatar-input" className="cursor-pointer">
                   <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center hover:shadow-lg hover:scale-105 transition-all">
                     {avatarPreview ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- local FileReader data URL, not a next/image-optimizable remote source
                       <img
                         src={avatarPreview}
                         alt="Avatar"

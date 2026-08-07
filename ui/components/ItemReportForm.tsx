@@ -279,7 +279,11 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
                       key={type}
                       type="button"
                       onClick={() =>
-                        setData((prev) => ({ ...prev, item_type: type as any, item_category: '' }))
+                        setData((prev) => ({
+                          ...prev,
+                          item_type: type as 'document' | 'object' | 'animal' | 'vehicle' | 'other',
+                          item_category: '',
+                        }))
                       }
                       className={`p-3 rounded-xl border-2 transition-all text-center ${
                         data.item_type === type
@@ -358,6 +362,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
                   className="relative w-32 h-32 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors overflow-hidden group"
                 >
                   {photoPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- local FileReader data URL, not a next/image-optimizable remote source
                     <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full">

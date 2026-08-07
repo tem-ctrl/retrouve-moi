@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -71,9 +72,11 @@ const Header: React.FC<HeaderProps> = ({
                     className="flex items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-colors"
                   >
                     {profile?.avatar_url ? (
-                      <img
+                      <Image
                         src={profile.avatar_url}
                         alt={profile?.full_name || user.email || 'User avatar'}
+                        width={32}
+                        height={32}
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (

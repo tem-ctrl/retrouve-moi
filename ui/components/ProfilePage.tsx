@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -440,9 +441,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                   onClick={() => onViewPerson(report)}
                 >
                   <div className="flex gap-4 p-4">
-                    <img
+                    <Image
                       src={report.photo_url}
                       alt={report.full_name}
+                      width={96}
+                      height={96}
                       className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">

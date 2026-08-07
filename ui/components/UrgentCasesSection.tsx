@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { MissingPerson } from '@/types';
@@ -57,11 +58,13 @@ const UrgentCasesSection: React.FC<UrgentCasesSectionProps> = ({
               key={person.id}
               className="bg-white rounded-xl shadow-md border-2 border-red-200 overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="relative">
-                <img
+              <div className="relative h-56">
+                <Image
                   src={person.photo_url}
                   alt={person.full_name}
-                  className="w-full h-56 object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className="object-cover"
                 />
                 <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4">
                   <div className="flex items-center gap-2">

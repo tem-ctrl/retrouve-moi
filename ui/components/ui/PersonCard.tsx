@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon } from '@/components/icons/Icons';
@@ -34,11 +35,13 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-      <div className="relative">
-        <img
+      <div className="relative h-48">
+        <Image
           src={person.photo_url}
           alt={person.full_name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3">
           <StatusBadge status={person.status} is_urgent={person.is_urgent} />

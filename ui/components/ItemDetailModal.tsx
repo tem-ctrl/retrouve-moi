@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { LostItem } from '@/types';
@@ -140,11 +141,13 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
         {/* Content */}
         <div className="p-4 sm:p-6">
           {/* Image */}
-          <div className="relative rounded-xl overflow-hidden mb-6">
-            <img
+          <div className="relative h-64 rounded-xl overflow-hidden mb-6">
+            <Image
               src={item.photo_url || defaultImage}
               alt={item.item_name}
-              className="w-full h-64 object-cover"
+              fill
+              sizes="(max-width: 640px) 100vw, 42rem"
+              className="object-cover"
             />
           </div>
 

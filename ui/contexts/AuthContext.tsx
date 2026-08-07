@@ -175,11 +175,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const signInWithPhone = async (_phone: string) => {
     // This would require a proper SMS/OTP implementation
     return { error: new Error('Phone sign in not yet implemented') };
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const verifyOtp = async (_phone: string, _token: string) => {
     // This would require a proper SMS/OTP implementation
     return { error: new Error('OTP verification not yet implemented') };

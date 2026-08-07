@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { MissingPerson } from '@/types';
@@ -44,11 +45,13 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
               key={person.id}
               className="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden hover:shadow-md transition-shadow"
             >
-              <div className="relative">
-                <img
+              <div className="relative h-40">
+                <Image
                   src={person.photo_url}
                   alt={person.full_name}
-                  className="w-full h-40 object-cover"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover"
                 />
                 <div className="absolute top-3 right-3">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">

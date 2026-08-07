@@ -198,6 +198,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                   className="relative w-32 h-32 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 hover:border-orange-500 transition-colors overflow-hidden group"
                 >
                   {photoPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- local FileReader data URL, not a next/image-optimizable remote source
                     <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full">

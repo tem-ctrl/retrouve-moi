@@ -16,6 +16,9 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
+  // Destructured out so next-themes' `value` prop isn't spread onto
+  // ThemeContext.Provider below, which has its own `value` of a different shape.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   value: _value,
   ...props
 }: ThemeProviderProps) {

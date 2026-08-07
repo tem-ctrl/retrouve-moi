@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import {
@@ -6,7 +7,6 @@ import {
   PhoneIcon,
   ArrowRightIcon,
   TagIcon,
-  FileTextIcon,
 } from '@/components/icons/Icons';
 import { LostItem } from '@/types';
 
@@ -166,11 +166,13 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-      <div className="relative">
-        <img
+      <div className="relative h-48">
+        <Image
           src={item.photo_url || defaultImage}
           alt={item.item_name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3">{getStatusBadge()}</div>
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2">

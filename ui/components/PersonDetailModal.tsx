@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 import { MissingPerson } from '@/types';
@@ -49,7 +50,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-      } catch (err) {
+      } catch {
         console.log('Share cancelled');
       }
     } else {
@@ -118,11 +119,13 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
         {/* Content */}
         <div className="p-4 sm:p-6">
           {/* Photo and Status */}
-          <div className="relative mb-6">
-            <img
+          <div className="relative h-64 sm:h-80 mb-6">
+            <Image
               src={person.photo_url}
               alt={person.full_name}
-              className="w-full h-64 sm:h-80 object-cover rounded-xl"
+              fill
+              sizes="(max-width: 640px) 100vw, 42rem"
+              className="object-cover rounded-xl"
             />
             <div className="absolute top-4 left-4">
               <StatusBadge status={person.status} is_urgent={person.is_urgent} />

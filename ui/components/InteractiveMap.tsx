@@ -1,8 +1,15 @@
+import type * as L from 'leaflet';
+// Type-only: pulls in the markercluster plugin's augmentation of the
+// "leaflet" module (L.MarkerClusterGroup, L.markerClusterGroup, …) without
+// emitting a runtime import — only the @types package is installed, the
+// plugin itself is loaded at runtime from a CDN <script> tag.
+import type {} from 'leaflet.markercluster';
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { MapMarker, MissingPerson, LostItem, CAMEROON_REGIONS } from '@/types';
 
-import { XIcon, MapPinIcon, FilterIcon, LayersIcon } from './icons/Icons';
+import { XIcon, MapPinIcon, FilterIcon } from './icons/Icons';
 
 interface InteractiveMapProps {
   persons: MissingPerson[];
@@ -11,9 +18,13 @@ interface InteractiveMapProps {
   onSelectItem?: (item: LostItem) => void;
 }
 
+// Leaflet (+ the markercluster plugin, whose types augment the "leaflet"
+// module) is loaded at runtime from a CDN <script> tag (see loadLeaflet
+// below), not bundled — this import is type-only, so no runtime code is
+// pulled in.
 declare global {
   interface Window {
-    L: any;
+    L: typeof L;
   }
 }
 
@@ -24,8 +35,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   onSelectItem,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<any>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.MarkerClusterGroup | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
   const [filters, setFilters] = useState({
@@ -105,7 +116,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       spiderfyOnMaxZoom: true,
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
-      iconCreateFunction: (cluster: any) => {
+      iconCreateFunction: (cluster: L.MarkerCluster) => {
         const count = cluster.getChildCount();
         let size = 'small';
         if (count > 10) size = 'medium';
@@ -193,7 +204,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     if (!mapLoaded || !markersRef.current) return;
 
     const L = window.L;
-    markersRef.current.clearLayers();
+    const markerGroup = markersRef.current;
+    markerGroup.clearLayers();
 
     // Helper to get coordinates for a region
     const getRegionCoords = (regionName: string) => {
@@ -267,7 +279,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           if (onSelectPerson) onSelectPerson(person);
         });
 
-        markersRef.current.addLayer(marker);
+        markerGroup.addLayer(marker);
       });
     }
 
@@ -338,7 +350,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           if (onSelectItem) onSelectItem(item);
         });
 
-        markersRef.current.addLayer(marker);
+        markerGroup.addLayer(marker);
       });
     }
   }, [mapLoaded, persons, items, filters, onSelectPerson, onSelectItem]);
@@ -512,9 +524,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
                 <div className="flex gap-3">
                   {selectedMarker.photo_url && (
-                    <img
+                    <Image
                       src={selectedMarker.photo_url}
                       alt={selectedMarker.title}
+                      width={64}
+                      height={64}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                   )}
