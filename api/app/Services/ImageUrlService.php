@@ -15,6 +15,8 @@ class ImageUrlService
             return null;
         }
 
-        return URL::to($imagePath, [], true);
+        $isSecure = config('app.env') === 'production';
+
+        return URL::to($imagePath, [], $isSecure);
     }
 }
