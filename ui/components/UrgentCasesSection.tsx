@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { MissingPerson } from '@/types';
+
 import { AlertTriangleIcon, MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon } from './icons/Icons';
 interface UrgentCasesSectionProps {
   persons: MissingPerson[];

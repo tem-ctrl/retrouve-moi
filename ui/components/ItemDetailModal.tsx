@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { LostItem } from '@/types';
+
 import { XIcon, MapPinIcon, CalendarIcon, PhoneIcon, MailIcon, TagIcon, ShareIcon } from './icons/Icons';
 
 interface ItemDetailModalProps {

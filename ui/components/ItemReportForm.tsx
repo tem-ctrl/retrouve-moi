@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { XIcon, CameraIcon, MapPinIcon, PackageIcon, PhoneIcon, FileTextIcon } from './icons/Icons';
+
 import { useAuth } from '@/contexts/AuthContext';
-import { ITEM_CATEGORIES } from '@/types';
-import { API_ROUTES } from '@/lib/routes';
 import { buildApiEndpoint } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/routes';
+import { ITEM_CATEGORIES } from '@/types';
+
+import { XIcon, CameraIcon, MapPinIcon, PackageIcon, PhoneIcon, FileTextIcon } from './icons/Icons';
 
 interface ItemReportFormProps {
   onClose: () => void;

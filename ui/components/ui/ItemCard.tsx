@@ -1,6 +1,7 @@
 import React from 'react';
-import { LostItem } from '@/types';
+
 import { MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon, TagIcon, FileTextIcon } from '@/components/icons/Icons';
+import { LostItem } from '@/types';
 
 interface ItemCardProps {
   item: LostItem;

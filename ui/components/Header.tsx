@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { useAuth } from '@/contexts/AuthContext';
+
 import { HeartIcon, BellIcon, MenuIcon, PlusIcon, UserIcon, ChevronDownIcon, LogOutIcon } from './icons/Icons';
 
 interface HeaderProps {

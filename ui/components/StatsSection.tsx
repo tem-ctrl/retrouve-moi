@@ -1,6 +1,7 @@
 import React from 'react';
-import StatsCard from './ui/StatsCard';
+
 import { UsersIcon, SearchIcon, CheckCircleIcon, AlertTriangleIcon } from './icons/Icons';
+import StatsCard from './ui/StatsCard';
 
 interface StatsSectionProps {
   totalReports: number;

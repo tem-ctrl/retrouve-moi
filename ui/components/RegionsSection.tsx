@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { MissingPerson } from '@/types';
+
 import { MapPinIcon } from './icons/Icons';
 
 interface RegionsSectionProps {

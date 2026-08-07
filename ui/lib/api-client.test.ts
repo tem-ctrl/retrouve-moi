@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { apiClient } from './api-client';
+
 import { missingPersonFixtures } from '@/mocks/fixtures';
+
+import { apiClient } from './api-client';
 
 describe('apiClient (via MSW)', () => {
   it('fetches missing persons from the mocked API', async () => {

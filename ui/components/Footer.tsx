@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { HeartIcon, PhoneIcon, MapPinIcon, PackageIcon, FileTextIcon } from './icons/Icons';
 
 const Footer: React.FC = () => {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { useAuth } from '@/contexts/AuthContext';
+
 import { XIcon, UserIcon, PhoneIcon, MailIcon, EyeIcon, EyeOffIcon, CheckCircleIcon, LockIcon } from './icons/Icons';
 
 interface AuthModalProps {

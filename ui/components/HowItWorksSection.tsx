@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { PlusIcon, SearchIcon, ShareIcon, CheckCircleIcon } from './icons/Icons';
 
 const HowItWorksSection: React.FC = () => {

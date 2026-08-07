@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import { MapMarker, MissingPerson, LostItem, CAMEROON_REGIONS } from '@/types';
+
 import { XIcon, MapPinIcon, FilterIcon, LayersIcon } from './icons/Icons';
 
 interface InteractiveMapProps {

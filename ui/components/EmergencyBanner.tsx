@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { PhoneIcon, AlertTriangleIcon } from './icons/Icons';
 
 const EmergencyBanner: React.FC = () => {

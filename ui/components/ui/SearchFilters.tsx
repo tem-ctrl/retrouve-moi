@@ -1,6 +1,7 @@
 import React from 'react';
-import { FilterState } from '@/types';
+
 import { SearchIcon, FilterIcon, ChevronDownIcon } from '@/components/icons/Icons';
+import { FilterState } from '@/types';
 
 interface SearchFiltersProps {
   filters: FilterState;

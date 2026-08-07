@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import { useAuth } from '@/contexts/AuthContext';
+import { buildApiEndpoint, extractDataArray } from '@/lib/api-client';
 import { API_ROUTES } from '@/lib/routes';
 import { MissingPerson } from '@/types';
-import { buildApiEndpoint, extractDataArray } from '@/lib/api-client';
+
 import {
   UserIcon,
   PhoneIcon,

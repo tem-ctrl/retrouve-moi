@@ -1,29 +1,30 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { apiClient } from '@/lib/api-client';
-import { MissingPerson, LostItem, FilterState } from '@/types';
+
+import AuthModal from '@/components/AuthModal';
+import EmergencyBanner from '@/components/EmergencyBanner';
+import Footer from '@/components/Footer';
+import FoundPersonsSection from '@/components/FoundPersonsSection';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
-import UrgentCasesSection from '@/components/UrgentCasesSection';
-import RegionsSection from '@/components/RegionsSection';
-import FoundPersonsSection from '@/components/FoundPersonsSection';
 import HowItWorksSection from '@/components/HowItWorksSection';
-import EmergencyBanner from '@/components/EmergencyBanner';
-import SearchFilters from '@/components/ui/SearchFilters';
-import PersonCard from '@/components/ui/PersonCard';
-import ItemCard from '@/components/ui/ItemCard';
-import PersonDetailModal from '@/components/PersonDetailModal';
-import ItemDetailModal from '@/components/ItemDetailModal';
-import ReportForm from '@/components/ReportForm';
-import ItemReportForm from '@/components/ItemReportForm';
-import SuccessModal from '@/components/SuccessModal';
-import MobileMenu from '@/components/MobileMenu';
-import AuthModal from '@/components/AuthModal';
-import ProfilePage from '@/components/ProfilePage';
-import InteractiveMap from '@/components/InteractiveMap';
-import Footer from '@/components/Footer';
 import { UserIcon, PackageIcon, MapIcon, GridIcon } from '@/components/icons/Icons';
+import InteractiveMap from '@/components/InteractiveMap';
+import ItemDetailModal from '@/components/ItemDetailModal';
+import ItemReportForm from '@/components/ItemReportForm';
+import MobileMenu from '@/components/MobileMenu';
+import PersonDetailModal from '@/components/PersonDetailModal';
+import ProfilePage from '@/components/ProfilePage';
+import RegionsSection from '@/components/RegionsSection';
+import ReportForm from '@/components/ReportForm';
+import SuccessModal from '@/components/SuccessModal';
+import ItemCard from '@/components/ui/ItemCard';
+import PersonCard from '@/components/ui/PersonCard';
+import SearchFilters from '@/components/ui/SearchFilters';
+import UrgentCasesSection from '@/components/UrgentCasesSection';
+import { apiClient } from '@/lib/api-client';
+import { MissingPerson, LostItem, FilterState } from '@/types';
 
 type ViewMode = 'persons' | 'items' | 'all';
 

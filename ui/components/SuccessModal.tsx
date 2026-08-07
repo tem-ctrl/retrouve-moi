@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CheckCircleIcon, XIcon } from './icons/Icons';
 
 interface SuccessModalProps {

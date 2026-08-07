@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { HeartIcon, SearchIcon, PlusIcon, PackageIcon, MapIcon } from './icons/Icons';
 
 interface HeroSectionProps {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+
 import { MissingPerson } from '@/types';
-import StatusBadge from './ui/StatusBadge';
+
 import {
   XIcon,
   MapPinIcon,
@@ -11,6 +12,7 @@ import {
   InfoIcon,
   ClockIcon
 } from './icons/Icons';
+import StatusBadge from './ui/StatusBadge';
 
 interface PersonDetailModalProps {
   person: MissingPerson;

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@/types';
-import { API_ROUTES } from '@/lib/routes';
+
 import { buildApiEndpoint } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/routes';
+import { User } from '@/types';
 
 interface AuthUser {
   id: number;

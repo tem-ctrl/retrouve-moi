@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { MissingPerson } from '@/types';
+
 import { CheckCircleIcon, CalendarIcon, MapPinIcon } from './icons/Icons';
 
 interface FoundPersonsSectionProps {

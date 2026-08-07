@@ -1,7 +1,9 @@
 import React from 'react';
-import { MissingPerson } from '@/types';
-import StatusBadge from './StatusBadge';
+
 import { MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon } from '@/components/icons/Icons';
+import { MissingPerson } from '@/types';
+
+import StatusBadge from './StatusBadge';
 
 interface PersonCardProps {
   person: MissingPerson;
