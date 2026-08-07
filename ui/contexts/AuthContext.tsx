@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProfile = async (user_id: number) => {
     try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(user_id)));
+      const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(user_id)));
       if (response.ok) {
         const data = await response.json();
         setProfile(data.data);
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         formData.append('phone', phone);
       }
 
-      const response = await fetch(buildApiEndpoint(API_ROUTES.AUTH.SIGNUP), {
+      const response = await fetch(buildApiEndpoint(API_ROUTES.auth.signup), {
         method: 'POST',
         body: formData,
       });
@@ -145,7 +145,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.AUTH.SIGNIN), {
+      const response = await fetch(buildApiEndpoint(API_ROUTES.auth.signin), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -189,7 +189,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await fetch(buildApiEndpoint(API_ROUTES.AUTH.SIGNOUT), { method: 'POST' });
+      await fetch(buildApiEndpoint(API_ROUTES.auth.signout), { method: 'POST' });
     } catch (error) {
       console.error('Error during sign out:', error);
     }
@@ -205,7 +205,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return { error: new Error('Not authenticated') };
 
     try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(user.id)), {
+      const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(user.id)), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),

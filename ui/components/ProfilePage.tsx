@@ -2,9 +2,10 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { buildApiEndpoint, extractDataArray } from '@/lib/api-client';
+import { buildApiEndpoint } from '@/lib/api-client';
 import { API_ROUTES } from '@/lib/routes';
 import { MissingPerson } from '@/types';
+import { ApiCollection } from '@/types/api';
 
 import {
   UserIcon,
@@ -80,16 +81,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
 
     try {
       const response = await fetch(
-        buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS({ user_id: user.id })),
+        buildApiEndpoint(API_ROUTES.missingPersons.collection({ user_id: user.id })),
       );
 
       if (!response.ok) {
         throw new Error('Failed to fetch user reports');
       }
 
-      const jsonResponse = await response.json();
-      const userReportsData = extractDataArray(jsonResponse) as MissingPerson[];
-      setUserReports(userReportsData);
+      const body: ApiCollection<MissingPerson> = await response.json();
+      setUserReports(body.data);
     } catch (error) {
       console.error('Error fetching user reports:', error);
     } finally {
