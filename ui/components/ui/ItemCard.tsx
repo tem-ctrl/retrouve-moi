@@ -1,6 +1,14 @@
+import Image from 'next/image';
 import React from 'react';
+
+import {
+  MapPinIcon,
+  CalendarIcon,
+  PhoneIcon,
+  ArrowRightIcon,
+  TagIcon,
+} from '@/components/icons/Icons';
 import { LostItem } from '@/types';
-import { MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon, TagIcon, FileTextIcon } from '@/components/icons/Icons';
 
 interface ItemCardProps {
   item: LostItem;
@@ -14,7 +22,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -22,32 +30,82 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
     switch (item.item_type) {
       case 'document':
         return (
-          <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <svg
+            className="w-8 h-8 text-blue-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
         );
       case 'object':
         return (
-          <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          <svg
+            className="w-8 h-8 text-purple-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+            />
           </svg>
         );
       case 'animal':
         return (
-          <svg className="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          <svg
+            className="w-8 h-8 text-amber-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
           </svg>
         );
       case 'vehicle':
         return (
-          <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          <svg
+            className="w-8 h-8 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+            />
           </svg>
         );
       default:
         return (
-          <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+          <svg
+            className="w-8 h-8 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+            />
           </svg>
         );
     }
@@ -84,38 +142,44 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
 
   const getItemTypeLabel = () => {
     switch (item.item_type) {
-      case 'document': return 'Document';
-      case 'object': return 'Objet';
-      case 'animal': return 'Animal';
-      case 'vehicle': return 'Véhicule';
-      default: return 'Autre';
+      case 'document':
+        return 'Document';
+      case 'object':
+        return 'Objet';
+      case 'animal':
+        return 'Animal';
+      case 'vehicle':
+        return 'Véhicule';
+      default:
+        return 'Autre';
     }
   };
 
-  const defaultImage = item.item_type === 'document' 
-    ? 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop'
-    : item.item_type === 'object'
-    ? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop'
-    : item.item_type === 'animal'
-    ? 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop'
-    : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop';
+  const defaultImage =
+    item.item_type === 'document'
+      ? 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop'
+      : item.item_type === 'object'
+        ? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop'
+        : item.item_type === 'animal'
+          ? 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop'
+          : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop';
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-      <div className="relative">
-        <img
+      <div className="relative h-48">
+        <Image
           src={item.photo_url || defaultImage}
           alt={item.item_name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-3 left-3">
-          {getStatusBadge()}
-        </div>
+        <div className="absolute top-3 left-3">{getStatusBadge()}</div>
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2">
           {getItemTypeIcon()}
         </div>
       </div>
-      
+
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.item_name}</h3>
@@ -129,13 +193,15 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
             {item.item_category}
           </span>
         </div>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center text-gray-600 text-sm">
             <MapPinIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
-            <span className="truncate">{item.location}, {item.region}</span>
+            <span className="truncate">
+              {item.location}, {item.region}
+            </span>
           </div>
-          
+
           <div className="flex items-center text-gray-600 text-sm">
             <CalendarIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
             <span>{formatDate(item.date_lost_found)}</span>
@@ -148,11 +214,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
             </div>
           )}
         </div>
-        
-        <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-          {item.description}
-        </p>
-        
+
+        <p className="text-sm text-gray-500 mb-4 line-clamp-2">{item.description}</p>
+
         <div className="flex gap-2">
           <button
             onClick={() => onViewDetails(item)}
@@ -161,7 +225,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
             Voir détails
             <ArrowRightIcon size={16} />
           </button>
-          
+
           <button
             onClick={() => onContact(item.contact_phone)}
             className="p-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"

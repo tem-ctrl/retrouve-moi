@@ -1,6 +1,8 @@
+import Image from 'next/image';
 import React, { useState } from 'react';
+
 import { MissingPerson } from '@/types';
-import StatusBadge from './ui/StatusBadge';
+
 import {
   XIcon,
   MapPinIcon,
@@ -9,8 +11,9 @@ import {
   ShareIcon,
   UserIcon,
   InfoIcon,
-  ClockIcon
+  ClockIcon,
 } from './icons/Icons';
+import StatusBadge from './ui/StatusBadge';
 
 interface PersonDetailModalProps {
   person: MissingPerson;
@@ -23,7 +26,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
     reporter_name: '',
     reporter_phone: '',
     location: '',
-    description: ''
+    description: '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +36,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -41,13 +44,13 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
     const shareData = {
       title: `Personne disparue: ${person.full_name}`,
       text: `Aidez-nous à retrouver ${person.full_name}, ${person.age} ans, disparu(e) à ${person.last_seen_location}. Dernière vue le ${formatDate(person.last_seen_date)}.`,
-      url: window.location.href
+      url: window.location.href,
     };
 
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-      } catch (err) {
+      } catch {
         console.log('Share cancelled');
       }
     } else {
@@ -69,7 +72,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
       const response = await fetch('/api/sightings', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           missingPersonId: person.id,
@@ -77,8 +80,8 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
           reporter_phone: sightingData.reporter_phone,
           location: sightingData.location,
           description: sightingData.description,
-          sightingDate: new Date().toISOString()
-        })
+          sightingDate: new Date().toISOString(),
+        }),
       });
 
       if (!response.ok) {
@@ -93,7 +96,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
       }, 2000);
     } catch (error) {
       console.error('Error submitting sighting:', error);
-      alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+      alert("Erreur lors de l'envoi. Veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }
@@ -116,11 +119,13 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
         {/* Content */}
         <div className="p-4 sm:p-6">
           {/* Photo and Status */}
-          <div className="relative mb-6">
-            <img
+          <div className="relative h-64 sm:h-80 mb-6">
+            <Image
               src={person.photo_url}
               alt={person.full_name}
-              className="w-full h-64 sm:h-80 object-cover rounded-xl"
+              fill
+              sizes="(max-width: 640px) 100vw, 42rem"
+              className="object-cover rounded-xl"
             />
             <div className="absolute top-4 left-4">
               <StatusBadge status={person.status} is_urgent={person.is_urgent} />
@@ -130,7 +135,9 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
           {/* Name and Basic Info */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">{person.full_name}</h1>
-            <p className="text-gray-600">{person.age} ans • {person.gender}</p>
+            <p className="text-gray-600">
+              {person.age} ans • {person.gender}
+            </p>
           </div>
 
           {/* Location and Date */}
@@ -139,7 +146,9 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
               <MapPinIcon size={20} className="text-orange-500 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-gray-900">Dernière localisation</p>
-                <p className="text-gray-600">{person.last_seen_location}, {person.region}</p>
+                <p className="text-gray-600">
+                  {person.last_seen_location}, {person.region}
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -176,13 +185,20 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
               </h3>
               <div className="bg-gray-50 rounded-xl p-4 space-y-2">
                 {person.height && (
-                  <p className="text-gray-600"><span className="font-medium">Taille:</span> {person.height}</p>
+                  <p className="text-gray-600">
+                    <span className="font-medium">Taille:</span> {person.height}
+                  </p>
                 )}
                 {person.distinctive_signs && (
-                  <p className="text-gray-600"><span className="font-medium">Signes particuliers:</span> {person.distinctive_signs}</p>
+                  <p className="text-gray-600">
+                    <span className="font-medium">Signes particuliers:</span>{' '}
+                    {person.distinctive_signs}
+                  </p>
                 )}
                 {person.clothing_description && (
-                  <p className="text-gray-600"><span className="font-medium">Vêtements:</span> {person.clothing_description}</p>
+                  <p className="text-gray-600">
+                    <span className="font-medium">Vêtements:</span> {person.clothing_description}
+                  </p>
                 )}
               </div>
             </div>
@@ -197,7 +213,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
               <PhoneIcon size={20} />
               Appeler le contact
             </button>
-            
+
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={handleShare}
@@ -206,7 +222,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
                 <ShareIcon size={18} />
                 Partager
               </button>
-              
+
               <button
                 onClick={() => setShowSightingForm(!showSightingForm)}
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
@@ -220,12 +236,22 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
           {showSightingForm && (
             <div className="bg-blue-50 rounded-xl p-4 mb-6">
               <h3 className="font-semibold text-gray-900 mb-4">Signaler une observation</h3>
-              
+
               {submitted ? (
                 <div className="text-center py-4">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="w-8 h-8 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <p className="text-green-700 font-medium">Merci pour votre signalement!</p>
@@ -236,7 +262,9 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
                     type="text"
                     placeholder="Votre nom"
                     value={sightingData.reporter_name}
-                    onChange={(e) => setSightingData({ ...sightingData, reporter_name: e.target.value })}
+                    onChange={(e) =>
+                      setSightingData({ ...sightingData, reporter_name: e.target.value })
+                    }
                     required
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   />
@@ -244,7 +272,9 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
                     type="tel"
                     placeholder="Votre téléphone"
                     value={sightingData.reporter_phone}
-                    onChange={(e) => setSightingData({ ...sightingData, reporter_phone: e.target.value })}
+                    onChange={(e) =>
+                      setSightingData({ ...sightingData, reporter_phone: e.target.value })
+                    }
                     required
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   />
@@ -259,7 +289,9 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
                   <textarea
                     placeholder="Décrivez ce que vous avez vu..."
                     value={sightingData.description}
-                    onChange={(e) => setSightingData({ ...sightingData, description: e.target.value })}
+                    onChange={(e) =>
+                      setSightingData({ ...sightingData, description: e.target.value })
+                    }
                     required
                     rows={3}
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"

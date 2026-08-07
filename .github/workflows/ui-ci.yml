@@ -1,0 +1,44 @@
+name: UI CI
+
+on:
+  pull_request:
+    paths:
+      - "ui/**"
+      - ".github/workflows/ui-ci.yml"
+
+defaults:
+  run:
+    working-directory: ui
+
+jobs:
+  lint-typecheck-test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "yarn"
+          cache-dependency-path: ui/yarn.lock
+
+      - name: Enable corepack
+        run: corepack enable yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Unit tests
+        run: yarn test
+
+      - name: Build
+        run: yarn build

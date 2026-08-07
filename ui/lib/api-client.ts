@@ -1,10 +1,9 @@
-import { MissingPerson, User, LostItem, Sighting } from "@/types";
-import { API_ROUTES } from "@/lib/routes";
-import { Filters } from "@/types/api-routes";
+import { env } from '@/lib/env';
+import { API_ROUTES } from '@/lib/routes';
+import { MissingPerson, User, LostItem, Sighting } from '@/types';
+import { Filters } from '@/types/api-routes';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.retrouve-moi.com/api";
-
-export const buildApiEndpoint = (route: string) => `${API_BASE_URL}${route}`;
+export const buildApiEndpoint = (route: string) => `${env.NEXT_PUBLIC_API_URL}${route}`;
 
 // Helper to extract data array from API response (handles both wrapped and unwrapped responses)
 export const extractDataArray = (response: unknown): unknown[] => {
@@ -41,7 +40,9 @@ export const extractDataArray = (response: unknown): unknown[] => {
 export const apiClient = {
   // Missing Persons
   async getMissingPersons(filters?: Filters): Promise<MissingPerson[]> {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS(filters)), { cache: 'no-store' });
+    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS(filters)), {
+      cache: 'no-store',
+    });
     if (!response.ok) throw new Error('Failed to fetch missing persons');
     const data = await response.json();
     return extractDataArray(data) as MissingPerson[];
@@ -74,14 +75,18 @@ export const apiClient = {
   },
 
   async deleteMissingPerson(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.DETAILS(id)), { method: 'DELETE' });
+    const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.DETAILS(id)), {
+      method: 'DELETE',
+    });
     if (!response.ok) throw new Error('Failed to delete missing person');
     return response.json();
   },
 
   // Lost Items
   async getLostItems(filters?: Filters): Promise<LostItem[]> {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.FILTERS(filters)), { cache: 'no-store' });
+    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.FILTERS(filters)), {
+      cache: 'no-store',
+    });
     if (!response.ok) throw new Error('Failed to fetch lost items');
     const data = await response.json();
     return extractDataArray(data) as LostItem[];
@@ -114,14 +119,18 @@ export const apiClient = {
   },
 
   async deleteLostItem(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.DETAILS(id)), { method: 'DELETE' });
+    const response = await fetch(buildApiEndpoint(API_ROUTES.LOST_ITEMS.DETAILS(id)), {
+      method: 'DELETE',
+    });
     if (!response.ok) throw new Error('Failed to delete lost item');
     return response.json();
   },
 
   // Sightings
   async getSightings(missingPersonId: number, filters?: Filters): Promise<Sighting[]> {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.SIGHTINGS.FILTERS(missingPersonId, filters)));
+    const response = await fetch(
+      buildApiEndpoint(API_ROUTES.SIGHTINGS.FILTERS(missingPersonId, filters)),
+    );
     if (!response.ok) throw new Error('Failed to fetch sightings');
     const data = await response.json();
     return extractDataArray(data) as Sighting[];
@@ -171,13 +180,19 @@ export const apiClient = {
   },
 
   async deleteUser(id: number) {
-    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(id)), { method: 'DELETE' });
+    const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(id)), {
+      method: 'DELETE',
+    });
     if (!response.ok) throw new Error('Failed to delete user');
     return response.json();
   },
 };
 
-export const makeApiCall = async (endpoint: string, method: string = 'GET', body?: Record<string, unknown> | FormData) => {
+export const makeApiCall = async (
+  endpoint: string,
+  method: string = 'GET',
+  body?: Record<string, unknown> | FormData,
+) => {
   const url = buildApiEndpoint(endpoint);
   const options: RequestInit = {
     method,

@@ -1,5 +1,8 @@
+import Image from 'next/image';
 import React from 'react';
+
 import { MissingPerson } from '@/types';
+
 import { CheckCircleIcon, CalendarIcon, MapPinIcon } from './icons/Icons';
 
 interface FoundPersonsSectionProps {
@@ -7,7 +10,7 @@ interface FoundPersonsSectionProps {
 }
 
 const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) => {
-  const foundPersons = persons.filter(p => p.status === 'found').slice(0, 4);
+  const foundPersons = persons.filter((p) => p.status === 'found').slice(0, 4);
 
   if (foundPersons.length === 0) return null;
 
@@ -16,7 +19,7 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -37,16 +40,18 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {foundPersons.map(person => (
-            <div 
+          {foundPersons.map((person) => (
+            <div
               key={person.id}
               className="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden hover:shadow-md transition-shadow"
             >
-              <div className="relative">
-                <img
+              <div className="relative h-40">
+                <Image
                   src={person.photo_url}
                   alt={person.full_name}
-                  className="w-full h-40 object-cover"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover"
                 />
                 <div className="absolute top-3 right-3">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
@@ -55,7 +60,7 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
                   </span>
                 </div>
               </div>
-              
+
               <div className="p-4">
                 <h3 className="font-bold text-gray-900 mb-2">{person.full_name}</h3>
                 <div className="space-y-1 text-sm text-gray-500">

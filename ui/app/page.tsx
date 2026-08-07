@@ -1,29 +1,30 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { apiClient } from '@/lib/api-client';
-import { MissingPerson, LostItem, FilterState } from '@/types';
+
+import AuthModal from '@/components/AuthModal';
+import EmergencyBanner from '@/components/EmergencyBanner';
+import Footer from '@/components/Footer';
+import FoundPersonsSection from '@/components/FoundPersonsSection';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
-import UrgentCasesSection from '@/components/UrgentCasesSection';
-import RegionsSection from '@/components/RegionsSection';
-import FoundPersonsSection from '@/components/FoundPersonsSection';
 import HowItWorksSection from '@/components/HowItWorksSection';
-import EmergencyBanner from '@/components/EmergencyBanner';
-import SearchFilters from '@/components/ui/SearchFilters';
-import PersonCard from '@/components/ui/PersonCard';
-import ItemCard from '@/components/ui/ItemCard';
-import PersonDetailModal from '@/components/PersonDetailModal';
-import ItemDetailModal from '@/components/ItemDetailModal';
-import ReportForm from '@/components/ReportForm';
-import ItemReportForm from '@/components/ItemReportForm';
-import SuccessModal from '@/components/SuccessModal';
-import MobileMenu from '@/components/MobileMenu';
-import AuthModal from '@/components/AuthModal';
-import ProfilePage from '@/components/ProfilePage';
-import InteractiveMap from '@/components/InteractiveMap';
-import Footer from '@/components/Footer';
 import { UserIcon, PackageIcon, MapIcon, GridIcon } from '@/components/icons/Icons';
+import InteractiveMap from '@/components/InteractiveMap';
+import ItemDetailModal from '@/components/ItemDetailModal';
+import ItemReportForm from '@/components/ItemReportForm';
+import MobileMenu from '@/components/MobileMenu';
+import PersonDetailModal from '@/components/PersonDetailModal';
+import ProfilePage from '@/components/ProfilePage';
+import RegionsSection from '@/components/RegionsSection';
+import ReportForm from '@/components/ReportForm';
+import SuccessModal from '@/components/SuccessModal';
+import ItemCard from '@/components/ui/ItemCard';
+import PersonCard from '@/components/ui/PersonCard';
+import SearchFilters from '@/components/ui/SearchFilters';
+import UrgentCasesSection from '@/components/UrgentCasesSection';
+import { apiClient } from '@/lib/api-client';
+import { MissingPerson, LostItem, FilterState } from '@/types';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
@@ -47,7 +48,7 @@ export default function Home() {
     status: '',
     gender: '',
     item_type: '',
-    report_type: ''
+    report_type: '',
   });
 
   const listingRef = useRef<HTMLDivElement>(null);
@@ -87,23 +88,24 @@ export default function Home() {
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      result = result.filter(p =>
-        p.full_name.toLowerCase().includes(searchLower) ||
-        p.last_seen_location.toLowerCase().includes(searchLower) ||
-        p.description?.toLowerCase().includes(searchLower)
+      result = result.filter(
+        (p) =>
+          p.full_name.toLowerCase().includes(searchLower) ||
+          p.last_seen_location.toLowerCase().includes(searchLower) ||
+          p.description?.toLowerCase().includes(searchLower),
       );
     }
 
     if (filters.region) {
-      result = result.filter(p => p.region === filters.region);
+      result = result.filter((p) => p.region === filters.region);
     }
 
     if (filters.status) {
-      result = result.filter(p => p.status === filters.status);
+      result = result.filter((p) => p.status === filters.status);
     }
 
     if (filters.gender) {
-      result = result.filter(p => p.gender === filters.gender);
+      result = result.filter((p) => p.gender === filters.gender);
     }
 
     return result;
@@ -115,24 +117,25 @@ export default function Home() {
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      result = result.filter(i =>
-        i.item_name.toLowerCase().includes(searchLower) ||
-        i.location.toLowerCase().includes(searchLower) ||
-        i.description?.toLowerCase().includes(searchLower) ||
-        i.item_category.toLowerCase().includes(searchLower)
+      result = result.filter(
+        (i) =>
+          i.item_name.toLowerCase().includes(searchLower) ||
+          i.location.toLowerCase().includes(searchLower) ||
+          i.description?.toLowerCase().includes(searchLower) ||
+          i.item_category.toLowerCase().includes(searchLower),
       );
     }
 
     if (filters.region) {
-      result = result.filter(i => i.region === filters.region);
+      result = result.filter((i) => i.region === filters.region);
     }
 
     if (filters.item_type) {
-      result = result.filter(i => i.item_type === filters.item_type);
+      result = result.filter((i) => i.item_type === filters.item_type);
     }
 
     if (filters.report_type) {
-      result = result.filter(i => i.report_type === filters.report_type);
+      result = result.filter((i) => i.report_type === filters.report_type);
     }
 
     return result;
@@ -141,13 +144,14 @@ export default function Home() {
   // Calculate statistics
   const stats = {
     totalPersons: persons.length,
-    missingPersons: persons.filter(p => p.status === 'missing' || p.status === 'searching').length,
-    foundPersons: persons.filter(p => p.status === 'found').length,
-    urgentPersons: persons.filter(p => p.is_urgent && p.status !== 'found').length,
+    missingPersons: persons.filter((p) => p.status === 'missing' || p.status === 'searching')
+      .length,
+    foundPersons: persons.filter((p) => p.status === 'found').length,
+    urgentPersons: persons.filter((p) => p.is_urgent && p.status !== 'found').length,
     totalItems: items.length,
-    lostItems: items.filter(i => i.report_type === 'lost' && i.status !== 'claimed').length,
-    foundItems: items.filter(i => i.report_type === 'found' && i.status !== 'claimed').length,
-    claimedItems: items.filter(i => i.status === 'claimed').length
+    lostItems: items.filter((i) => i.report_type === 'lost' && i.status !== 'claimed').length,
+    foundItems: items.filter((i) => i.report_type === 'found' && i.status !== 'claimed').length,
+    claimedItems: items.filter((i) => i.status === 'claimed').length,
   };
 
   const handleViewPersonDetails = (person: MissingPerson) => {
@@ -180,7 +184,7 @@ export default function Home() {
   };
 
   const handleRegionClick = (region: string) => {
-    setFilters(prev => ({ ...prev, region }));
+    setFilters((prev) => ({ ...prev, region }));
     scrollToListings();
   };
 
@@ -195,7 +199,7 @@ export default function Home() {
   // Show profile page if open
   if (showProfilePage) {
     return (
-      <ProfilePage 
+      <ProfilePage
         onClose={() => setShowProfilePage(false)}
         onViewPerson={(person) => {
           setShowProfilePage(false);
@@ -209,7 +213,13 @@ export default function Home() {
     setFilters({ search: '', region: '', status: '', gender: '', item_type: '', report_type: '' });
   };
 
-  const hasActiveFilters = filters.search || filters.region || filters.status || filters.gender || filters.item_type || filters.report_type;
+  const hasActiveFilters =
+    filters.search ||
+    filters.region ||
+    filters.status ||
+    filters.gender ||
+    filters.item_type ||
+    filters.report_type;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -217,7 +227,7 @@ export default function Home() {
       <EmergencyBanner />
 
       {/* Header */}
-      <Header 
+      <Header
         onMenuClick={() => setShowMobileMenu(true)}
         onReportClick={handleReportClick}
         onAuthClick={() => setShowAuthModal(true)}
@@ -225,10 +235,7 @@ export default function Home() {
       />
 
       {/* Hero Section */}
-      <HeroSection 
-        onReportClick={handleReportClick}
-        onSearchClick={scrollToListings}
-      />
+      <HeroSection onReportClick={handleReportClick} onSearchClick={scrollToListings} />
 
       {/* Stats Section - Extended */}
       <section className="py-8 bg-white">
@@ -327,7 +334,7 @@ export default function Home() {
       </section>
 
       {/* Urgent Cases Section */}
-      <UrgentCasesSection 
+      <UrgentCasesSection
         persons={persons}
         onViewDetails={handleViewPersonDetails}
         onContact={handleContact}
@@ -347,10 +354,7 @@ export default function Home() {
       <HowItWorksSection />
 
       {/* Regions Section */}
-      <RegionsSection 
-        persons={persons}
-        onRegionClick={handleRegionClick}
-      />
+      <RegionsSection persons={persons} onRegionClick={handleRegionClick} />
 
       {/* Main Content - All Listings */}
       <main className="flex-1 py-8 bg-gray-100" ref={listingRef}>
@@ -410,9 +414,12 @@ export default function Home() {
           {/* Results Count */}
           <div className="mt-6 mb-4 flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">
-              {viewMode === 'persons' && `${filteredPersons.length} personne${filteredPersons.length !== 1 ? 's' : ''}`}
-              {viewMode === 'items' && `${filteredItems.length} objet${filteredItems.length !== 1 ? 's' : ''}`}
-              {viewMode === 'all' && `${filteredPersons.length + filteredItems.length} signalement${(filteredPersons.length + filteredItems.length) !== 1 ? 's' : ''}`}
+              {viewMode === 'persons' &&
+                `${filteredPersons.length} personne${filteredPersons.length !== 1 ? 's' : ''}`}
+              {viewMode === 'items' &&
+                `${filteredItems.length} objet${filteredItems.length !== 1 ? 's' : ''}`}
+              {viewMode === 'all' &&
+                `${filteredPersons.length + filteredItems.length} signalement${filteredPersons.length + filteredItems.length !== 1 ? 's' : ''}`}
             </h3>
             {hasActiveFilters && (
               <button
@@ -428,7 +435,10 @@ export default function Home() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
+                <div
+                  key={i}
+                  className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse"
+                >
                   <div className="h-48 bg-gray-200" />
                   <div className="p-4 space-y-3">
                     <div className="h-5 bg-gray-200 rounded w-3/4" />
@@ -451,7 +461,7 @@ export default function Home() {
                     </h4>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredPersons.map(person => (
+                    {filteredPersons.map((person) => (
                       <PersonCard
                         key={person.id}
                         person={person}
@@ -473,7 +483,7 @@ export default function Home() {
                     </h4>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredItems.map(item => (
+                    {filteredItems.map((item) => (
                       <ItemCard
                         key={item.id}
                         item={item}
@@ -488,15 +498,31 @@ export default function Home() {
               {/* Empty State */}
               {((viewMode === 'persons' && filteredPersons.length === 0) ||
                 (viewMode === 'items' && filteredItems.length === 0) ||
-                (viewMode === 'all' && filteredPersons.length === 0 && filteredItems.length === 0)) && (
+                (viewMode === 'all' &&
+                  filteredPersons.length === 0 &&
+                  filteredItems.length === 0)) && (
                 <div className="text-center py-12">
                   <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-12 h-12 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun résultat trouvé</h3>
-                  <p className="text-gray-500 mb-4">Essayez de modifier vos critères de recherche</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Aucun résultat trouvé
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Essayez de modifier vos critères de recherche
+                  </p>
                   <button
                     onClick={clearFilters}
                     className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
@@ -518,24 +544,15 @@ export default function Home() {
 
       {/* Modals */}
       {selectedPerson && (
-        <PersonDetailModal
-          person={selectedPerson}
-          onClose={() => setSelectedPerson(null)}
-        />
+        <PersonDetailModal person={selectedPerson} onClose={() => setSelectedPerson(null)} />
       )}
 
       {selectedItem && (
-        <ItemDetailModal
-          item={selectedItem}
-          onClose={() => setSelectedItem(null)}
-        />
+        <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
       )}
 
       {showReportForm && (
-        <ReportForm
-          onClose={() => setShowReportForm(false)}
-          onSuccess={handleReportSuccess}
-        />
+        <ReportForm onClose={() => setShowReportForm(false)} onSuccess={handleReportSuccess} />
       )}
 
       {showItemReportForm && (
@@ -545,15 +562,10 @@ export default function Home() {
         />
       )}
 
-      {showSuccessModal && (
-        <SuccessModal onClose={() => setShowSuccessModal(false)} />
-      )}
+      {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
 
       {showAuthModal && (
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-        />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       )}
 
       {/* Mobile Menu */}

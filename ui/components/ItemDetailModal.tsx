@@ -1,6 +1,17 @@
+import Image from 'next/image';
 import React from 'react';
+
 import { LostItem } from '@/types';
-import { XIcon, MapPinIcon, CalendarIcon, PhoneIcon, MailIcon, TagIcon, ShareIcon } from './icons/Icons';
+
+import {
+  XIcon,
+  MapPinIcon,
+  CalendarIcon,
+  PhoneIcon,
+  MailIcon,
+  TagIcon,
+  ShareIcon,
+} from './icons/Icons';
 
 interface ItemDetailModalProps {
   item: LostItem;
@@ -13,7 +24,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -48,27 +59,33 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
 
   const getItemTypeLabel = () => {
     switch (item.item_type) {
-      case 'document': return 'Document';
-      case 'object': return 'Objet';
-      case 'animal': return 'Animal';
-      case 'vehicle': return 'Véhicule';
-      default: return 'Autre';
+      case 'document':
+        return 'Document';
+      case 'object':
+        return 'Objet';
+      case 'animal':
+        return 'Animal';
+      case 'vehicle':
+        return 'Véhicule';
+      default:
+        return 'Autre';
     }
   };
 
-  const defaultImage = item.item_type === 'document' 
-    ? 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop'
-    : item.item_type === 'object'
-    ? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop'
-    : item.item_type === 'animal'
-    ? 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop'
-    : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop';
+  const defaultImage =
+    item.item_type === 'document'
+      ? 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop'
+      : item.item_type === 'object'
+        ? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop'
+        : item.item_type === 'animal'
+          ? 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop'
+          : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop';
 
   const handleShare = async () => {
     const shareData = {
       title: `${item.report_type === 'found' ? 'Trouvé' : 'Perdu'}: ${item.item_name}`,
       text: `${item.item_name} - ${item.location}, ${item.region}. ${item.description}`,
-      url: window.location.href
+      url: window.location.href,
     };
 
     if (navigator.share) {
@@ -124,11 +141,13 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
         {/* Content */}
         <div className="p-4 sm:p-6">
           {/* Image */}
-          <div className="relative rounded-xl overflow-hidden mb-6">
-            <img
+          <div className="relative h-64 rounded-xl overflow-hidden mb-6">
+            <Image
               src={item.photo_url || defaultImage}
               alt={item.item_name}
-              className="w-full h-64 object-cover"
+              fill
+              sizes="(max-width: 640px) 100vw, 42rem"
+              className="object-cover"
             />
           </div>
 

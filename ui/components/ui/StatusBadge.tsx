@@ -13,14 +13,14 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, is_urgent }) => {
           label: 'Retrouvé',
           bgColor: 'bg-green-100',
           textColor: 'text-green-800',
-          borderColor: 'border-green-200'
+          borderColor: 'border-green-200',
         };
       case 'searching':
         return {
           label: 'En cours de recherche',
           bgColor: 'bg-blue-100',
           textColor: 'text-blue-800',
-          borderColor: 'border-blue-200'
+          borderColor: 'border-blue-200',
         };
       case 'urgent':
       case 'missing':
@@ -29,7 +29,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, is_urgent }) => {
           label: 'Disparu',
           bgColor: 'bg-red-100',
           textColor: 'text-red-800',
-          borderColor: 'border-red-200'
+          borderColor: 'border-red-200',
         };
     }
   };
@@ -43,7 +43,9 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, is_urgent }) => {
           Urgent
         </span>
       )}
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${config.bgColor} ${config.textColor} border ${config.borderColor}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${config.bgColor} ${config.textColor} border ${config.borderColor}`}
+      >
         {config.label}
       </span>
     </div>

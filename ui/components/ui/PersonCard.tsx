@@ -1,7 +1,10 @@
+import Image from 'next/image';
 import React from 'react';
-import { MissingPerson } from '@/types';
-import StatusBadge from './StatusBadge';
+
 import { MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon } from '@/components/icons/Icons';
+import { MissingPerson } from '@/types';
+
+import StatusBadge from './StatusBadge';
 
 interface PersonCardProps {
   person: MissingPerson;
@@ -15,48 +18,57 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getAgeCategory = (age: number, gender: string) => {
-    if (age < 13) return gender === 'Fille' ? 'Enfant fille' : gender === 'Femme' ? 'Enfant fille' : 'Enfant garçon';
+    if (age < 13)
+      return gender === 'Fille'
+        ? 'Enfant fille'
+        : gender === 'Femme'
+          ? 'Enfant fille'
+          : 'Enfant garçon';
     if (age < 18) return gender === 'Fille' || gender === 'Femme' ? 'Adolescente' : 'Adolescent';
     return gender === 'Femme' || gender === 'Fille' ? 'Femme' : 'Homme';
   };
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-      <div className="relative">
-        <img
+      <div className="relative h-48">
+        <Image
           src={person.photo_url}
           alt={person.full_name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3">
           <StatusBadge status={person.status} is_urgent={person.is_urgent} />
         </div>
       </div>
-      
+
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-900 mb-2">{person.full_name}</h3>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center text-gray-600 text-sm">
             <MapPinIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
-            <span className="truncate">{person.last_seen_location}, {person.region}</span>
+            <span className="truncate">
+              {person.last_seen_location}, {person.region}
+            </span>
           </div>
-          
+
           <div className="flex items-center text-gray-600 text-sm">
             <CalendarIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
             <span>{formatDate(person.last_seen_date)}</span>
           </div>
         </div>
-        
+
         <p className="text-sm text-gray-500 mb-4">
           {person.age} ans • {getAgeCategory(person.age, person.gender)}
         </p>
-        
+
         <div className="flex gap-2">
           <button
             onClick={() => onViewDetails(person)}
@@ -65,7 +77,7 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
             Voir détails
             <ArrowRightIcon size={16} />
           </button>
-          
+
           <button
             onClick={() => onContact(person.contact_phone)}
             className="p-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"

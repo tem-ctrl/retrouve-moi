@@ -128,20 +128,20 @@ export const CAMEROON_REGIONS = [
   { name: 'Nord-Ouest', lat: 6.0667, lng: 10.15 },
   { name: 'Ouest', lat: 5.4833, lng: 10.4167 },
   { name: 'Sud', lat: 2.95, lng: 10.9 },
-  { name: 'Sud-Ouest', lat: 4.95, lng: 9.2333 }
+  { name: 'Sud-Ouest', lat: 4.95, lng: 9.2333 },
 ];
 
 export const ITEM_CATEGORIES = {
   document: [
-    'Carte Nationale d\'Identité (CNI)',
+    "Carte Nationale d'Identité (CNI)",
     'Passeport',
     'Permis de conduire',
-    'Carte d\'étudiant',
+    "Carte d'étudiant",
     'Diplôme/Certificat',
     'Acte de naissance',
     'Carte bancaire',
     'Carte professionnelle',
-    'Autre document'
+    'Autre document',
   ],
   object: [
     'Téléphone portable',
@@ -154,21 +154,9 @@ export const ITEM_CATEGORIES = {
     'Clés',
     'Appareil photo',
     'Lunettes',
-    'Autre objet'
+    'Autre objet',
   ],
-  animal: [
-    'Chien',
-    'Chat',
-    'Oiseau',
-    'Autre animal'
-  ],
-  vehicle: [
-    'Moto',
-    'Vélo',
-    'Voiture',
-    'Autre véhicule'
-  ],
-  other: [
-    'Autre'
-  ]
+  animal: ['Chien', 'Chat', 'Oiseau', 'Autre animal'],
+  vehicle: ['Moto', 'Vélo', 'Voiture', 'Autre véhicule'],
+  other: ['Autre'],
 };

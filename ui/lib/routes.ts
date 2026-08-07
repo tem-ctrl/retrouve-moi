@@ -60,9 +60,9 @@ export const API_ROUTES = {
       }
       return `/sightings?${params.toString()}`;
     },
-  }
-}
+  },
+};
 
 export const ROUTES = {
-  home: '/'
-}
+  home: '/',
+};
