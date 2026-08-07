@@ -195,7 +195,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
                   <PackageIcon size={32} className="text-purple-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Type de signalement</h3>
-                <p className="text-gray-500 text-sm">Décrivez l'objet perdu ou trouvé</p>
+                <p className="text-gray-500 text-sm">Décrivez l&apos;objet perdu ou trouvé</p>
               </div>
 
               {/* Report Type Selection */}
@@ -214,7 +214,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <div className="font-semibold text-gray-900">J'ai perdu</div>
+                  <div className="font-semibold text-gray-900">J&apos;ai perdu</div>
                   <div className="text-xs text-gray-500">Je recherche un objet</div>
                 </button>
                 <button
@@ -231,14 +231,14 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div className="font-semibold text-gray-900">J'ai trouvé</div>
+                  <div className="font-semibold text-gray-900">J&apos;ai trouvé</div>
                   <div className="text-xs text-gray-500">Je signale une trouvaille</div>
                 </button>
               </div>
 
               {/* Item Type Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type d'objet *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Type d&apos;objet *</label>
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {[
                     { type: 'document', icon: FileTextIcon, label: 'Document' },
@@ -311,7 +311,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'objet *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l&apos;objet *</label>
                   <input
                     type="text"
                     name="item_name"

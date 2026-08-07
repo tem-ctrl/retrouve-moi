@@ -89,7 +89,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onReportClick,
 
         {/* Emergency Numbers */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100 bg-gray-50">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Numéros d'urgence</h3>
+          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Numéros d&apos;urgence</h3>
           <div className="grid grid-cols-2 gap-2">
             <a 
               href="tel:117"

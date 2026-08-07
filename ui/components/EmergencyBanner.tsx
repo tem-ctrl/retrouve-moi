@@ -8,7 +8,7 @@ const EmergencyBanner: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm">
           <div className="flex items-center gap-2">
             <AlertTriangleIcon size={18} />
-            <span className="font-medium">En cas d'urgence:</span>
+            <span className="font-medium">En cas d&apos;urgence:</span>
           </div>
           <div className="flex items-center gap-4">
             <a 

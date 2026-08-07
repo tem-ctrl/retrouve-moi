@@ -177,7 +177,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
           <p className="text-white/40 text-xs mt-4 text-center">
-            En cas d'urgence, contactez immédiatement les forces de l'ordre locales. Cette plateforme est un service citoyen gratuit.
+            En cas d&apos;urgence, contactez immédiatement les forces de l&apos;ordre locales. Cette plateforme est un service citoyen gratuit.
           </p>
         </div>
       </div>

@@ -29,7 +29,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
         <div className="bg-blue-50 rounded-xl p-4 mb-6 text-left">
           <h3 className="font-semibold text-blue-900 mb-2">Prochaines étapes:</h3>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Partagez l'annonce sur les réseaux sociaux</li>
+            <li>• Partagez l&apos;annonce sur les réseaux sociaux</li>
             <li>• Contactez les autorités locales</li>
             <li>• Informez vos proches et voisins</li>
           </ul>
@@ -39,7 +39,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
           onClick={onClose}
           className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold transition-colors"
         >
-          Retour à l'accueil
+          Retour à l&apos;accueil
         </button>
       </div>
     </div>
