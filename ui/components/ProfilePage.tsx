@@ -15,7 +15,7 @@ import {
   AlertTriangleIcon,
   SearchIcon,
   EditIcon,
-  LogOutIcon
+  LogOutIcon,
 } from './icons/Icons';
 import StatusBadge from './ui/StatusBadge';
 
@@ -34,7 +34,7 @@ const REGIONS = [
   'Nord-Ouest',
   'Ouest',
   'Sud',
-  'Sud-Ouest'
+  'Sud-Ouest',
 ];
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
@@ -53,7 +53,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
     address: profile?.address || '',
     city: profile?.city || '',
     region: profile?.region || '',
-    bio: profile?.bio || ''
+    bio: profile?.bio || '',
   });
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
         address: profile.address || '',
         city: profile.city || '',
         region: profile.region || '',
-        bio: profile.bio || ''
+        bio: profile.bio || '',
       });
     }
   }, [profile]);
@@ -78,7 +78,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
     if (!user) return;
 
     try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS({ user_id: user.id })));
+      const response = await fetch(
+        buildApiEndpoint(API_ROUTES.MISSING_PERSONS.FILTERS({ user_id: user.id })),
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch user reports');
@@ -121,14 +123,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getStatusCount = (status: string) => {
     if (status === 'all') return userReports.length;
-    if (status === 'urgent') return userReports.filter(r => r.is_urgent).length;
-    return userReports.filter(r => r.status === status).length;
+    if (status === 'urgent') return userReports.filter((r) => r.is_urgent).length;
+    return userReports.filter((r) => r.status === status).length;
   };
 
   return (
@@ -212,7 +214,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
               <div className="bg-gradient-to-r from-[#1E3A5F] to-[#2d4a6f] p-6 text-white">
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold">
-                    {profile?.full_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                    {profile?.full_name?.charAt(0)?.toUpperCase() ||
+                      user?.email?.charAt(0)?.toUpperCase() ||
+                      'U'}
                   </div>
                   <div className="flex-1">
                     <h2 className="text-2xl font-bold">{profile?.full_name || 'Utilisateur'}</h2>
@@ -237,7 +241,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nom complet
+                        </label>
                         <input
                           type="text"
                           value={formData.full_name}
@@ -246,7 +252,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Téléphone
+                        </label>
                         <input
                           type="tel"
                           value={formData.phone}
@@ -258,7 +266,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Adresse
+                      </label>
                       <input
                         type="text"
                         value={formData.address}
@@ -270,7 +280,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Ville
+                        </label>
                         <input
                           type="text"
                           value={formData.city}
@@ -280,15 +292,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Région</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Région
+                        </label>
                         <select
                           value={formData.region}
                           onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
                         >
                           <option value="">Sélectionner une région</option>
-                          {REGIONS.map(region => (
-                            <option key={region} value={region}>{region}</option>
+                          {REGIONS.map((region) => (
+                            <option key={region} value={region}>
+                              {region}
+                            </option>
                           ))}
                         </select>
                       </div>
@@ -344,7 +360,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       <div>
                         <p className="text-xs text-gray-500">Localisation</p>
                         <p className="font-medium text-gray-900">
-                          {[profile?.address, profile?.city, profile?.region].filter(Boolean).join(', ') || '-'}
+                          {[profile?.address, profile?.city, profile?.region]
+                            .filter(Boolean)
+                            .join(', ') || '-'}
                         </p>
                       </div>
                     </div>
@@ -415,7 +433,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                 </button>
               </div>
             ) : (
-              userReports.map(report => (
+              userReports.map((report) => (
                 <div
                   key={report.id}
                   className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
@@ -435,7 +453,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       <div className="space-y-1 text-sm text-gray-500">
                         <div className="flex items-center gap-2">
                           <MapPinIcon size={14} className="text-orange-500 flex-shrink-0" />
-                          <span className="truncate">{report.last_seen_location}, {report.region}</span>
+                          <span className="truncate">
+                            {report.last_seen_location}, {report.region}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CalendarIcon size={14} className="text-orange-500 flex-shrink-0" />

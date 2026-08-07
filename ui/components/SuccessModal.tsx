@@ -22,9 +22,10 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Signalement envoyé!</h2>
-        
+
         <p className="text-gray-600 mb-6">
-          Votre signalement a été publié avec succès. Il est maintenant visible par tous les utilisateurs de la plateforme.
+          Votre signalement a été publié avec succès. Il est maintenant visible par tous les
+          utilisateurs de la plateforme.
         </p>
 
         <div className="bg-blue-50 rounded-xl p-4 mb-6 text-left">

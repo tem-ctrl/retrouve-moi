@@ -15,7 +15,7 @@ export function MockServiceWorkerProvider({ children }: { children: React.ReactN
   useEffect(() => {
     if (!MOCKING_ENABLED) return;
     import('@/mocks/browser').then(({ worker }) =>
-      worker.start({ onUnhandledRequest: 'bypass' }).then(() => setReady(true))
+      worker.start({ onUnhandledRequest: 'bypass' }).then(() => setReady(true)),
     );
   }, []);
 

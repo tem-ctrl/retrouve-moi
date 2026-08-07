@@ -17,12 +17,17 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getAgeCategory = (age: number, gender: string) => {
-    if (age < 13) return gender === 'Fille' ? 'Enfant fille' : gender === 'Femme' ? 'Enfant fille' : 'Enfant garçon';
+    if (age < 13)
+      return gender === 'Fille'
+        ? 'Enfant fille'
+        : gender === 'Femme'
+          ? 'Enfant fille'
+          : 'Enfant garçon';
     if (age < 18) return gender === 'Fille' || gender === 'Femme' ? 'Adolescente' : 'Adolescent';
     return gender === 'Femme' || gender === 'Fille' ? 'Femme' : 'Homme';
   };
@@ -39,26 +44,28 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
           <StatusBadge status={person.status} is_urgent={person.is_urgent} />
         </div>
       </div>
-      
+
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-900 mb-2">{person.full_name}</h3>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center text-gray-600 text-sm">
             <MapPinIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
-            <span className="truncate">{person.last_seen_location}, {person.region}</span>
+            <span className="truncate">
+              {person.last_seen_location}, {person.region}
+            </span>
           </div>
-          
+
           <div className="flex items-center text-gray-600 text-sm">
             <CalendarIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
             <span>{formatDate(person.last_seen_date)}</span>
           </div>
         </div>
-        
+
         <p className="text-sm text-gray-500 mb-4">
           {person.age} ans • {getAgeCategory(person.age, person.gender)}
         </p>
-        
+
         <div className="flex gap-2">
           <button
             onClick={() => onViewDetails(person)}
@@ -67,7 +74,7 @@ const PersonCard: React.FC<PersonCardProps> = ({ person, onViewDetails, onContac
             Voir détails
             <ArrowRightIcon size={16} />
           </button>
-          
+
           <button
             onClick={() => onContact(person.contact_phone)}
             className="p-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"

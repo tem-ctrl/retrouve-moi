@@ -21,7 +21,7 @@ const REGIONS = [
   'Nord-Ouest',
   'Ouest',
   'Sud',
-  'Sud-Ouest'
+  'Sud-Ouest',
 ];
 
 const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
@@ -48,17 +48,17 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
     clothing_description: '',
     reporter_name: '',
     reporter_phone: '',
-    reporter_email: ''
+    reporter_email: '',
   });
 
   // Pre-fill reporter info if user is logged in
   useEffect(() => {
     if (user && profile) {
-      setData(prev => ({
+      setData((prev) => ({
         ...prev,
         reporter_name: profile.full_name || '',
         reporter_phone: profile.phone || '',
-        reporter_email: user.email || ''
+        reporter_email: user.email || '',
       }));
     }
   }, [user, profile]);
@@ -75,11 +75,13 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value, type } = e.target;
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
   };
 
@@ -114,7 +116,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
 
       const response = await fetch(buildApiEndpoint(API_ROUTES.missing_persons), {
         method: 'POST',
-        body: fd
+        body: fd,
       });
 
       if (!response.ok) {
@@ -124,17 +126,18 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
       onSuccess();
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('Erreur lors de l\'envoi du signalement. Veuillez réessayer.');
+      alert("Erreur lors de l'envoi du signalement. Veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const nextStep = () => setStep(prev => Math.min(prev + 1, 3));
-  const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
+  const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
+  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const isStep1Valid = data.full_name && data.age && data.gender;
-  const isStep2Valid = data.last_seen_location && data.last_seen_date && data.region && data.description;
+  const isStep2Valid =
+    data.last_seen_location && data.last_seen_date && data.region && data.description;
   const isStep3Valid = data.contact_phone && data.reporter_name && data.reporter_phone;
 
   return (
@@ -207,7 +210,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom complet *
+                  </label>
                   <input
                     type="text"
                     name="full_name"
@@ -252,7 +257,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Taille (en cm)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Taille (en cm)
+                  </label>
                   <input
                     type="number"
                     name="height"
@@ -264,7 +271,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Signes distinctifs</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Signes distinctifs
+                  </label>
                   <input
                     type="text"
                     name="distinctive_signs"
@@ -276,7 +285,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Vêtements portés</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Vêtements portés
+                  </label>
                   <textarea
                     name="clothing_description"
                     value={data.clothing_description}
@@ -298,12 +309,16 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                   <MapPinIcon size={32} className="text-orange-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Lieu et circonstances</h3>
-                <p className="text-gray-500 text-sm">Où et quand la personne a-t-elle été vue pour la dernière fois?</p>
+                <p className="text-gray-500 text-sm">
+                  Où et quand la personne a-t-elle été vue pour la dernière fois?
+                </p>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Dernière localisation connue *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Dernière localisation connue *
+                  </label>
                   <input
                     type="text"
                     name="last_seen_location"
@@ -326,14 +341,18 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
                     >
                       <option value="">Sélectionner une région</option>
-                      {REGIONS.map(region => (
-                        <option key={region} value={region}>{region}</option>
+                      {REGIONS.map((region) => (
+                        <option key={region} value={region}>
+                          {region}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date de disparition *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date de disparition *
+                    </label>
                     <input
                       type="date"
                       name="last_seen_date"
@@ -347,7 +366,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Description des circonstances *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description des circonstances *
+                  </label>
                   <textarea
                     name="description"
                     value={data.description}
@@ -369,7 +390,8 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                     className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
                   />
                   <label htmlFor="is_urgent" className="text-sm text-gray-700">
-                    <span className="font-medium text-red-600">Cas urgent</span> - La personne est en danger immédiat
+                    <span className="font-medium text-red-600">Cas urgent</span> - La personne est
+                    en danger immédiat
                   </label>
                 </div>
               </div>
@@ -384,7 +406,9 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                   <PhoneIcon size={32} className="text-orange-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Informations de contact</h3>
-                <p className="text-gray-500 text-sm">Comment vous contacter si quelqu&apos;un a des informations?</p>
+                <p className="text-gray-500 text-sm">
+                  Comment vous contacter si quelqu&apos;un a des informations?
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -460,7 +484,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onClose, onSuccess }) => {
                 Précédent
               </button>
             )}
-            
+
             {step < 3 ? (
               <button
                 type="button"

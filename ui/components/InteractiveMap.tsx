@@ -17,11 +17,11 @@ declare global {
   }
 }
 
-const InteractiveMap: React.FC<InteractiveMapProps> = ({ 
-  persons, 
-  items, 
-  onSelectPerson, 
-  onSelectItem 
+const InteractiveMap: React.FC<InteractiveMapProps> = ({
+  persons,
+  items,
+  onSelectPerson,
+  onSelectItem,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -34,7 +34,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     showMissing: true,
     showUrgent: true,
     showFound: true,
-    showLost: true
+    showLost: true,
   });
   const [showFilters, setShowFilters] = useState(false);
 
@@ -61,7 +61,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       const clusterDefaultCss = document.createElement('link');
       clusterDefaultCss.rel = 'stylesheet';
-      clusterDefaultCss.href = 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css';
+      clusterDefaultCss.href =
+        'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css';
       document.head.appendChild(clusterDefaultCss);
 
       // Load Leaflet JS
@@ -71,7 +72,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       script.onload = () => {
         // Load MarkerCluster JS after Leaflet
         const clusterScript = document.createElement('script');
-        clusterScript.src = 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js';
+        clusterScript.src =
+          'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js';
         clusterScript.async = true;
         clusterScript.onload = () => setMapLoaded(true);
         document.body.appendChild(clusterScript);
@@ -87,13 +89,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     if (!mapLoaded || !mapRef.current || mapInstanceRef.current) return;
 
     const L = window.L;
-    
+
     // Center on Cameroon
     const map = L.map(mapRef.current).setView([7.3697, 12.3547], 6);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
     mapInstanceRef.current = map;
@@ -107,13 +110,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         let size = 'small';
         if (count > 10) size = 'medium';
         if (count > 50) size = 'large';
-        
+
         return L.divIcon({
           html: `<div class="cluster-icon cluster-${size}">${count}</div>`,
           className: 'custom-cluster-icon',
-          iconSize: L.point(40, 40)
+          iconSize: L.point(40, 40),
         });
-      }
+      },
     });
 
     map.addLayer(markersRef.current);
@@ -194,12 +197,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     // Helper to get coordinates for a region
     const getRegionCoords = (regionName: string) => {
-      const region = CAMEROON_REGIONS.find(r => r.name === regionName);
+      const region = CAMEROON_REGIONS.find((r) => r.name === regionName);
       if (region) {
         // Add some randomness to avoid overlapping markers
         return {
           lat: region.lat + (Math.random() - 0.5) * 0.5,
-          lng: region.lng + (Math.random() - 0.5) * 0.5
+          lng: region.lng + (Math.random() - 0.5) * 0.5,
         };
       }
       return null;
@@ -207,11 +210,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     // Add person markers
     if (filters.showPersons) {
-      persons.forEach(person => {
+      persons.forEach((person) => {
         // Filter by status
         if (person.status === 'found' && !filters.showFound) return;
         if (person.is_urgent && !filters.showUrgent) return;
-        if ((person.status === 'missing' || person.status === 'searching') && !filters.showMissing) return;
+        if ((person.status === 'missing' || person.status === 'searching') && !filters.showMissing)
+          return;
 
         let lat = person.latitude;
         let lng = person.longitude;
@@ -227,8 +231,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           }
         }
 
-        const markerClass = person.is_urgent ? 'marker-urgent' : 
-                           person.status === 'found' ? 'marker-found' : 'marker-missing';
+        const markerClass = person.is_urgent
+          ? 'marker-urgent'
+          : person.status === 'found'
+            ? 'marker-found'
+            : 'marker-missing';
 
         const icon = L.divIcon({
           html: `<div class="custom-marker ${markerClass}" style="width: 36px; height: 36px;">
@@ -239,11 +246,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </div>`,
           className: '',
           iconSize: [36, 36],
-          iconAnchor: [18, 18]
+          iconAnchor: [18, 18],
         });
 
         const marker = L.marker([lat, lng], { icon });
-        
+
         marker.on('click', () => {
           setSelectedMarker({
             id: person.id,
@@ -255,7 +262,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             is_urgent: person.is_urgent,
             photo_url: person.photo_url,
             location: person.last_seen_location,
-            date: person.last_seen_date
+            date: person.last_seen_date,
           });
           if (onSelectPerson) onSelectPerson(person);
         });
@@ -266,7 +273,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     // Add item markers
     if (filters.showItems) {
-      items.forEach(item => {
+      items.forEach((item) => {
         // Filter by status
         if (item.report_type === 'found' && !filters.showFound) return;
         if (item.report_type === 'lost' && !filters.showLost) return;
@@ -285,15 +292,20 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           }
         }
 
-        const markerClass = item.report_type === 'found' ? 'marker-found' : 
-                           item.is_urgent ? 'marker-urgent' : 'marker-lost';
+        const markerClass =
+          item.report_type === 'found'
+            ? 'marker-found'
+            : item.is_urgent
+              ? 'marker-urgent'
+              : 'marker-lost';
 
-        const itemIcon = item.item_type === 'document' ? 
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        const itemIcon =
+          item.item_type === 'document'
+            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
-          </svg>` :
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          </svg>`
+            : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
             <line x1="3" y1="9" x2="21" y2="9"/>
             <line x1="9" y1="21" x2="9" y2="9"/>
@@ -305,11 +317,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </div>`,
           className: '',
           iconSize: [32, 32],
-          iconAnchor: [16, 16]
+          iconAnchor: [16, 16],
         });
 
         const marker = L.marker([lat, lng], { icon });
-        
+
         marker.on('click', () => {
           setSelectedMarker({
             id: item.id,
@@ -321,7 +333,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             is_urgent: item.is_urgent,
             photo_url: item.photo_url,
             location: item.location,
-            date: item.date_lost_found
+            date: item.date_lost_found,
           });
           if (onSelectItem) onSelectItem(item);
         });
@@ -336,25 +348,34 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getStatusLabel = (status: string, type: string) => {
     if (type === 'person') {
       switch (status) {
-        case 'missing': return 'Disparu(e)';
-        case 'urgent': return 'Urgent';
-        case 'found': return 'Retrouvé(e)';
-        case 'searching': return 'Recherche en cours';
-        default: return status;
+        case 'missing':
+          return 'Disparu(e)';
+        case 'urgent':
+          return 'Urgent';
+        case 'found':
+          return 'Retrouvé(e)';
+        case 'searching':
+          return 'Recherche en cours';
+        default:
+          return status;
       }
     } else {
       switch (status) {
-        case 'lost': return 'Perdu';
-        case 'found': return 'Trouvé';
-        case 'claimed': return 'Réclamé';
-        default: return status;
+        case 'lost':
+          return 'Perdu';
+        case 'found':
+          return 'Trouvé';
+        case 'claimed':
+          return 'Réclamé';
+        default:
+          return status;
       }
     }
   };
@@ -366,9 +387,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Carte des signalements
           </h2>
-          <p className="text-gray-600">
-            Visualisez tous les cas signalés au Cameroun
-          </p>
+          <p className="text-gray-600">Visualisez tous les cas signalés au Cameroun</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -413,7 +432,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showPersons}
-                    onChange={(e) => setFilters(f => ({ ...f, showPersons: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showPersons: e.target.checked }))}
                     className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
                   />
                   <span className="text-sm text-gray-700">Personnes</span>
@@ -422,7 +441,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showItems}
-                    onChange={(e) => setFilters(f => ({ ...f, showItems: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showItems: e.target.checked }))}
                     className="w-4 h-4 text-purple-500 rounded focus:ring-purple-500"
                   />
                   <span className="text-sm text-gray-700">Objets/Documents</span>
@@ -432,7 +451,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showMissing}
-                    onChange={(e) => setFilters(f => ({ ...f, showMissing: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showMissing: e.target.checked }))}
                     className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
                   />
                   <span className="text-sm text-gray-700">Disparus</span>
@@ -441,7 +460,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showUrgent}
-                    onChange={(e) => setFilters(f => ({ ...f, showUrgent: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showUrgent: e.target.checked }))}
                     className="w-4 h-4 text-red-500 rounded focus:ring-red-500"
                   />
                   <span className="text-sm text-gray-700">Urgents</span>
@@ -450,7 +469,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showFound}
-                    onChange={(e) => setFilters(f => ({ ...f, showFound: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showFound: e.target.checked }))}
                     className="w-4 h-4 text-green-500 rounded focus:ring-green-500"
                   />
                   <span className="text-sm text-gray-700">Retrouvés</span>
@@ -459,7 +478,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <input
                     type="checkbox"
                     checked={filters.showLost}
-                    onChange={(e) => setFilters(f => ({ ...f, showLost: e.target.checked }))}
+                    onChange={(e) => setFilters((f) => ({ ...f, showLost: e.target.checked }))}
                     className="w-4 h-4 text-blue-500 rounded focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-700">Perdus</span>
@@ -470,11 +489,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
           {/* Map Container */}
           <div className="relative">
-            <div 
-              ref={mapRef} 
-              className="w-full h-[500px] z-0"
-              style={{ background: '#e5e7eb' }}
-            >
+            <div ref={mapRef} className="w-full h-[500px] z-0" style={{ background: '#e5e7eb' }}>
               {!mapLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
@@ -494,11 +509,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                 >
                   <XIcon size={16} className="text-gray-500" />
                 </button>
-                
+
                 <div className="flex gap-3">
                   {selectedMarker.photo_url && (
-                    <img 
-                      src={selectedMarker.photo_url} 
+                    <img
+                      src={selectedMarker.photo_url}
                       alt={selectedMarker.title}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
@@ -510,11 +525,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                       <span className="truncate">{selectedMarker.location}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-2">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        selectedMarker.is_urgent ? 'bg-red-100 text-red-700' :
-                        selectedMarker.status === 'found' ? 'bg-green-100 text-green-700' :
-                        'bg-orange-100 text-orange-700'
-                      }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          selectedMarker.is_urgent
+                            ? 'bg-red-100 text-red-700'
+                            : selectedMarker.status === 'found'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-orange-100 text-orange-700'
+                        }`}
+                      >
                         {getStatusLabel(selectedMarker.status, selectedMarker.type)}
                       </span>
                       <span className="text-xs text-gray-500">
@@ -531,23 +550,34 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <div className="p-4 bg-gray-50 border-t border-gray-100">
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="text-center">
-                <div className="font-bold text-2xl text-orange-600">{persons.filter(p => p.status !== 'found').length}</div>
+                <div className="font-bold text-2xl text-orange-600">
+                  {persons.filter((p) => p.status !== 'found').length}
+                </div>
                 <div className="text-gray-500">Personnes disparues</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-red-600">{persons.filter(p => p.is_urgent && p.status !== 'found').length}</div>
+                <div className="font-bold text-2xl text-red-600">
+                  {persons.filter((p) => p.is_urgent && p.status !== 'found').length}
+                </div>
                 <div className="text-gray-500">Cas urgents</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-blue-600">{items.filter(i => i.report_type === 'lost' && i.status !== 'claimed').length}</div>
+                <div className="font-bold text-2xl text-blue-600">
+                  {items.filter((i) => i.report_type === 'lost' && i.status !== 'claimed').length}
+                </div>
                 <div className="text-gray-500">Objets perdus</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-purple-600">{items.filter(i => i.report_type === 'found' && i.status !== 'claimed').length}</div>
+                <div className="font-bold text-2xl text-purple-600">
+                  {items.filter((i) => i.report_type === 'found' && i.status !== 'claimed').length}
+                </div>
                 <div className="text-gray-500">Objets trouvés</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-green-600">{persons.filter(p => p.status === 'found').length + items.filter(i => i.status === 'claimed').length}</div>
+                <div className="font-bold text-2xl text-green-600">
+                  {persons.filter((p) => p.status === 'found').length +
+                    items.filter((i) => i.status === 'claimed').length}
+                </div>
                 <div className="text-gray-500">Cas résolus</div>
               </div>
             </div>

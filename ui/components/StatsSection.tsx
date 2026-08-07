@@ -14,7 +14,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
   totalReports,
   missingCount,
   foundCount,
-  urgentCount
+  urgentCount,
 }) => {
   return (
     <section className="bg-gray-100 py-6">

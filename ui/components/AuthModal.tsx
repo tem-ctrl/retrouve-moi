@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 
-import { XIcon, UserIcon, PhoneIcon, MailIcon, EyeIcon, EyeOffIcon, CheckCircleIcon, LockIcon } from './icons/Icons';
+import {
+  XIcon,
+  UserIcon,
+  PhoneIcon,
+  MailIcon,
+  EyeIcon,
+  EyeOffIcon,
+  CheckCircleIcon,
+  LockIcon,
+} from './icons/Icons';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -52,9 +61,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     const { error } = await signIn(email, password);
 
     if (error) {
-      setError(error.message === 'Invalid login credentials' 
-        ? 'Email ou mot de passe incorrect' 
-        : error.message);
+      setError(
+        error.message === 'Invalid login credentials'
+          ? 'Email ou mot de passe incorrect'
+          : error.message,
+      );
     } else {
       onClose();
       resetForm();
@@ -80,7 +91,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
       return;
     }
 
-    const response = await signUp(email, password, passwordConfirmation, full_name, phone, avatar || undefined);
+    const response = await signUp(
+      email,
+      password,
+      passwordConfirmation,
+      full_name,
+      phone,
+      avatar || undefined,
+    );
 
     if (response.error) {
       setError(response.error.message);
@@ -109,7 +127,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     const { error } = await signInWithPhone(formattedPhone);
 
     if (error) {
-      setError('Erreur lors de l\'envoi du code. Vérifiez le numéro.');
+      setError("Erreur lors de l'envoi du code. Vérifiez le numéro.");
     } else {
       setPhone(formattedPhone);
       setMode('otp');
@@ -147,7 +165,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           >
             <XIcon size={20} />
           </button>
-          
+
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
               <UserIcon size={28} className="text-orange-400" />
@@ -192,7 +210,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <div className="relative">
-                  <MailIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <MailIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="email"
                     value={email}
@@ -207,7 +228,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
                 <div className="relative">
-                  <LockIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <LockIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
@@ -260,7 +284,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                 <label htmlFor="avatar-input" className="cursor-pointer">
                   <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center hover:shadow-lg hover:scale-105 transition-all">
                     {avatarPreview ? (
-                      <img src={avatarPreview} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+                      <img
+                        src={avatarPreview}
+                        alt="Avatar"
+                        className="w-full h-full rounded-full object-cover"
+                      />
                     ) : (
                       <UserIcon size={40} className="text-white" />
                     )}
@@ -270,7 +298,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
                 <div className="relative">
-                  <UserIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <UserIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="text"
                     value={full_name}
@@ -285,7 +316,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <div className="relative">
-                  <MailIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <MailIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="email"
                     value={email}
@@ -300,7 +334,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
                 <div className="relative">
-                  <PhoneIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <PhoneIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="tel"
                     value={phone}
@@ -315,7 +352,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
                 <div className="relative">
-                  <LockIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <LockIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
@@ -336,9 +376,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirmer le mot de passe
+                </label>
                 <div className="relative">
-                  <LockIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <LockIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type={showPasswordConfirmation ? 'text' : 'password'}
                     value={passwordConfirmation}
@@ -371,9 +416,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           {mode === 'phone' && (
             <form onSubmit={handlePhoneLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de téléphone</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Numéro de téléphone
+                </label>
                 <div className="relative">
-                  <PhoneIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <PhoneIcon
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="tel"
                     value={phone}
@@ -400,7 +450,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           {mode === 'otp' && (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Code de vérification</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Code de vérification
+                </label>
                 <input
                   type="text"
                   value={otp}
@@ -410,9 +462,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                   maxLength={6}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-center text-2xl tracking-widest"
                 />
-                <p className="text-xs text-gray-500 mt-1 text-center">
-                  Code envoyé au {phone}
-                </p>
+                <p className="text-xs text-gray-500 mt-1 text-center">Code envoyé au {phone}</p>
               </div>
 
               <button

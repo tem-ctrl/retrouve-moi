@@ -22,7 +22,7 @@ const REGIONS = [
   'Nord-Ouest',
   'Ouest',
   'Sud',
-  'Sud-Ouest'
+  'Sud-Ouest',
 ];
 
 const PERSON_STATUSES = [
@@ -30,7 +30,7 @@ const PERSON_STATUSES = [
   { value: 'missing', label: 'Disparu' },
   { value: 'searching', label: 'En cours de recherche' },
   { value: 'urgent', label: 'Urgent' },
-  { value: 'found', label: 'Retrouvé' }
+  { value: 'found', label: 'Retrouvé' },
 ];
 
 const GENDERS = [
@@ -38,7 +38,7 @@ const GENDERS = [
   { value: 'Homme', label: 'Homme' },
   { value: 'Femme', label: 'Femme' },
   { value: 'Fille', label: 'Fille' },
-  { value: 'Garçon', label: 'Garçon' }
+  { value: 'Garçon', label: 'Garçon' },
 ];
 
 const item_typeS = [
@@ -47,13 +47,13 @@ const item_typeS = [
   { value: 'object', label: 'Objet' },
   { value: 'animal', label: 'Animal' },
   { value: 'vehicle', label: 'Véhicule' },
-  { value: 'other', label: 'Autre' }
+  { value: 'other', label: 'Autre' },
 ];
 
 const report_typeS = [
   { value: '', label: 'Perdu & Trouvé' },
   { value: 'lost', label: 'Perdu' },
-  { value: 'found', label: 'Trouvé' }
+  { value: 'found', label: 'Trouvé' },
 ];
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
@@ -61,7 +61,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   onFilterChange,
   showFilters,
   onToggleFilters,
-  viewMode = 'all'
+  viewMode = 'all',
 }) => {
   const handleChange = (key: keyof FilterState, value: string) => {
     onFilterChange({ ...filters, [key]: value });
@@ -95,10 +95,19 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Search Input */}
           <div className="relative">
-            <SearchIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <SearchIcon
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
             <input
               type="text"
-              placeholder={viewMode === 'items' ? "Rechercher un objet..." : viewMode === 'persons' ? "Rechercher une personne..." : "Rechercher..."}
+              placeholder={
+                viewMode === 'items'
+                  ? 'Rechercher un objet...'
+                  : viewMode === 'persons'
+                    ? 'Rechercher une personne...'
+                    : 'Rechercher...'
+              }
               value={filters.search}
               onChange={(e) => handleChange('search', e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"

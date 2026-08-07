@@ -1,0 +1,10 @@
+.next
+out
+build
+coverage
+test-results
+playwright-report
+node_modules
+yarn.lock
+public/mockServiceWorker.js
+next-env.d.ts

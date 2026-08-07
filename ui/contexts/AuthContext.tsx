@@ -20,7 +20,14 @@ interface AuthContextType {
   session: AuthSession | null;
   profile: User | null;
   loading: boolean;
-  signUp: (email: string, password: string, passwordConfirmation: string, full_name: string, phone?: string, avatar?: File) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+    full_name: string,
+    phone?: string,
+    avatar?: File,
+  ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithPhone: (phone: string) => Promise<{ error: Error | null }>;
   verifyOtp: (phone: string, token: string) => Promise<{ error: Error | null }>;
@@ -68,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check if user is logged in from localStorage
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('authToken');
-    
+
     if (storedUser && storedToken) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -81,11 +88,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('authToken');
       }
     }
-    
+
     setLoading(false);
   }, []);
 
-  const signUp = async (email: string, password: string, passwordConfirmation: string, full_name: string, phone?: string, avatar?: File) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+    full_name: string,
+    phone?: string,
+    avatar?: File,
+  ) => {
     try {
       const formData = new FormData();
       formData.append('email', email);
@@ -102,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const response = await fetch(buildApiEndpoint(API_ROUTES.AUTH.SIGNUP), {
         method: 'POST',
-        body: formData
+        body: formData,
       });
 
       if (!response.ok) {
@@ -111,14 +125,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const data = await response.json();
-      
+
       // Store user and token
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('authToken', data.token);
-      
+
       setUser(data.user);
       setSession({ token: data.token });
-      
+
       if (data.user.id) {
         await fetchProfile(data.user.id);
       }
@@ -134,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await fetch(buildApiEndpoint(API_ROUTES.AUTH.SIGNIN), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
@@ -143,14 +157,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const data = await response.json();
-      
+
       // Store user and token
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('authToken', data.token);
-      
+
       setUser(data.user);
       setSession({ token: data.token });
-      
+
       if (data.user.id) {
         await fetchProfile(data.user.id);
       }
@@ -192,7 +206,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await fetch(buildApiEndpoint(API_ROUTES.USERS.DETAILS(user.id)), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
+        body: JSON.stringify(updates),
       });
 
       if (!response.ok) {
@@ -219,7 +233,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         verifyOtp,
         signOut,
         updateProfile,
-        refreshProfile
+        refreshProfile,
       }}
     >
       {children}

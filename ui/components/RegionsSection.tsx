@@ -24,7 +24,7 @@ const REGIONS_DATA = [
 
 const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick }) => {
   const getRegionCount = (regionName: string) => {
-    return persons.filter(p => p.region === regionName && p.status !== 'found').length;
+    return persons.filter((p) => p.region === regionName && p.status !== 'found').length;
   };
 
   return (
@@ -40,7 +40,7 @@ const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick 
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {REGIONS_DATA.map(region => {
+          {REGIONS_DATA.map((region) => {
             const count = getRegionCount(region.name);
             return (
               <button
@@ -48,7 +48,9 @@ const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick 
                 onClick={() => onRegionClick(region.name)}
                 className="group relative bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-all hover:shadow-md"
               >
-                <div className={`w-10 h-10 ${region.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                <div
+                  className={`w-10 h-10 ${region.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}
+                >
                   <MapPinIcon size={20} className="text-white" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1">{region.name}</h3>

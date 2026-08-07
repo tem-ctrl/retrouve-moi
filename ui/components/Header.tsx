@@ -2,7 +2,15 @@ import React from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 
-import { HeartIcon, BellIcon, MenuIcon, PlusIcon, UserIcon, ChevronDownIcon, LogOutIcon } from './icons/Icons';
+import {
+  HeartIcon,
+  BellIcon,
+  MenuIcon,
+  PlusIcon,
+  UserIcon,
+  ChevronDownIcon,
+  LogOutIcon,
+} from './icons/Icons';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -11,7 +19,12 @@ interface HeaderProps {
   onProfileClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick, onReportClick, onAuthClick, onProfileClick }) => {
+const Header: React.FC<HeaderProps> = ({
+  onMenuClick,
+  onReportClick,
+  onAuthClick,
+  onProfileClick,
+}) => {
   const { user, profile, loading, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 
@@ -43,15 +56,15 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, onReportClick, onAuthClick
               <span className="hidden sm:inline">Signaler une disparition</span>
               <span className="sm:hidden">Signaler</span>
             </button>
-            
+
             <button className="p-2 hover:bg-white/10 rounded-lg transition-colors relative">
               <BellIcon size={22} />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
 
             {/* User Menu */}
-            {!loading && (
-              user ? (
+            {!loading &&
+              (user ? (
                 <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
@@ -65,18 +78,20 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, onReportClick, onAuthClick
                       />
                     ) : (
                       <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-sm font-bold">
-                        {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                        {profile?.full_name?.charAt(0)?.toUpperCase() ||
+                          user.email?.charAt(0)?.toUpperCase() ||
+                          'U'}
                       </div>
                     )}
-                    <ChevronDownIcon size={16} className={`hidden sm:block transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+                    <ChevronDownIcon
+                      size={16}
+                      className={`hidden sm:block transition-transform ${showUserMenu ? 'rotate-180' : ''}`}
+                    />
                   </button>
 
                   {showUserMenu && (
                     <>
-                      <div 
-                        className="fixed inset-0 z-10"
-                        onClick={() => setShowUserMenu(false)}
-                      />
+                      <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
                       <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-20">
                         <div className="px-4 py-2 border-b border-gray-100">
                           <p className="font-medium text-gray-900 truncate">
@@ -116,10 +131,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, onReportClick, onAuthClick
                   <UserIcon size={18} />
                   <span className="hidden sm:inline">Connexion</span>
                 </button>
-              )
-            )}
-            
-            <button 
+              ))}
+
+            <button
               onClick={onMenuClick}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors lg:hidden"
             >

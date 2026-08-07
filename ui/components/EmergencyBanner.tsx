@@ -12,24 +12,15 @@ const EmergencyBanner: React.FC = () => {
             <span className="font-medium">En cas d&apos;urgence:</span>
           </div>
           <div className="flex items-center gap-4">
-            <a 
-              href="tel:117" 
-              className="flex items-center gap-1 hover:underline"
-            >
+            <a href="tel:117" className="flex items-center gap-1 hover:underline">
               <PhoneIcon size={14} />
               Police: 117
             </a>
-            <a 
-              href="tel:113" 
-              className="flex items-center gap-1 hover:underline"
-            >
+            <a href="tel:113" className="flex items-center gap-1 hover:underline">
               <PhoneIcon size={14} />
               Gendarmerie: 113
             </a>
-            <a 
-              href="tel:118" 
-              className="flex items-center gap-1 hover:underline"
-            >
+            <a href="tel:118" className="flex items-center gap-1 hover:underline">
               <PhoneIcon size={14} />
               Pompiers: 118
             </a>
