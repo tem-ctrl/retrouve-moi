@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   compress: true,
   images: {
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
         protocol: apiUrl.protocol.replace(':', '') as 'http' | 'https',
@@ -20,11 +21,6 @@ const nextConfig: NextConfig = {
         hostname: 'localhost',
         pathname: '/uploads/**',
         port: '8000',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
       },
     ],
   },
