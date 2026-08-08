@@ -7,31 +7,35 @@ test('browse, filter, view a detail, and submit a missing-person report', async 
   await page.goto('/');
   await expect(page).toHaveTitle(/Signalement Disparitions/);
 
-  // Browse & filter listings (scoped to the main listing grid — the urgent
-  // cases section above it also renders Paul Tassong, unfiltered, since he's
-  // flagged is_urgent)
+  // Browse via the dedicated /missing-persons listing route (see
+  // refactoring.md Phase 3.8 — the inline grid that used to live on Home
+  // was replaced by this route).
+  await page.getByRole('button', { name: 'Parcourir les personnes' }).click();
+  await expect(page).toHaveURL(/\/missing-persons$/);
+
   const listings = page.getByRole('main');
   await page.getByRole('button', { name: 'Recherche avancée' }).click();
-  await page.getByPlaceholder('Rechercher...').fill('Tassong');
+  await page.getByPlaceholder('Rechercher une personne...').fill('Tassong');
 
   await expect(listings.getByRole('heading', { name: 'Paul Tassong', level: 3 })).toBeVisible();
   await expect(listings.getByRole('heading', { name: 'Aïcha Bello', level: 3 })).not.toBeVisible();
 
-  // Open a person's detail view
+  // Open a person's detail view — a real, shareable /missing-persons/[id]
+  // URL rendered as an intercepted modal-over-grid (Phase 3.5).
   await listings.getByRole('button', { name: 'Voir détails' }).click();
+  await expect(page).toHaveURL(/\/missing-persons\/\d+$/);
   await expect(page.getByRole('heading', { name: 'Paul Tassong', level: 1 })).toBeVisible();
   await expect(page.getByText('Détails du signalement')).toBeVisible();
 
-  // Close the detail modal
-  await page
-    .getByRole('heading', { name: 'Détails du signalement' })
-    .locator('xpath=following-sibling::button')
-    .click();
+  // Close the detail modal — pops back to /missing-persons (filters intact,
+  // since this is a real history back(), not a fresh navigation)
+  await page.getByText('Détails du signalement').locator('xpath=following-sibling::button').click();
+  await expect(page).toHaveURL(/\/missing-persons\?search=Tassong$/);
   await expect(page.getByText('Détails du signalement')).not.toBeVisible();
 
   // Open the report form from the header — lands on /report, person tab
   // active by default (see refactoring.md Phase 3.4).
-  await page.getByRole('banner').getByRole('button', { name: 'Signaler une disparition' }).click();
+  await page.getByRole('banner').getByRole('link', { name: 'Signaler une disparition' }).click();
   await expect(page).toHaveURL(/\/report$/);
   await expect(page.getByRole('button', { name: 'Personne disparue' })).toBeVisible();
 

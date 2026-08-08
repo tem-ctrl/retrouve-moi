@@ -1,3 +1,4 @@
+import { FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
 
 const buildQueryString = (params?: Filters): string => {
@@ -84,3 +85,26 @@ export const ROUTES = {
   profile: '/profile',
   login: '/login',
 };
+
+/**
+ * Shared by /missing-persons and /lost-items (see refactoring.md Phase 3.8)
+ * to keep filters in the URL — reads every possible FilterState field
+ * regardless of which resource's page is calling it; each page only
+ * forwards the subset relevant to its own API filters.
+ */
+export const filtersFromSearchParams = (searchParams: URLSearchParams): FilterState => ({
+  search: searchParams.get('search') ?? '',
+  region: searchParams.get('region') ?? '',
+  status: searchParams.get('status') ?? '',
+  gender: searchParams.get('gender') ?? '',
+  item_type: searchParams.get('item_type') ?? '',
+  report_type: searchParams.get('report_type') ?? '',
+});
+
+// Drops blank fields before building the query string — SearchFilters hands
+// back every FilterState field on each change, and a blank one showing up
+// as e.g. `?status=` in the URL would be noise.
+export const buildFilterQueryString = (filters: FilterState): string =>
+  buildQueryString(
+    Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) as Filters,
+  );

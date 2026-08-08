@@ -1,7 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { ROUTES } from '@/lib/routes';
 
 import {
   HeartIcon,
@@ -15,17 +17,9 @@ import {
 
 interface HeaderProps {
   onMenuClick: () => void;
-  onReportClick: () => void;
-  onAuthClick: () => void;
-  onProfileClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  onMenuClick,
-  onReportClick,
-  onAuthClick,
-  onProfileClick,
-}) => {
+const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, profile, loading, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 
@@ -49,14 +43,14 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={onReportClick}
+            <Link
+              href={ROUTES.report()}
               className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg font-medium transition-colors text-sm"
             >
               <PlusIcon size={18} />
               <span className="hidden sm:inline">Signaler une disparition</span>
               <span className="sm:hidden">Signaler</span>
-            </button>
+            </Link>
 
             <button className="p-2 hover:bg-white/10 rounded-lg transition-colors relative">
               <BellIcon size={22} />
@@ -102,16 +96,14 @@ const Header: React.FC<HeaderProps> = ({
                           </p>
                           <p className="text-sm text-gray-500 truncate">{user.email}</p>
                         </div>
-                        <button
-                          onClick={() => {
-                            setShowUserMenu(false);
-                            onProfileClick();
-                          }}
+                        <Link
+                          href={ROUTES.profile}
+                          onClick={() => setShowUserMenu(false)}
                           className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                         >
                           <UserIcon size={18} />
                           Mon profil
-                        </button>
+                        </Link>
                         <button
                           onClick={() => {
                             setShowUserMenu(false);
@@ -127,13 +119,13 @@ const Header: React.FC<HeaderProps> = ({
                   )}
                 </div>
               ) : (
-                <button
-                  onClick={onAuthClick}
+                <Link
+                  href={ROUTES.login}
                   className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-sm"
                 >
                   <UserIcon size={18} />
                   <span className="hidden sm:inline">Connexion</span>
-                </button>
+                </Link>
               ))}
 
             <button
