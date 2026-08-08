@@ -48,7 +48,7 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 - App Router with a single route (`app/page.tsx` = `/`); most "pages" (profile, forms, detail views) are actually client-side modal/section toggles within `Home`, not separate routes.
 - All data fetching goes through `lib/api-client.ts` (`apiClient.*` helpers) which targets `NEXT_PUBLIC_API_URL` (defaults to `https://api.retrouve-moi.com/api`). Endpoint paths are centralized in `lib/routes.ts` (`API_ROUTES`) — add new endpoints there rather than hardcoding paths.
 - `extractDataArray()` in `lib/api-client.ts` normalizes API responses that may come back as a bare array, or wrapped in `data`/`results`/`items` — reuse it for any new list-fetching code instead of assuming a response shape.
-- Auth state (`contexts/AuthContext.tsx`) is hand-rolled: token + user stored in `localStorage`, no cookies/session, manually rehydrated on mount. `contexts/AppContext.tsx` is a separate, minimal context for UI-only state (sidebar).
+- Auth state (`contexts/AuthContext.tsx`) is hand-rolled: token + user stored in `localStorage`, no cookies/session, manually rehydrated on mount.
 - `components/ui/` holds shadcn/ui-style primitives (Radix-based) plus a few domain components that don't quite fit ui-primitive naming (`ItemCard`, `PersonCard`, `SearchFilters`, `StatsCard`, `StatusBadge`) — check there before adding a new generic UI component.
 - Domain components (`Header`, `HeroSection`, `ReportForm`, `ItemReportForm`, modals, etc.) live directly under `components/`.
 - UI copy is in French; keep new user-facing strings consistent with that.
