@@ -7,6 +7,10 @@ import { LostItem } from '@/types';
 import { ApiCollection } from '@/types/api';
 import { Filters } from '@/types/api-routes';
 
+// Stable reference so consumers depending on `data` in an effect/memo don't
+// see a new array identity on every render while loading.
+const EMPTY_LOST_ITEMS: LostItem[] = [];
+
 /**
  * Pass `null` (not `undefined`) to skip fetching entirely — matching SWR's
  * own null-key-means-skip convention. `undefined`/omitted still means
@@ -21,5 +25,5 @@ export function useLostItems(filters?: Filters | null) {
     () => apiFetch<ApiCollection<LostItem>>(API_ROUTES.lostItems.collection(filters ?? undefined)),
   );
 
-  return { data: data?.data ?? [], error, isLoading, mutate };
+  return { data: data?.data ?? EMPTY_LOST_ITEMS, error, isLoading, mutate };
 }

@@ -7,6 +7,10 @@ import { MissingPerson } from '@/types';
 import { ApiCollection } from '@/types/api';
 import { Filters } from '@/types/api-routes';
 
+// Stable reference so consumers depending on `data` in an effect/memo don't
+// see a new array identity on every render while loading.
+const EMPTY_MISSING_PERSONS: MissingPerson[] = [];
+
 /**
  * Pass `null` (not `undefined`) to skip fetching entirely — e.g. a
  * user-scoped list before the user is known — matching SWR's own
@@ -25,5 +29,5 @@ export function useMissingPersons(filters?: Filters | null) {
       ),
   );
 
-  return { data: data?.data ?? [], error, isLoading, mutate };
+  return { data: data?.data ?? EMPTY_MISSING_PERSONS, error, isLoading, mutate };
 }

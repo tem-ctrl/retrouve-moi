@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -26,6 +26,7 @@ import UrgentCasesSection from '@/components/UrgentCasesSection';
 import { useLostItems } from '@/hooks/api/useLostItems';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { MissingPerson, LostItem, FilterState } from '@/types';
+import { Filters } from '@/types/api-routes';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
@@ -59,64 +60,28 @@ export default function Home() {
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
-  // Compute filtered persons based on search and filters
-  const filteredPersons = useMemo(() => {
-    let result = [...persons];
-
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.full_name.toLowerCase().includes(searchLower) ||
-          p.last_seen_location.toLowerCase().includes(searchLower) ||
-          p.description?.toLowerCase().includes(searchLower),
-      );
-    }
-
-    if (filters.region) {
-      result = result.filter((p) => p.region === filters.region);
-    }
-
-    if (filters.status) {
-      result = result.filter((p) => p.status === filters.status);
-    }
-
-    if (filters.gender) {
-      result = result.filter((p) => p.gender === filters.gender);
-    }
-
-    return result;
-  }, [filters, persons]);
-
-  // Compute filtered items based on search and filters
-  const filteredItems = useMemo(() => {
-    let result = [...items];
-
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      result = result.filter(
-        (i) =>
-          i.item_name.toLowerCase().includes(searchLower) ||
-          i.location.toLowerCase().includes(searchLower) ||
-          i.description?.toLowerCase().includes(searchLower) ||
-          i.item_category.toLowerCase().includes(searchLower),
-      );
-    }
-
-    if (filters.region) {
-      result = result.filter((i) => i.region === filters.region);
-    }
-
-    if (filters.item_type) {
-      result = result.filter((i) => i.item_type === filters.item_type);
-    }
-
-    if (filters.report_type) {
-      result = result.filter((i) => i.report_type === filters.report_type);
-    }
-
-    return result;
-  }, [filters, items]);
+  // Server-side filtered listing data for the "Tous les signalements" grid
+  // only — deliberately separate from the unfiltered `persons`/`items`
+  // above, which power stats/map/urgent-cases/regions and must stay
+  // unaffected by the user's search filters. When no filter is active these
+  // resolve to the same SWR key as the unfiltered fetch above, so SWR's
+  // cache dedupes them into a single request rather than two.
+  const personListFilters: Filters = {
+    limit: 30,
+    ...(filters.search && { search: filters.search }),
+    ...(filters.region && { region: filters.region }),
+    ...(filters.status && { status: filters.status }),
+    ...(filters.gender && { gender: filters.gender }),
+  };
+  const itemListFilters: Filters = {
+    limit: 30,
+    ...(filters.search && { search: filters.search }),
+    ...(filters.region && { region: filters.region }),
+    ...(filters.item_type && { item_type: filters.item_type }),
+    ...(filters.report_type && { report_type: filters.report_type }),
+  };
+  const { data: filteredPersons } = useMissingPersons(personListFilters);
+  const { data: filteredItems } = useLostItems(itemListFilters);
 
   // Calculate statistics
   const stats = {
@@ -131,13 +96,17 @@ export default function Home() {
     claimedItems: items.filter((i) => i.status === 'claimed').length,
   };
 
-  const handleViewPersonDetails = (person: MissingPerson) => {
+  // Stable references: InteractiveMap's marker-rebuild effect depends on
+  // these, and rebuilds every marker (with position jitter) whenever they
+  // change identity — an inline function here would re-run that effect on
+  // every render of Home.
+  const handleViewPersonDetails = useCallback((person: MissingPerson) => {
     setSelectedPerson(person);
-  };
+  }, []);
 
-  const handleViewItemDetails = (item: LostItem) => {
+  const handleViewItemDetails = useCallback((item: LostItem) => {
     setSelectedItem(item);
-  };
+  }, []);
 
   const handleContact = (phone: string) => {
     window.location.href = `tel:${phone}`;
