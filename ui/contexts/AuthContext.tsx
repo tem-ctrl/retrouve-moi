@@ -11,20 +11,11 @@ import {
   setStoredSession,
 } from '@/lib/auth-storage';
 import { API_ROUTES } from '@/lib/routes';
-import { User } from '@/types';
-
-interface AuthUser {
-  id: number;
-  email: string;
-}
-
-interface AuthSession {
-  token: string;
-}
+import { AuthUser, Session, User } from '@/types';
 
 interface AuthContextType {
   user: AuthUser | null;
-  session: AuthSession | null;
+  session: Session | null;
   profile: User | null;
   loading: boolean;
   signUp: (
@@ -54,7 +45,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [session, setSession] = useState<AuthSession | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   // Reactively derived from `user` — no manual fetch-after-sign-in needed:
   // useUser(undefined) is a no-op (see hooks/api/useUser), so this also
