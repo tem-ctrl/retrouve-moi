@@ -57,6 +57,9 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
     headers.set('Content-Type', 'application/json');
   }
 
+  // Note: sending this doesn't make requests protected yet — most API
+  // routes aren't behind auth:sanctum or ownership checks. See the
+  // TODO(auth) block in api/routes/api.php.
   const token = getAuthToken();
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
