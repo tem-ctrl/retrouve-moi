@@ -3,6 +3,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { buildApiEndpoint } from '@/lib/api-client';
+import {
+  clearStoredSession,
+  getStoredToken,
+  getStoredUser,
+  setStoredSession,
+} from '@/lib/auth-storage';
 import { API_ROUTES } from '@/lib/routes';
 import { User } from '@/types';
 
@@ -72,21 +78,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Check if user is logged in from localStorage
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('authToken');
+    const storedUser = getStoredUser();
+    const storedToken = getStoredToken();
 
     if (storedUser && storedToken) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setSession({ token: storedToken });
-        fetchProfile(parsedUser.id);
-      } catch (error) {
-        console.error('Error restoring session:', error);
-        localStorage.removeItem('user');
-        localStorage.removeItem('authToken');
-      }
+      setUser(storedUser);
+      setSession({ token: storedToken });
+      fetchProfile(storedUser.id);
+    } else {
+      // Covers both "nothing stored" and "corrupted/partial state" (e.g. a
+      // token with no matching user) — leaves storage coherent either way.
+      clearStoredSession();
     }
 
     setLoading(false);
@@ -126,9 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const data = await response.json();
 
-      // Store user and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('authToken', data.token);
+      setStoredSession(data.user, data.token);
 
       setUser(data.user);
       setSession({ token: data.token });
@@ -158,9 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const data = await response.json();
 
-      // Store user and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('authToken', data.token);
+      setStoredSession(data.user, data.token);
 
       setUser(data.user);
       setSession({ token: data.token });
@@ -194,8 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Error during sign out:', error);
     }
 
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
+    clearStoredSession();
     setUser(null);
     setSession(null);
     setProfile(null);
