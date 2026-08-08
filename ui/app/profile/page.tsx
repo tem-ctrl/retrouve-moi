@@ -30,7 +30,7 @@ export default function Profile() {
   }
 
   const handleViewPerson = (person: MissingPerson) => {
-    router.push(`${ROUTES.home}?person=${person.id}`);
+    router.push(ROUTES.missingPersons.byId(person.id));
   };
 
   return <ProfilePage onClose={() => router.push(ROUTES.home)} onViewPerson={handleViewPerson} />;

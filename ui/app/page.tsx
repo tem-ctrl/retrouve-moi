@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useRef, useCallback, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState, useRef, useCallback } from 'react';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -12,9 +12,7 @@ import HeroSection from '@/components/HeroSection';
 import HowItWorksSection from '@/components/HowItWorksSection';
 import { UserIcon, PackageIcon, MapIcon, GridIcon } from '@/components/icons/Icons';
 import InteractiveMap from '@/components/InteractiveMap';
-import ItemDetailModal from '@/components/ItemDetailModal';
 import MobileMenu from '@/components/MobileMenu';
-import PersonDetailModal from '@/components/PersonDetailModal';
 import RegionsSection from '@/components/RegionsSection';
 import ItemCard from '@/components/ui/ItemCard';
 import PersonCard from '@/components/ui/PersonCard';
@@ -22,7 +20,6 @@ import SearchFilters from '@/components/ui/SearchFilters';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
 import { useLostItems } from '@/hooks/api/useLostItems';
 import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
-import { useMissingPerson } from '@/hooks/api/useMissingPerson';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
 import { ROUTES } from '@/lib/routes';
@@ -31,26 +28,11 @@ import { Filters } from '@/types/api-routes';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
-// useSearchParams() below requires a Suspense boundary during static
-// prerendering — this thin wrapper is the default export so the page can
-// still statically prerender everything that doesn't depend on the
-// `?person=` query param.
 export default function Home() {
-  return (
-    <Suspense fallback={null}>
-      <HomeContent />
-    </Suspense>
-  );
-}
-
-function HomeContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { data: persons, isLoading: personsLoading } = useMissingPersons({ limit: 30 });
   const { data: items, isLoading: itemsLoading } = useLostItems({ limit: 30 });
   const loading = personsLoading || itemsLoading;
-  const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
-  const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -66,15 +48,6 @@ function HomeContent() {
 
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
-
-  // Opens a person's detail modal via URL (?person=<id>) — used when
-  // arriving from /profile's report list, a separate route from Home's own
-  // selectedPerson state. See app/profile/page.tsx's handleViewPerson.
-  // Derived directly at render time (not synced into state via an effect)
-  // so it falls away cleanly once the query param is cleared on close.
-  const personIdFromQuery = searchParams.get('person');
-  const { data: personFromQuery } = useMissingPerson(personIdFromQuery ?? undefined);
-  const displayedPerson = selectedPerson ?? personFromQuery ?? null;
 
   // Server-side filtered, paginated listing data for the "Tous les
   // signalements" grid only — deliberately separate from the unfiltered
@@ -122,14 +95,22 @@ function HomeContent() {
   // Stable references: InteractiveMap's marker-rebuild effect depends on
   // these, and rebuilds every marker (with position jitter) whenever they
   // change identity — an inline function here would re-run that effect on
-  // every render of Home.
-  const handleViewPersonDetails = useCallback((person: MissingPerson) => {
-    setSelectedPerson(person);
-  }, []);
+  // every render of Home. Navigating to /missing-persons/[id] (resp.
+  // /lost-items/[id]) shows the detail as a modal-over-grid via the
+  // intercepting route in app/@modal — see refactoring.md Phase 3.5.
+  const handleViewPersonDetails = useCallback(
+    (person: MissingPerson) => {
+      router.push(ROUTES.missingPersons.byId(person.id));
+    },
+    [router],
+  );
 
-  const handleViewItemDetails = useCallback((item: LostItem) => {
-    setSelectedItem(item);
-  }, []);
+  const handleViewItemDetails = useCallback(
+    (item: LostItem) => {
+      router.push(ROUTES.lostItems.byId(item.id));
+    },
+    [router],
+  );
 
   const handleContact = (phone: string) => {
     window.location.href = `tel:${phone}`;
@@ -513,24 +494,6 @@ function HomeContent() {
       <Footer />
 
       {/* Modals */}
-      {displayedPerson && (
-        <PersonDetailModal
-          person={displayedPerson}
-          onClose={() => {
-            setSelectedPerson(null);
-            // Only reached the URL via ?person=<id> when arriving from
-            // /profile — clean it back up so it doesn't linger stale.
-            if (personIdFromQuery) {
-              router.replace(ROUTES.home);
-            }
-          }}
-        />
-      )}
-
-      {selectedItem && (
-        <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
-      )}
-
       {showAuthModal && (
         <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       )}

@@ -6,7 +6,10 @@ export const missingPersonFixtures: MissingPerson[] = [
     full_name: 'Paul Tassong',
     age: 34,
     gender: 'male',
-    photo_url: 'https://example.com/photo1.jpg',
+    // localhost:8000/uploads/** matches next.config.ts's images.remotePatterns
+    // — an unconfigured host (e.g. example.com) throws when next/image
+    // renders it, crashing any page that displays this fixture.
+    photo_url: 'http://localhost:8000/uploads/photo1.jpg',
     description: 'Vu pour la dernière fois au marché Mokolo.',
     last_seen_location: 'Marché Mokolo, Yaoundé',
     last_seen_date: '2026-07-20',
@@ -22,7 +25,7 @@ export const missingPersonFixtures: MissingPerson[] = [
     full_name: 'Aïcha Bello',
     age: 19,
     gender: 'female',
-    photo_url: 'https://example.com/photo2.jpg',
+    photo_url: 'http://localhost:8000/uploads/photo2.jpg',
     description: 'Disparue après un cours du soir.',
     last_seen_location: 'Université de Douala',
     last_seen_date: '2026-07-18',
@@ -41,7 +44,7 @@ export const lostItemFixtures: LostItem[] = [
     item_type: 'document',
     item_name: "Carte Nationale d'Identité",
     item_category: "Carte Nationale d'Identité (CNI)",
-    photo_url: 'https://example.com/item1.jpg',
+    photo_url: 'http://localhost:8000/uploads/item1.jpg',
     description: 'CNI perdue près de la gare routière.',
     location: 'Gare routière, Bafoussam',
     date_lost_found: '2026-07-22',
