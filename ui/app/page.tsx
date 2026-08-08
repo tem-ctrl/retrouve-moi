@@ -18,7 +18,6 @@ import ItemReportForm from '@/components/ItemReportForm';
 import MobileMenu from '@/components/MobileMenu';
 import PersonDetailModal from '@/components/PersonDetailModal';
 import RegionsSection from '@/components/RegionsSection';
-import ReportForm from '@/components/ReportForm';
 import SuccessModal from '@/components/SuccessModal';
 import ItemCard from '@/components/ui/ItemCard';
 import PersonCard from '@/components/ui/PersonCard';
@@ -56,7 +55,6 @@ function HomeContent() {
   const loading = personsLoading || itemsLoading;
   const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
-  const [showReportForm, setShowReportForm] = useState(false);
   const [showItemReportForm, setShowItemReportForm] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -146,7 +144,6 @@ function HomeContent() {
   };
 
   const handleReportSuccess = () => {
-    setShowReportForm(false);
     setShowItemReportForm(false);
     setShowSuccessModal(true);
     // Broad invalidation for every array-keyed instance of this resource
@@ -175,7 +172,7 @@ function HomeContent() {
   };
 
   const handleReportClick = () => {
-    setShowReportForm(true);
+    router.push(ROUTES.reportMissingPerson);
   };
 
   const handleItemReportClick = () => {
@@ -554,10 +551,6 @@ function HomeContent() {
 
       {selectedItem && (
         <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
-      )}
-
-      {showReportForm && (
-        <ReportForm onClose={() => setShowReportForm(false)} onSuccess={handleReportSuccess} />
       )}
 
       {showItemReportForm && (
