@@ -24,6 +24,14 @@ const matchesSearch = (searchParams: URLSearchParams, ...fields: (string | undef
   return fields.some((field) => field?.toLowerCase().includes(needle));
 };
 
+// Mirrors every index() method's offset()->limit() pagination — applied
+// after filtering, matching the real query order.
+const paginate = <T>(items: T[], searchParams: URLSearchParams): T[] => {
+  const limit = Number(searchParams.get('limit') ?? 15);
+  const offset = Number(searchParams.get('offset') ?? 0);
+  return items.slice(offset, offset + limit);
+};
+
 // Mirrors MissingPersonController@index's filtering, not just its shape —
 // region/status/gender/search are real query behavior the UI now relies on
 // (see hooks/api/useMissingPersons + app/page.tsx's server-side filters).
@@ -52,7 +60,7 @@ const filterLostItems = (searchParams: URLSearchParams): LostItem[] =>
 export const handlers = [
   http.get(endpoint('/missing-persons'), ({ request }) => {
     const { searchParams } = new URL(request.url);
-    return HttpResponse.json({ data: filterMissingPersons(searchParams) });
+    return HttpResponse.json({ data: paginate(filterMissingPersons(searchParams), searchParams) });
   }),
 
   http.get(endpoint('/missing-persons/:id'), ({ params }) => {
@@ -65,7 +73,7 @@ export const handlers = [
 
   http.get(endpoint('/lost-items'), ({ request }) => {
     const { searchParams } = new URL(request.url);
-    return HttpResponse.json({ data: filterLostItems(searchParams) });
+    return HttpResponse.json({ data: paginate(filterLostItems(searchParams), searchParams) });
   }),
 
   http.get(endpoint('/lost-items/:id'), ({ params }) => {

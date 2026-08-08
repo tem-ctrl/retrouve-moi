@@ -24,7 +24,9 @@ import PersonCard from '@/components/ui/PersonCard';
 import SearchFilters from '@/components/ui/SearchFilters';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
 import { useLostItems } from '@/hooks/api/useLostItems';
+import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
+import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
 import { MissingPerson, LostItem, FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
 
@@ -60,28 +62,35 @@ export default function Home() {
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
-  // Server-side filtered listing data for the "Tous les signalements" grid
-  // only — deliberately separate from the unfiltered `persons`/`items`
-  // above, which power stats/map/urgent-cases/regions and must stay
-  // unaffected by the user's search filters. When no filter is active these
-  // resolve to the same SWR key as the unfiltered fetch above, so SWR's
-  // cache dedupes them into a single request rather than two.
+  // Server-side filtered, paginated listing data for the "Tous les
+  // signalements" grid only — deliberately separate from the unfiltered
+  // `persons`/`items` above, which power stats/map/urgent-cases/regions and
+  // must stay unaffected by both the user's search filters and pagination.
+  // (`limit` is omitted here — the infinite hooks force their own page size.)
   const personListFilters: Filters = {
-    limit: 30,
     ...(filters.search && { search: filters.search }),
     ...(filters.region && { region: filters.region }),
     ...(filters.status && { status: filters.status }),
     ...(filters.gender && { gender: filters.gender }),
   };
   const itemListFilters: Filters = {
-    limit: 30,
     ...(filters.search && { search: filters.search }),
     ...(filters.region && { region: filters.region }),
     ...(filters.item_type && { item_type: filters.item_type }),
     ...(filters.report_type && { report_type: filters.report_type }),
   };
-  const { data: filteredPersons } = useMissingPersons(personListFilters);
-  const { data: filteredItems } = useLostItems(itemListFilters);
+  const {
+    data: filteredPersons,
+    hasMore: hasMorePersons,
+    isLoadingMore: isLoadingMorePersons,
+    loadMore: loadMorePersons,
+  } = useMissingPersonsInfinite(personListFilters);
+  const {
+    data: filteredItems,
+    hasMore: hasMoreItems,
+    isLoadingMore: isLoadingMoreItems,
+    loadMore: loadMoreItems,
+  } = useLostItemsInfinite(itemListFilters);
 
   // Calculate statistics
   const stats = {
@@ -416,6 +425,17 @@ export default function Home() {
                       />
                     ))}
                   </div>
+                  {hasMorePersons && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={loadMorePersons}
+                        disabled={isLoadingMorePersons}
+                        className="px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 rounded-full font-medium transition-colors"
+                      >
+                        {isLoadingMorePersons ? 'Chargement...' : 'Charger plus de personnes'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -438,6 +458,17 @@ export default function Home() {
                       />
                     ))}
                   </div>
+                  {hasMoreItems && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={loadMoreItems}
+                        disabled={isLoadingMoreItems}
+                        className="px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 rounded-full font-medium transition-colors"
+                      >
+                        {isLoadingMoreItems ? 'Chargement...' : "Charger plus d'objets"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
