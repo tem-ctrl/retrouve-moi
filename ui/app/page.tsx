@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState, useRef, useCallback, Suspense } from 'react';
 import { mutate } from 'swr';
 
 import AuthModal from '@/components/AuthModal';
@@ -16,7 +17,6 @@ import ItemDetailModal from '@/components/ItemDetailModal';
 import ItemReportForm from '@/components/ItemReportForm';
 import MobileMenu from '@/components/MobileMenu';
 import PersonDetailModal from '@/components/PersonDetailModal';
-import ProfilePage from '@/components/ProfilePage';
 import RegionsSection from '@/components/RegionsSection';
 import ReportForm from '@/components/ReportForm';
 import SuccessModal from '@/components/SuccessModal';
@@ -26,15 +26,31 @@ import SearchFilters from '@/components/ui/SearchFilters';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
 import { useLostItems } from '@/hooks/api/useLostItems';
 import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
+import { useMissingPerson } from '@/hooks/api/useMissingPerson';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
 import { lostItemKeys, missingPersonKeys } from '@/lib/queryKeys';
+import { ROUTES } from '@/lib/routes';
 import { MissingPerson, LostItem, FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
+// useSearchParams() below requires a Suspense boundary during static
+// prerendering — this thin wrapper is the default export so the page can
+// still statically prerender everything that doesn't depend on the
+// `?person=` query param.
 export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+function HomeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: persons, isLoading: personsLoading } = useMissingPersons({ limit: 30 });
   const { data: items, isLoading: itemsLoading } = useLostItems({ limit: 30 });
   const loading = personsLoading || itemsLoading;
@@ -46,7 +62,6 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showProfilePage, setShowProfilePage] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('all');
   const [filters, setFilters] = useState<FilterState>({
     search: '',
@@ -59,6 +74,15 @@ export default function Home() {
 
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+
+  // Opens a person's detail modal via URL (?person=<id>) — used when
+  // arriving from /profile's report list, a separate route from Home's own
+  // selectedPerson state. See app/profile/page.tsx's handleViewPerson.
+  // Derived directly at render time (not synced into state via an effect)
+  // so it falls away cleanly once the query param is cleared on close.
+  const personIdFromQuery = searchParams.get('person');
+  const { data: personFromQuery } = useMissingPerson(personIdFromQuery ?? undefined);
+  const displayedPerson = selectedPerson ?? personFromQuery ?? null;
 
   // Server-side filtered, paginated listing data for the "Tous les
   // signalements" grid only — deliberately separate from the unfiltered
@@ -158,19 +182,6 @@ export default function Home() {
     setShowItemReportForm(true);
   };
 
-  // Show profile page if open
-  if (showProfilePage) {
-    return (
-      <ProfilePage
-        onClose={() => setShowProfilePage(false)}
-        onViewPerson={(person) => {
-          setShowProfilePage(false);
-          setSelectedPerson(person);
-        }}
-      />
-    );
-  }
-
   const clearFilters = () => {
     setFilters({ search: '', region: '', status: '', gender: '', item_type: '', report_type: '' });
   };
@@ -193,7 +204,7 @@ export default function Home() {
         onMenuClick={() => setShowMobileMenu(true)}
         onReportClick={handleReportClick}
         onAuthClick={() => setShowAuthModal(true)}
-        onProfileClick={() => setShowProfilePage(true)}
+        onProfileClick={() => router.push(ROUTES.profile)}
       />
 
       {/* Hero Section */}
@@ -203,35 +214,35 @@ export default function Home() {
       <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-orange-50 to-orange-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-orange-600">{stats.totalPersons}</div>
               <div className="text-xs text-orange-700">Personnes signalées</div>
             </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-red-50 to-red-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-red-600">{stats.urgentPersons}</div>
               <div className="text-xs text-red-700">Cas urgents</div>
             </div>
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-amber-600">{stats.missingPersons}</div>
               <div className="text-xs text-amber-700">Personnes disparues</div>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.foundPersons}</div>
               <div className="text-xs text-green-700">Personnes retrouvées</div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-purple-600">{stats.totalItems}</div>
               <div className="text-xs text-purple-700">Objets signalés</div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.lostItems}</div>
               <div className="text-xs text-blue-700">Objets perdus</div>
             </div>
-            <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-teal-50 to-teal-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-teal-600">{stats.foundItems}</div>
               <div className="text-xs text-teal-700">Objets trouvés</div>
             </div>
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 text-center">
+            <div className="bg-linear-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-emerald-600">{stats.claimedItems}</div>
               <div className="text-xs text-emerald-700">Objets réclamés</div>
             </div>
@@ -527,8 +538,18 @@ export default function Home() {
       <Footer />
 
       {/* Modals */}
-      {selectedPerson && (
-        <PersonDetailModal person={selectedPerson} onClose={() => setSelectedPerson(null)} />
+      {displayedPerson && (
+        <PersonDetailModal
+          person={displayedPerson}
+          onClose={() => {
+            setSelectedPerson(null);
+            // Only reached the URL via ?person=<id> when arriving from
+            // /profile — clean it back up so it doesn't linger stale.
+            if (personIdFromQuery) {
+              router.replace(ROUTES.home);
+            }
+          }}
+        />
       )}
 
       {selectedItem && (
