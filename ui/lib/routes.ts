@@ -78,8 +78,9 @@ export const ROUTES = {
     list: '/lost-items',
     byId: (id: number | string) => `/lost-items/${id}`,
   },
-  reportMissingPerson: '/report/missing-person',
-  reportLostItem: '/report/lost-item',
+  // Single tabbed page (person tab default, item tab via ?type=item) — see
+  // refactoring.md Phase 3.4.
+  report: (type?: 'item') => (type === 'item' ? '/report?type=item' : '/report'),
   profile: '/profile',
   login: '/login',
 };

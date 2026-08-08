@@ -29,9 +29,11 @@ test('browse, filter, view a detail, and submit a missing-person report', async 
     .click();
   await expect(page.getByText('Détails du signalement')).not.toBeVisible();
 
-  // Open the report form from the header
+  // Open the report form from the header — lands on /report, person tab
+  // active by default (see refactoring.md Phase 3.4).
   await page.getByRole('banner').getByRole('button', { name: 'Signaler une disparition' }).click();
-  await expect(page.getByRole('heading', { name: 'Signaler une disparition' })).toBeVisible();
+  await expect(page).toHaveURL(/\/report$/);
+  await expect(page.getByRole('button', { name: 'Personne disparue' })).toBeVisible();
 
   // Step 1: personal information
   await page.getByPlaceholder('Ex: Paul Tassong').fill('Jean Test');

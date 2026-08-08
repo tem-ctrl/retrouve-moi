@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, useRef, useCallback, Suspense } from 'react';
-import { mutate } from 'swr';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -14,11 +13,9 @@ import HowItWorksSection from '@/components/HowItWorksSection';
 import { UserIcon, PackageIcon, MapIcon, GridIcon } from '@/components/icons/Icons';
 import InteractiveMap from '@/components/InteractiveMap';
 import ItemDetailModal from '@/components/ItemDetailModal';
-import ItemReportForm from '@/components/ItemReportForm';
 import MobileMenu from '@/components/MobileMenu';
 import PersonDetailModal from '@/components/PersonDetailModal';
 import RegionsSection from '@/components/RegionsSection';
-import SuccessModal from '@/components/SuccessModal';
 import ItemCard from '@/components/ui/ItemCard';
 import PersonCard from '@/components/ui/PersonCard';
 import SearchFilters from '@/components/ui/SearchFilters';
@@ -28,7 +25,6 @@ import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
 import { useMissingPerson } from '@/hooks/api/useMissingPerson';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
-import { lostItemKeys, missingPersonKeys } from '@/lib/queryKeys';
 import { ROUTES } from '@/lib/routes';
 import { MissingPerson, LostItem, FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
@@ -55,8 +51,6 @@ function HomeContent() {
   const loading = personsLoading || itemsLoading;
   const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
-  const [showItemReportForm, setShowItemReportForm] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -104,14 +98,12 @@ function HomeContent() {
     hasMore: hasMorePersons,
     isLoadingMore: isLoadingMorePersons,
     loadMore: loadMorePersons,
-    mutate: mutateFilteredPersons,
   } = useMissingPersonsInfinite(personListFilters);
   const {
     data: filteredItems,
     hasMore: hasMoreItems,
     isLoadingMore: isLoadingMoreItems,
     loadMore: loadMoreItems,
-    mutate: mutateFilteredItems,
   } = useLostItemsInfinite(itemListFilters);
 
   // Calculate statistics
@@ -143,20 +135,6 @@ function HomeContent() {
     window.location.href = `tel:${phone}`;
   };
 
-  const handleReportSuccess = () => {
-    setShowItemReportForm(false);
-    setShowSuccessModal(true);
-    // Broad invalidation for every array-keyed instance of this resource
-    // (e.g. ProfilePage's own-reports list) — a per-hook mutate() would
-    // only revalidate the exact variant that one hook instance fetched.
-    mutate(missingPersonKeys.matchesAnyKey);
-    mutate(lostItemKeys.matchesAnyKey);
-    // The listing grid's useXInfinite hooks aren't covered by the matcher
-    // above (see lib/queryKeys.ts) — invalidate them via their own mutate.
-    mutateFilteredPersons();
-    mutateFilteredItems();
-  };
-
   const scrollToListings = () => {
     listingRef.current?.scrollIntoView({ behavior: 'smooth' });
     setShowFilters(true);
@@ -172,11 +150,11 @@ function HomeContent() {
   };
 
   const handleReportClick = () => {
-    router.push(ROUTES.reportMissingPerson);
+    router.push(ROUTES.report());
   };
 
   const handleItemReportClick = () => {
-    setShowItemReportForm(true);
+    router.push(ROUTES.report('item'));
   };
 
   const clearFilters = () => {
@@ -553,15 +531,6 @@ function HomeContent() {
         <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
       )}
 
-      {showItemReportForm && (
-        <ItemReportForm
-          onClose={() => setShowItemReportForm(false)}
-          onSuccess={handleReportSuccess}
-        />
-      )}
-
-      {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
-
       {showAuthModal && (
         <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       )}
@@ -571,6 +540,7 @@ function HomeContent() {
         isOpen={showMobileMenu}
         onClose={() => setShowMobileMenu(false)}
         onReportClick={handleReportClick}
+        onItemReportClick={handleItemReportClick}
       />
     </div>
   );
