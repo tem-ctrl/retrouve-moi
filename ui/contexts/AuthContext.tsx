@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
+import { useUser } from '@/hooks/api/useUser';
 import { buildApiEndpoint } from '@/lib/api-client';
 import {
   clearStoredSession,
@@ -39,7 +40,6 @@ interface AuthContextType {
   verifyOtp: (phone: string, token: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error: Error | null }>;
-  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,27 +55,11 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [session, setSession] = useState<AuthSession | null>(null);
-  const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchProfile = async (user_id: number) => {
-    try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(user_id)));
-      if (response.ok) {
-        const data = await response.json();
-        setProfile(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      setProfile(null);
-    }
-  };
-
-  const refreshProfile = async () => {
-    if (user) {
-      await fetchProfile(user.id);
-    }
-  };
+  // Reactively derived from `user` — no manual fetch-after-sign-in needed:
+  // useUser(undefined) is a no-op (see hooks/api/useUser), so this also
+  // naturally clears itself on sign-out.
+  const { data: profile, mutate: mutateProfile } = useUser(user?.id);
 
   useEffect(() => {
     const storedUser = getStoredUser();
@@ -84,7 +68,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedUser && storedToken) {
       setUser(storedUser);
       setSession({ token: storedToken });
-      fetchProfile(storedUser.id);
     } else {
       // Covers both "nothing stored" and "corrupted/partial state" (e.g. a
       // token with no matching user) — leaves storage coherent either way.
@@ -133,10 +116,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       setSession({ token: data.token });
 
-      if (data.user.id) {
-        await fetchProfile(data.user.id);
-      }
-
       return { error: null };
     } catch (error) {
       return { error: error as Error };
@@ -162,10 +141,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(data.user);
       setSession({ token: data.token });
-
-      if (data.user.id) {
-        await fetchProfile(data.user.id);
-      }
 
       return { error: null };
     } catch (error) {
@@ -195,7 +170,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     clearStoredSession();
     setUser(null);
     setSession(null);
-    setProfile(null);
   };
 
   const updateProfile = async (updates: Partial<User>) => {
@@ -212,7 +186,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Failed to update profile');
       }
 
-      await fetchProfile(user.id);
+      await mutateProfile();
       return { error: null };
     } catch (error) {
       return { error: error as Error };
@@ -224,7 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         session,
-        profile,
+        profile: profile ?? null,
         loading,
         signUp,
         signIn,
@@ -232,7 +206,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         verifyOtp,
         signOut,
         updateProfile,
-        refreshProfile,
       }}
     >
       {children}
