@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import SWRProvider from '@/providers/SWRProviders';
 
 import { MockServiceWorkerProvider } from './_mocks/MockServiceWorkerProvider';
 
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="fr">
       <body className="antialiased">
         <MockServiceWorkerProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <SWRProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </SWRProvider>
         </MockServiceWorkerProvider>
       </body>
     </html>

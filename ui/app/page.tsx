@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -23,15 +23,20 @@ import ItemCard from '@/components/ui/ItemCard';
 import PersonCard from '@/components/ui/PersonCard';
 import SearchFilters from '@/components/ui/SearchFilters';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
-import { apiClient } from '@/lib/api-client';
+import { useLostItems } from '@/hooks/api/useLostItems';
+import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { MissingPerson, LostItem, FilterState } from '@/types';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
 export default function Home() {
-  const [persons, setPersons] = useState<MissingPerson[]>([]);
-  const [items, setItems] = useState<LostItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: persons,
+    isLoading: personsLoading,
+    mutate: mutatePersons,
+  } = useMissingPersons({ limit: 30 });
+  const { data: items, isLoading: itemsLoading, mutate: mutateItems } = useLostItems({ limit: 30 });
+  const loading = personsLoading || itemsLoading;
   const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
   const [showReportForm, setShowReportForm] = useState(false);
@@ -53,34 +58,6 @@ export default function Home() {
 
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
-
-  // Fetch missing persons
-  const fetchPersons = async () => {
-    try {
-      const response = await apiClient.getMissingPersons({ limit: 30 });
-      setPersons(response || []);
-    } catch (error) {
-      console.error('Error fetching persons:', error);
-    }
-  };
-
-  // Fetch lost items
-  const fetchItems = async () => {
-    try {
-      const response = await apiClient.getLostItems({ limit: 30 });
-      setItems(response || []);
-    } catch (error) {
-      console.error('Error fetching items:', error);
-    }
-  };
-  useEffect(() => {
-    const fetchAll = async () => {
-      setLoading(true);
-      await Promise.all([fetchPersons(), fetchItems()]);
-      setLoading(false);
-    };
-    fetchAll();
-  }, []);
 
   // Compute filtered persons based on search and filters
   const filteredPersons = useMemo(() => {
@@ -170,8 +147,8 @@ export default function Home() {
     setShowReportForm(false);
     setShowItemReportForm(false);
     setShowSuccessModal(true);
-    fetchPersons();
-    fetchItems();
+    mutatePersons();
+    mutateItems();
   };
 
   const scrollToListings = () => {
