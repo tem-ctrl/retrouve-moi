@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import { mutate } from 'swr';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -27,18 +28,15 @@ import { useLostItems } from '@/hooks/api/useLostItems';
 import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
 import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
+import { lostItemKeys, missingPersonKeys } from '@/lib/queryKeys';
 import { MissingPerson, LostItem, FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
 export default function Home() {
-  const {
-    data: persons,
-    isLoading: personsLoading,
-    mutate: mutatePersons,
-  } = useMissingPersons({ limit: 30 });
-  const { data: items, isLoading: itemsLoading, mutate: mutateItems } = useLostItems({ limit: 30 });
+  const { data: persons, isLoading: personsLoading } = useMissingPersons({ limit: 30 });
+  const { data: items, isLoading: itemsLoading } = useLostItems({ limit: 30 });
   const loading = personsLoading || itemsLoading;
   const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
@@ -84,12 +82,14 @@ export default function Home() {
     hasMore: hasMorePersons,
     isLoadingMore: isLoadingMorePersons,
     loadMore: loadMorePersons,
+    mutate: mutateFilteredPersons,
   } = useMissingPersonsInfinite(personListFilters);
   const {
     data: filteredItems,
     hasMore: hasMoreItems,
     isLoadingMore: isLoadingMoreItems,
     loadMore: loadMoreItems,
+    mutate: mutateFilteredItems,
   } = useLostItemsInfinite(itemListFilters);
 
   // Calculate statistics
@@ -125,8 +125,15 @@ export default function Home() {
     setShowReportForm(false);
     setShowItemReportForm(false);
     setShowSuccessModal(true);
-    mutatePersons();
-    mutateItems();
+    // Broad invalidation for every array-keyed instance of this resource
+    // (e.g. ProfilePage's own-reports list) — a per-hook mutate() would
+    // only revalidate the exact variant that one hook instance fetched.
+    mutate(missingPersonKeys.matchesAnyKey);
+    mutate(lostItemKeys.matchesAnyKey);
+    // The listing grid's useXInfinite hooks aren't covered by the matcher
+    // above (see lib/queryKeys.ts) — invalidate them via their own mutate.
+    mutateFilteredPersons();
+    mutateFilteredItems();
   };
 
   const scrollToListings = () => {

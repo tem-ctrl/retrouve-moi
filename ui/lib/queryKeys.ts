@@ -9,6 +9,26 @@ import { Filters } from '@/types/api-routes';
  * currently cached, while individual hooks still key off the precise,
  * narrow variant they fetched.
  */
+// Matches every SWR cache entry for a resource that uses the array-shaped
+// keys from createResourceKeys (first element equals `resource`) — i.e.
+// every regular useX hook, regardless of which filters it was called with.
+// Pass to SWR's global `mutate()` for broad invalidation after a mutation.
+//
+// Deliberately does NOT attempt to match useSWRInfinite-based hooks
+// (useXInfinite). Their data-bearing cache entry lives under a
+// `$inf$`-prefixed key, and — confirmed by direct testing, not assumed —
+// SWR's matcher-function mutate() never successfully revalidates that
+// entry regardless of what the matcher matches or what options are passed;
+// only a literal-key mutate() against the exact `$inf$...` key works. Since
+// each useXInfinite instance's key depends on its own filters, there's no
+// way to enumerate "every possible instance" from outside. Callers with an
+// infinite hook mounted must use that hook's own returned `mutate()` for
+// it — see app/page.tsx's handleReportSuccess for both patterns combined.
+const matchesResource =
+  (resource: string) =>
+  (key: unknown): boolean =>
+    Array.isArray(key) && key[0] === resource;
+
 function createResourceKeys(resource: string) {
   const all = [resource] as const;
   return {
@@ -17,6 +37,7 @@ function createResourceKeys(resource: string) {
     list: (filters?: Filters) => [...all, 'list', filters ?? {}] as const,
     details: () => [...all, 'detail'] as const,
     detail: (id: number | string) => [...all, 'detail', id] as const,
+    matchesAnyKey: matchesResource(resource),
   };
 }
 
@@ -37,4 +58,5 @@ export const sightingKeys = {
     [...sightingKeys.lists(), missingPersonId, filters ?? {}] as const,
   details: () => [...sightingKeys.all, 'detail'] as const,
   detail: (id: number | string) => [...sightingKeys.details(), id] as const,
+  matchesAnyKey: matchesResource('sightings'),
 };

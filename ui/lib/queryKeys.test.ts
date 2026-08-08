@@ -20,6 +20,35 @@ describe('missingPersonKeys', () => {
     expect(missingPersonKeys.list({ region: 'Centre' }).slice(0, 1)).toEqual(missingPersonKeys.all);
     expect(missingPersonKeys.detail(1).slice(0, 1)).toEqual(missingPersonKeys.all);
   });
+
+  describe('matchesAnyKey', () => {
+    it("matches this resource's array-shaped keys, regardless of filters", () => {
+      expect(missingPersonKeys.matchesAnyKey(missingPersonKeys.list())).toBe(true);
+      expect(missingPersonKeys.matchesAnyKey(missingPersonKeys.list({ region: 'Centre' }))).toBe(
+        true,
+      );
+      expect(missingPersonKeys.matchesAnyKey(missingPersonKeys.detail(1))).toBe(true);
+    });
+
+    it('does not match useSWRInfinite string keys, deliberately', () => {
+      // A matcher-function mutate() never successfully revalidates a
+      // useSWRInfinite entry regardless of what it matches (confirmed by
+      // direct testing — an SWR limitation) — so matchesAnyKey doesn't
+      // pretend to cover them. Infinite hooks are invalidated via their
+      // own returned mutate() instead. See the comment on matchesResource.
+      expect(missingPersonKeys.matchesAnyKey('$inf$/missing-persons?limit=30&offset=0')).toBe(
+        false,
+      );
+      expect(missingPersonKeys.matchesAnyKey('/missing-persons?limit=30&offset=0')).toBe(false);
+    });
+
+    it("does not match another resource's keys", () => {
+      expect(missingPersonKeys.matchesAnyKey(lostItemKeys.list())).toBe(false);
+      expect(missingPersonKeys.matchesAnyKey('/lost-items?limit=30')).toBe(false);
+      expect(missingPersonKeys.matchesAnyKey(undefined)).toBe(false);
+      expect(missingPersonKeys.matchesAnyKey(null)).toBe(false);
+    });
+  });
 });
 
 describe('lostItemKeys and userKeys', () => {
