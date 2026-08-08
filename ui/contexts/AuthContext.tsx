@@ -2,22 +2,20 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
+import { useUser } from '@/hooks/api/useUser';
 import { buildApiEndpoint } from '@/lib/api-client';
+import {
+  clearStoredSession,
+  getStoredToken,
+  getStoredUser,
+  setStoredSession,
+} from '@/lib/auth-storage';
 import { API_ROUTES } from '@/lib/routes';
-import { User } from '@/types';
-
-interface AuthUser {
-  id: number;
-  email: string;
-}
-
-interface AuthSession {
-  token: string;
-}
+import { AuthUser, Session, User } from '@/types';
 
 interface AuthContextType {
   user: AuthUser | null;
-  session: AuthSession | null;
+  session: Session | null;
   profile: User | null;
   loading: boolean;
   signUp: (
@@ -29,11 +27,8 @@ interface AuthContextType {
     avatar?: File,
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signInWithPhone: (phone: string) => Promise<{ error: Error | null }>;
-  verifyOtp: (phone: string, token: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error: Error | null }>;
-  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,45 +43,24 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [session, setSession] = useState<AuthSession | null>(null);
-  const [profile, setProfile] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchProfile = async (user_id: number) => {
-    try {
-      const response = await fetch(buildApiEndpoint(API_ROUTES.users.byId(user_id)));
-      if (response.ok) {
-        const data = await response.json();
-        setProfile(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      setProfile(null);
-    }
-  };
-
-  const refreshProfile = async () => {
-    if (user) {
-      await fetchProfile(user.id);
-    }
-  };
+  // Reactively derived from `user` — no manual fetch-after-sign-in needed:
+  // useUser(undefined) is a no-op (see hooks/api/useUser), so this also
+  // naturally clears itself on sign-out.
+  const { data: profile, mutate: mutateProfile } = useUser(user?.id);
 
   useEffect(() => {
-    // Check if user is logged in from localStorage
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('authToken');
+    const storedUser = getStoredUser();
+    const storedToken = getStoredToken();
 
     if (storedUser && storedToken) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setSession({ token: storedToken });
-        fetchProfile(parsedUser.id);
-      } catch (error) {
-        console.error('Error restoring session:', error);
-        localStorage.removeItem('user');
-        localStorage.removeItem('authToken');
-      }
+      setUser(storedUser);
+      setSession({ token: storedToken });
+    } else {
+      // Covers both "nothing stored" and "corrupted/partial state" (e.g. a
+      // token with no matching user) — leaves storage coherent either way.
+      clearStoredSession();
     }
 
     setLoading(false);
@@ -126,16 +100,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const data = await response.json();
 
-      // Store user and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('authToken', data.token);
+      setStoredSession(data.user, data.token);
 
       setUser(data.user);
       setSession({ token: data.token });
-
-      if (data.user.id) {
-        await fetchProfile(data.user.id);
-      }
 
       return { error: null };
     } catch (error) {
@@ -158,33 +126,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const data = await response.json();
 
-      // Store user and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('authToken', data.token);
+      setStoredSession(data.user, data.token);
 
       setUser(data.user);
       setSession({ token: data.token });
-
-      if (data.user.id) {
-        await fetchProfile(data.user.id);
-      }
 
       return { error: null };
     } catch (error) {
       return { error: error as Error };
     }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const signInWithPhone = async (_phone: string) => {
-    // This would require a proper SMS/OTP implementation
-    return { error: new Error('Phone sign in not yet implemented') };
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const verifyOtp = async (_phone: string, _token: string) => {
-    // This would require a proper SMS/OTP implementation
-    return { error: new Error('OTP verification not yet implemented') };
   };
 
   const signOut = async () => {
@@ -194,11 +144,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Error during sign out:', error);
     }
 
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
+    clearStoredSession();
     setUser(null);
     setSession(null);
-    setProfile(null);
   };
 
   const updateProfile = async (updates: Partial<User>) => {
@@ -215,7 +163,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Failed to update profile');
       }
 
-      await fetchProfile(user.id);
+      await mutateProfile();
       return { error: null };
     } catch (error) {
       return { error: error as Error };
@@ -227,15 +175,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         session,
-        profile,
+        profile: profile ?? null,
         loading,
         signUp,
         signIn,
-        signInWithPhone,
-        verifyOtp,
         signOut,
         updateProfile,
-        refreshProfile,
       }}
     >
       {children}

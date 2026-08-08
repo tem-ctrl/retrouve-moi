@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import React from 'react';
+
+import { ROUTES } from '@/lib/routes';
 
 import {
   XIcon,
@@ -15,36 +18,23 @@ import {
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onReportClick: () => void;
-  onItemReportClick?: () => void;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({
-  isOpen,
-  onClose,
-  onReportClick,
-  onItemReportClick,
-}) => {
+const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const menuItems = [
-    { icon: <HomeIcon size={20} />, label: 'Accueil', onClick: onClose },
+    { icon: <HomeIcon size={20} />, label: 'Accueil', href: ROUTES.home },
     {
       icon: <PlusIcon size={20} />,
       label: 'Signaler une disparition',
-      onClick: () => {
-        onClose();
-        onReportClick();
-      },
+      href: ROUTES.report(),
       highlight: 'orange',
     },
     {
       icon: <PackageIcon size={20} />,
       label: 'Signaler un objet',
-      onClick: () => {
-        onClose();
-        onItemReportClick?.();
-      },
+      href: ROUTES.report('item'),
       highlight: 'purple',
     },
     { icon: <SearchIcon size={20} />, label: 'Rechercher', onClick: onClose },
@@ -75,33 +65,41 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         {/* Menu Items */}
         <nav className="p-4">
           <ul className="space-y-1">
-            {menuItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={item.onClick}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                    item.highlight === 'orange'
-                      ? 'bg-orange-50 text-orange-700 hover:bg-orange-100'
-                      : item.highlight === 'purple'
-                        ? 'bg-purple-50 text-purple-700 hover:bg-purple-100'
-                        : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span
-                    className={
-                      item.highlight === 'orange'
-                        ? 'text-orange-500'
-                        : item.highlight === 'purple'
-                          ? 'text-purple-500'
-                          : 'text-gray-500'
-                    }
-                  >
-                    {item.icon}
-                  </span>
+            {menuItems.map((item, index) => {
+              const className = `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                item.highlight === 'orange'
+                  ? 'bg-orange-50 text-orange-700 hover:bg-orange-100'
+                  : item.highlight === 'purple'
+                    ? 'bg-purple-50 text-purple-700 hover:bg-purple-100'
+                    : 'text-gray-700 hover:bg-gray-100'
+              }`;
+              const iconClassName =
+                item.highlight === 'orange'
+                  ? 'text-orange-500'
+                  : item.highlight === 'purple'
+                    ? 'text-purple-500'
+                    : 'text-gray-500';
+              const content = (
+                <>
+                  <span className={iconClassName}>{item.icon}</span>
                   <span className="font-medium">{item.label}</span>
-                </button>
-              </li>
-            ))}
+                </>
+              );
+
+              return (
+                <li key={index}>
+                  {item.href ? (
+                    <Link href={item.href} onClick={onClose} className={className}>
+                      {content}
+                    </Link>
+                  ) : (
+                    <button onClick={item.onClick} className={className}>
+                      {content}
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </nav>
 

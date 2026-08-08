@@ -8,6 +8,7 @@ import { ITEM_CATEGORIES } from '@/types';
 import { XIcon, CameraIcon, MapPinIcon, PackageIcon, PhoneIcon, FileTextIcon } from './icons/Icons';
 
 interface ItemReportFormProps {
+  tabs: React.ReactNode;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -25,7 +26,7 @@ const REGIONS = [
   'Sud-Ouest',
 ];
 
-const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) => {
+const ItemReportForm: React.FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) => {
   const { user, profile } = useAuth();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -163,12 +164,8 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ onClose, onSuccess }) =
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between z-10">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              {data.report_type === 'found'
-                ? 'Signaler un objet trouvé'
-                : 'Signaler un objet perdu'}
-            </h2>
-            <p className="text-sm text-gray-500">Étape {step} sur 3</p>
+            {tabs}
+            <p className="text-sm text-gray-500 mt-1.5">Étape {step} sur 3</p>
           </div>
           <button
             onClick={onClose}

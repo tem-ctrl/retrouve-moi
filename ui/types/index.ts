@@ -94,14 +94,21 @@ export interface User {
   updated_at: string;
 }
 
+/**
+ * The minimal identity returned by POST /auth/signin and /auth/signup —
+ * not the full profile (see User for that, fetched separately via
+ * useUser once signed in). Single canonical definition: previously
+ * duplicated as a local interface in contexts/AuthContext.tsx and as
+ * lib/auth-storage.ts's StoredAuthUser.
+ */
 export interface AuthUser {
   id: number;
-  email?: string;
-  phone?: string;
-  metadata?: {
-    full_name?: string;
-    avatar_url?: string;
-  };
+  email: string;
+}
+
+/** The persisted Sanctum token wrapper — see lib/auth-storage.ts. */
+export interface Session {
+  token: string;
 }
 
 export interface MapMarker {

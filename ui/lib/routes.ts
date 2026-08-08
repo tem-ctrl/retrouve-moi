@@ -1,3 +1,4 @@
+import { FilterState } from '@/types';
 import { Filters } from '@/types/api-routes';
 
 const buildQueryString = (params?: Filters): string => {
@@ -58,3 +59,52 @@ export const API_ROUTES = {
     byId: (id: number | string) => `/sightings/${id}`,
   },
 };
+
+/**
+ * Single source of truth for this app's own (Next.js) routes — the
+ * `ROUTES` counterpart to `API_ROUTES` above, so page links/redirects don't
+ * hardcode path strings any more than API calls do. Route segments are
+ * English (see refactoring.md Phase 3.1) even though rendered page copy
+ * stays French. Not every entry has a page behind it yet — they're added
+ * here as each one lands in Phase 3, mirroring how `API_ROUTES` lists every
+ * backend route whether or not the frontend calls it yet.
+ */
+export const ROUTES = {
+  home: '/',
+  missingPersons: {
+    list: '/missing-persons',
+    byId: (id: number | string) => `/missing-persons/${id}`,
+  },
+  lostItems: {
+    list: '/lost-items',
+    byId: (id: number | string) => `/lost-items/${id}`,
+  },
+  // Single tabbed page (person tab default, item tab via ?type=item) — see
+  // refactoring.md Phase 3.4.
+  report: (type?: 'item') => (type === 'item' ? '/report?type=item' : '/report'),
+  profile: '/profile',
+  login: '/login',
+};
+
+/**
+ * Shared by /missing-persons and /lost-items (see refactoring.md Phase 3.8)
+ * to keep filters in the URL — reads every possible FilterState field
+ * regardless of which resource's page is calling it; each page only
+ * forwards the subset relevant to its own API filters.
+ */
+export const filtersFromSearchParams = (searchParams: URLSearchParams): FilterState => ({
+  search: searchParams.get('search') ?? '',
+  region: searchParams.get('region') ?? '',
+  status: searchParams.get('status') ?? '',
+  gender: searchParams.get('gender') ?? '',
+  item_type: searchParams.get('item_type') ?? '',
+  report_type: searchParams.get('report_type') ?? '',
+});
+
+// Drops blank fields before building the query string — SearchFilters hands
+// back every FilterState field on each change, and a blank one showing up
+// as e.g. `?status=` in the URL would be noise.
+export const buildFilterQueryString = (filters: FilterState): string =>
+  buildQueryString(
+    Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) as Filters,
+  );

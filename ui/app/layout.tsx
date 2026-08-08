@@ -14,15 +14,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="fr">
       <body className="antialiased">
         <MockServiceWorkerProvider>
           <SWRProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              {children}
+              {modal}
+            </AuthProvider>
           </SWRProvider>
         </MockServiceWorkerProvider>
       </body>

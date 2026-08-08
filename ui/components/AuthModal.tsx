@@ -20,8 +20,8 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login' }) => {
-  const { signUp, signIn, signInWithPhone, verifyOtp } = useAuth();
-  const [mode, setMode] = useState<'login' | 'signup' | 'phone' | 'otp'>(initialMode);
+  const { signUp, signIn } = useAuth();
+  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -34,7 +34,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [full_name, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
@@ -46,7 +45,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     setPasswordConfirmation('');
     setFullName('');
     setPhone('');
-    setOtp('');
     setAvatar(null);
     setAvatarPreview(null);
     setError(null);
@@ -113,47 +111,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     setLoading(false);
   };
 
-  const handlePhoneLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    // Format phone number for Cameroon
-    let formattedPhone = phone.trim();
-    if (!formattedPhone.startsWith('+')) {
-      formattedPhone = '+237' + formattedPhone.replace(/^0/, '');
-    }
-
-    const { error } = await signInWithPhone(formattedPhone);
-
-    if (error) {
-      setError("Erreur lors de l'envoi du code. Vérifiez le numéro.");
-    } else {
-      setPhone(formattedPhone);
-      setMode('otp');
-      setSuccess('Code envoyé par SMS!');
-    }
-
-    setLoading(false);
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const { error } = await verifyOtp(phone, otp);
-
-    if (error) {
-      setError('Code invalide ou expiré');
-    } else {
-      onClose();
-      resetForm();
-    }
-
-    setLoading(false);
-  };
-
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl animate-scale-in overflow-hidden">
@@ -174,14 +131,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               <h2 className="text-xl font-bold">
                 {mode === 'login' && 'Connexion'}
                 {mode === 'signup' && 'Créer un compte'}
-                {mode === 'phone' && 'Connexion par téléphone'}
-                {mode === 'otp' && 'Vérification'}
               </h2>
               <p className="text-sm text-white/70">
                 {mode === 'login' && 'Accédez à votre espace personnel'}
                 {mode === 'signup' && 'Rejoignez notre communauté'}
-                {mode === 'phone' && 'Recevez un code par SMS'}
-                {mode === 'otp' && 'Entrez le code reçu'}
               </p>
             </div>
           </div>
@@ -413,149 +366,47 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
             </form>
           )}
 
-          {/* Phone Login Form */}
-          {mode === 'phone' && (
-            <form onSubmit={handlePhoneLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Numéro de téléphone
-                </label>
-                <div className="relative">
-                  <PhoneIcon
-                    size={18}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    placeholder="6 XX XX XX XX"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Format: 6XXXXXXXX (Cameroun)</p>
-              </div>
+          {/* Mode Switcher */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">ou</span>
+            </div>
+          </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="cursor-pointer w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white rounded-xl font-semibold transition-colors"
-              >
-                {loading ? 'Envoi...' : 'Recevoir le code'}
-              </button>
-            </form>
-          )}
-
-          {/* OTP Verification Form */}
-          {mode === 'otp' && (
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Code de vérification
-                </label>
-                <input
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  required
-                  placeholder="000000"
-                  maxLength={6}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-center text-2xl tracking-widest"
-                />
-                <p className="text-xs text-gray-500 mt-1 text-center">Code envoyé au {phone}</p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || otp.length !== 6}
-                className="cursor-pointer w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white rounded-xl font-semibold transition-colors"
-              >
-                {loading ? 'Vérification...' : 'Vérifier'}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setMode('phone')}
-                className="cursor-pointer w-full py-2 text-gray-600 hover:text-gray-800 text-sm"
-              >
-                Renvoyer le code
-              </button>
-            </form>
-          )}
-
-          {/* Mode Switchers */}
-          {(mode === 'login' || mode === 'signup') && (
-            <>
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">ou</span>
-                </div>
-              </div>
-
-              {/* <button
-                type="button"
-                onClick={() => {
-                  setMode('phone');
-                  resetForm();
-                }}
-                className="cursor-pointer w-full py-3 border border-gray-200 hover:bg-gray-50 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <PhoneIcon size={18} />
-                Continuer avec le téléphone
-              </button> */}
-
-              <p className="text-center text-sm text-gray-600 mt-4">
-                {mode === 'login' ? (
-                  <>
-                    Pas encore de compte?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMode('signup');
-                        resetForm();
-                      }}
-                      className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
-                    >
-                      S&apos;inscrire
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    Déjà un compte?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMode('login');
-                        resetForm();
-                      }}
-                      className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
-                    >
-                      Se connecter
-                    </button>
-                  </>
-                )}
-              </p>
-            </>
-          )}
-
-          {mode === 'phone' && (
-            <p className="text-center text-sm text-gray-600 mt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('login');
-                  resetForm();
-                }}
-                className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
-              >
-                Retour à la connexion par email
-              </button>
-            </p>
-          )}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            {mode === 'login' ? (
+              <>
+                Pas encore de compte?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('signup');
+                    resetForm();
+                  }}
+                  className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
+                >
+                  S&apos;inscrire
+                </button>
+              </>
+            ) : (
+              <>
+                Déjà un compte?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('login');
+                    resetForm();
+                  }}
+                  className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
+                >
+                  Se connecter
+                </button>
+              </>
+            )}
+          </p>
         </div>
       </div>
     </div>

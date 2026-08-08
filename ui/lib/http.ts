@@ -1,6 +1,5 @@
+import { getStoredToken } from '@/lib/auth-storage';
 import { env } from '@/lib/env';
-
-const AUTH_TOKEN_STORAGE_KEY = 'authToken';
 
 export class ApiError extends Error {
   readonly status: number;
@@ -20,11 +19,6 @@ export class ApiError extends Error {
 }
 
 const buildUrl = (path: string) => `${env.NEXT_PUBLIC_API_URL}${path}`;
-
-const getAuthToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
-  return window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-};
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -60,7 +54,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   // Note: sending this doesn't make requests protected yet — most API
   // routes aren't behind auth:sanctum or ownership checks. See the
   // TODO(auth) block in api/routes/api.php.
-  const token = getAuthToken();
+  const token = getStoredToken();
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
   }
