@@ -28,6 +28,10 @@ class MissingPersonController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {

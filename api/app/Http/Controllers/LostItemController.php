@@ -28,8 +28,12 @@ class LostItemController extends Controller
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('reportType')) {
-            $query->where('report_type', $request->reportType);
+        if ($request->filled('report_type')) {
+            $query->where('report_type', $request->report_type);
+        }
+
+        if ($request->filled('item_type')) {
+            $query->where('item_type', $request->item_type);
         }
 
         if ($request->filled('search')) {
