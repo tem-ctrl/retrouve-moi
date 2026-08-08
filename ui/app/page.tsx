@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { mutate } from 'swr';
 
 import AuthModal from '@/components/AuthModal';
 import EmergencyBanner from '@/components/EmergencyBanner';
@@ -23,15 +24,20 @@ import ItemCard from '@/components/ui/ItemCard';
 import PersonCard from '@/components/ui/PersonCard';
 import SearchFilters from '@/components/ui/SearchFilters';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
-import { apiClient } from '@/lib/api-client';
+import { useLostItems } from '@/hooks/api/useLostItems';
+import { useLostItemsInfinite } from '@/hooks/api/useLostItemsInfinite';
+import { useMissingPersons } from '@/hooks/api/useMissingPersons';
+import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
+import { lostItemKeys, missingPersonKeys } from '@/lib/queryKeys';
 import { MissingPerson, LostItem, FilterState } from '@/types';
+import { Filters } from '@/types/api-routes';
 
 type ViewMode = 'persons' | 'items' | 'all';
 
 export default function Home() {
-  const [persons, setPersons] = useState<MissingPerson[]>([]);
-  const [items, setItems] = useState<LostItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: persons, isLoading: personsLoading } = useMissingPersons({ limit: 30 });
+  const { data: items, isLoading: itemsLoading } = useLostItems({ limit: 30 });
+  const loading = personsLoading || itemsLoading;
   const [selectedPerson, setSelectedPerson] = useState<MissingPerson | null>(null);
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
   const [showReportForm, setShowReportForm] = useState(false);
@@ -54,92 +60,37 @@ export default function Home() {
   const listingRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
-  // Fetch missing persons
-  const fetchPersons = async () => {
-    try {
-      const response = await apiClient.getMissingPersons({ limit: 30 });
-      setPersons(response || []);
-    } catch (error) {
-      console.error('Error fetching persons:', error);
-    }
+  // Server-side filtered, paginated listing data for the "Tous les
+  // signalements" grid only — deliberately separate from the unfiltered
+  // `persons`/`items` above, which power stats/map/urgent-cases/regions and
+  // must stay unaffected by both the user's search filters and pagination.
+  // (`limit` is omitted here — the infinite hooks force their own page size.)
+  const personListFilters: Filters = {
+    ...(filters.search && { search: filters.search }),
+    ...(filters.region && { region: filters.region }),
+    ...(filters.status && { status: filters.status }),
+    ...(filters.gender && { gender: filters.gender }),
   };
-
-  // Fetch lost items
-  const fetchItems = async () => {
-    try {
-      const response = await apiClient.getLostItems({ limit: 30 });
-      setItems(response || []);
-    } catch (error) {
-      console.error('Error fetching items:', error);
-    }
+  const itemListFilters: Filters = {
+    ...(filters.search && { search: filters.search }),
+    ...(filters.region && { region: filters.region }),
+    ...(filters.item_type && { item_type: filters.item_type }),
+    ...(filters.report_type && { report_type: filters.report_type }),
   };
-  useEffect(() => {
-    const fetchAll = async () => {
-      setLoading(true);
-      await Promise.all([fetchPersons(), fetchItems()]);
-      setLoading(false);
-    };
-    fetchAll();
-  }, []);
-
-  // Compute filtered persons based on search and filters
-  const filteredPersons = useMemo(() => {
-    let result = [...persons];
-
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.full_name.toLowerCase().includes(searchLower) ||
-          p.last_seen_location.toLowerCase().includes(searchLower) ||
-          p.description?.toLowerCase().includes(searchLower),
-      );
-    }
-
-    if (filters.region) {
-      result = result.filter((p) => p.region === filters.region);
-    }
-
-    if (filters.status) {
-      result = result.filter((p) => p.status === filters.status);
-    }
-
-    if (filters.gender) {
-      result = result.filter((p) => p.gender === filters.gender);
-    }
-
-    return result;
-  }, [filters, persons]);
-
-  // Compute filtered items based on search and filters
-  const filteredItems = useMemo(() => {
-    let result = [...items];
-
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      result = result.filter(
-        (i) =>
-          i.item_name.toLowerCase().includes(searchLower) ||
-          i.location.toLowerCase().includes(searchLower) ||
-          i.description?.toLowerCase().includes(searchLower) ||
-          i.item_category.toLowerCase().includes(searchLower),
-      );
-    }
-
-    if (filters.region) {
-      result = result.filter((i) => i.region === filters.region);
-    }
-
-    if (filters.item_type) {
-      result = result.filter((i) => i.item_type === filters.item_type);
-    }
-
-    if (filters.report_type) {
-      result = result.filter((i) => i.report_type === filters.report_type);
-    }
-
-    return result;
-  }, [filters, items]);
+  const {
+    data: filteredPersons,
+    hasMore: hasMorePersons,
+    isLoadingMore: isLoadingMorePersons,
+    loadMore: loadMorePersons,
+    mutate: mutateFilteredPersons,
+  } = useMissingPersonsInfinite(personListFilters);
+  const {
+    data: filteredItems,
+    hasMore: hasMoreItems,
+    isLoadingMore: isLoadingMoreItems,
+    loadMore: loadMoreItems,
+    mutate: mutateFilteredItems,
+  } = useLostItemsInfinite(itemListFilters);
 
   // Calculate statistics
   const stats = {
@@ -154,13 +105,17 @@ export default function Home() {
     claimedItems: items.filter((i) => i.status === 'claimed').length,
   };
 
-  const handleViewPersonDetails = (person: MissingPerson) => {
+  // Stable references: InteractiveMap's marker-rebuild effect depends on
+  // these, and rebuilds every marker (with position jitter) whenever they
+  // change identity — an inline function here would re-run that effect on
+  // every render of Home.
+  const handleViewPersonDetails = useCallback((person: MissingPerson) => {
     setSelectedPerson(person);
-  };
+  }, []);
 
-  const handleViewItemDetails = (item: LostItem) => {
+  const handleViewItemDetails = useCallback((item: LostItem) => {
     setSelectedItem(item);
-  };
+  }, []);
 
   const handleContact = (phone: string) => {
     window.location.href = `tel:${phone}`;
@@ -170,8 +125,15 @@ export default function Home() {
     setShowReportForm(false);
     setShowItemReportForm(false);
     setShowSuccessModal(true);
-    fetchPersons();
-    fetchItems();
+    // Broad invalidation for every array-keyed instance of this resource
+    // (e.g. ProfilePage's own-reports list) — a per-hook mutate() would
+    // only revalidate the exact variant that one hook instance fetched.
+    mutate(missingPersonKeys.matchesAnyKey);
+    mutate(lostItemKeys.matchesAnyKey);
+    // The listing grid's useXInfinite hooks aren't covered by the matcher
+    // above (see lib/queryKeys.ts) — invalidate them via their own mutate.
+    mutateFilteredPersons();
+    mutateFilteredItems();
   };
 
   const scrollToListings = () => {
@@ -470,6 +432,17 @@ export default function Home() {
                       />
                     ))}
                   </div>
+                  {hasMorePersons && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={loadMorePersons}
+                        disabled={isLoadingMorePersons}
+                        className="px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 rounded-full font-medium transition-colors"
+                      >
+                        {isLoadingMorePersons ? 'Chargement...' : 'Charger plus de personnes'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -492,6 +465,17 @@ export default function Home() {
                       />
                     ))}
                   </div>
+                  {hasMoreItems && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={loadMoreItems}
+                        disabled={isLoadingMoreItems}
+                        className="px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 rounded-full font-medium transition-colors"
+                      >
+                        {isLoadingMoreItems ? 'Chargement...' : "Charger plus d'objets"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

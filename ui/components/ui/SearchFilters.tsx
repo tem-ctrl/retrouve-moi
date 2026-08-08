@@ -33,12 +33,15 @@ const PERSON_STATUSES = [
   { value: 'found', label: 'Retrouvé' },
 ];
 
+// Values match what ReportForm actually submits (MissingPerson.gender), not
+// the French labels — these never lined up before, so this filter silently
+// matched nothing.
 const GENDERS = [
   { value: '', label: 'Tous les genres' },
-  { value: 'Homme', label: 'Homme' },
-  { value: 'Femme', label: 'Femme' },
-  { value: 'Fille', label: 'Fille' },
-  { value: 'Garçon', label: 'Garçon' },
+  { value: 'male', label: 'Homme' },
+  { value: 'female', label: 'Femme' },
+  { value: 'girl', label: 'Fille' },
+  { value: 'boy', label: 'Garçon' },
 ];
 
 const item_typeS = [

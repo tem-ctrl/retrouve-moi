@@ -22,6 +22,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/signout', [AuthController::class, 'signout']);
 });
 
+// TODO(auth): every route below is unauthenticated — no auth:sanctum
+// middleware, no ownership checks. The Next.js frontend now sends a
+// Bearer token on every request once a user is signed in (see
+// ui/lib/http.ts), but that token currently protects nothing here: any
+// client can update or delete any user's missing-person report, lost-item
+// report, or account, authenticated or not. Before relying on that header
+// for anything, these mutation routes (PUT/PATCH/DELETE, and arguably
+// POST) need auth:sanctum plus an ownership check (e.g. a policy comparing
+// the authenticated user to the resource's user_id) — not just a "logged
+// in" check, since these are all per-owner resources.
+
 // Users routes
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{user_id}', [UserController::class, 'get']);

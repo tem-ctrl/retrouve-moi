@@ -2,10 +2,8 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { buildApiEndpoint } from '@/lib/api-client';
-import { API_ROUTES } from '@/lib/routes';
+import { useMissingPersons } from '@/hooks/api/useMissingPersons';
 import { MissingPerson } from '@/types';
-import { ApiCollection } from '@/types/api';
 
 import {
   UserIcon,
@@ -46,8 +44,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [userReports, setUserReports] = useState<MissingPerson[]>([]);
-  const [loadingReports, setLoadingReports] = useState(true);
+  const { data: userReports, isLoading: loadingReports } = useMissingPersons(
+    user ? { user_id: user.id } : null,
+  );
 
   const [formData, setFormData] = useState({
     full_name: profile?.full_name || '',
@@ -60,6 +59,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
 
   useEffect(() => {
     if (profile) {
+      // Seeding editable form state from profile once it loads
+      // asynchronously — not syncing an external system.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         full_name: profile.full_name || '',
         phone: profile.phone || '',
@@ -70,32 +72,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
       });
     }
   }, [profile]);
-
-  useEffect(() => {
-    fetchUserReports();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  const fetchUserReports = async () => {
-    if (!user) return;
-
-    try {
-      const response = await fetch(
-        buildApiEndpoint(API_ROUTES.missingPersons.collection({ user_id: user.id })),
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user reports');
-      }
-
-      const body: ApiCollection<MissingPerson> = await response.json();
-      setUserReports(body.data);
-    } catch (error) {
-      console.error('Error fetching user reports:', error);
-    } finally {
-      setLoadingReports(false);
-    }
-  };
 
   const handleSaveProfile = async () => {
     setLoading(true);
