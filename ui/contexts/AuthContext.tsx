@@ -27,8 +27,6 @@ interface AuthContextType {
     avatar?: File,
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signInWithPhone: (phone: string) => Promise<{ error: Error | null }>;
-  verifyOtp: (phone: string, token: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error: Error | null }>;
 }
@@ -139,18 +137,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const signInWithPhone = async (_phone: string) => {
-    // This would require a proper SMS/OTP implementation
-    return { error: new Error('Phone sign in not yet implemented') };
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const verifyOtp = async (_phone: string, _token: string) => {
-    // This would require a proper SMS/OTP implementation
-    return { error: new Error('OTP verification not yet implemented') };
-  };
-
   const signOut = async () => {
     try {
       await fetch(buildApiEndpoint(API_ROUTES.auth.signout), { method: 'POST' });
@@ -193,8 +179,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         signUp,
         signIn,
-        signInWithPhone,
-        verifyOtp,
         signOut,
         updateProfile,
       }}
