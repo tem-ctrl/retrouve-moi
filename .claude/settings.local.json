@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f app/diag4.test.tsx /tmp/diag5-output.json /tmp/diag6-output.json; echo done)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}
