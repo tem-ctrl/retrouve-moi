@@ -66,7 +66,7 @@ const UrgentCasesSection: React.FC<UrgentCasesSectionProps> = ({
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className="object-cover"
                 />
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4">
+                <div className="absolute top-0 left-0 right-0 -to-b from-black/50 to-transparent p-4">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded-full animate-pulse">
                       <AlertTriangleIcon size={16} />

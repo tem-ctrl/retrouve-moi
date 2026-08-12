@@ -9,7 +9,7 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onReportClick, onSearchClick }) => {
   return (
-    <section className="relative bg-gradient-to-br from-[#1E3A5F] via-[#2d4a6f] to-[#1E3A5F] text-white overflow-hidden">
+    <section className="relative bg-linear-to-br from-[#1E3A5F] via-[#2d4a6f] to-[#1E3A5F] text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2"></div>

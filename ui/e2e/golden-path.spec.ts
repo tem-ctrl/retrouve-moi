@@ -20,15 +20,15 @@ test('browse, filter, view a detail, and submit a missing-person report', async 
   await expect(listings.getByRole('heading', { name: 'Paul Tassong', level: 3 })).toBeVisible();
   await expect(listings.getByRole('heading', { name: 'Aïcha Bello', level: 3 })).not.toBeVisible();
 
-  // Open a person's detail view — a real, shareable /missing-persons/[id]
-  // URL rendered as an intercepted modal-over-grid (Phase 3.5).
+  // Open a person's detail view — a real, shareable, full-page
+  // /missing-persons/[id] route.
   await listings.getByRole('button', { name: 'Voir détails' }).click();
   await expect(page).toHaveURL(/\/missing-persons\/\d+$/);
   await expect(page.getByRole('heading', { name: 'Paul Tassong', level: 1 })).toBeVisible();
   await expect(page.getByText('Détails du signalement')).toBeVisible();
 
-  // Close the detail modal — pops back to /missing-persons (filters intact,
-  // since this is a real history back(), not a fresh navigation)
+  // Close the detail view — pops back to /missing-persons (filters intact,
+  // since this is a real history back())
   await page.getByText('Détails du signalement').locator('xpath=following-sibling::button').click();
   await expect(page).toHaveURL(/\/missing-persons\?search=Tassong$/);
   await expect(page.getByText('Détails du signalement')).not.toBeVisible();
