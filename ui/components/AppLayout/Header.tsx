@@ -32,13 +32,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
               <HeartIcon size={24} className="text-orange-400" />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="font-bold text-lg leading-tight">Portail des Personnes</h1>
-              <p className="text-xs text-white/70">Disparues au Cameroun</p>
-            </div>
-            <div className="sm:hidden">
-              <h1 className="font-bold text-sm">Disparus Cameroun</h1>
-            </div>
+            <h1 className="font-bold text-sm sm:text-lg sm:leading-tight">Retrouve-moi</h1>
           </Link>
 
           {/* Actions */}

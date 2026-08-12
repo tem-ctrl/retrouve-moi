@@ -83,7 +83,7 @@ function ReportContent() {
 
   return (
     <AppLayout>
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="w-full lg:w-3xl mx-auto px-4 py-8">
         {activeTab === 'item' ? (
           <ItemReportForm
             tabs={tabs}
