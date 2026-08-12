@@ -13,7 +13,7 @@ import {
   UserIcon,
   ChevronDownIcon,
   LogOutIcon,
-} from './icons/Icons';
+} from '../icons/Icons';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link href={ROUTES.home} className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
               <HeartIcon size={24} className="text-orange-400" />
             </div>
@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <div className="sm:hidden">
               <h1 className="font-bold text-sm">Disparus Cameroun</h1>
             </div>
-          </div>
+          </Link>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 </div>
               ) : (
                 <Link
-                  href={ROUTES.login}
+                  href={ROUTES.login()}
                   className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-sm"
                 >
                   <UserIcon size={18} />
