@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useEffect, SubmitEvent , ChangeEvent} from 'react';
+import React, { FC, useState, useRef, useEffect, SubmitEvent, ChangeEvent } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { buildApiEndpoint } from '@/lib/api-client';

@@ -217,8 +217,8 @@ const Footer: React.FC = () => {
         <div className="border-t border-white/10 mt-8 pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm text-center sm:text-left">
-              &copy; {currentYear} Retrouve-moi - Portail des Signalements au Cameroun. Une initiative
-              citoyenne.
+              &copy; {currentYear} Retrouve-moi - Portail des Signalements au Cameroun. Une
+              initiative citoyenne.
             </p>
             <div className="flex gap-4 text-sm">
               <a href="#" className="text-white/60 hover:text-white transition-colors">

@@ -1,0 +1,7 @@
+cd ui
+
+yarn typecheck
+yarn lint
+yarn format
+
+git add -A .
