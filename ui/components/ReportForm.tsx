@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { FC, useState, useRef, useEffect, SubmitEvent , ChangeEvent} from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { buildApiEndpoint } from '@/lib/api-client';
@@ -25,7 +25,7 @@ const REGIONS = [
   'Sud-Ouest',
 ];
 
-const ReportForm: React.FC<ReportFormProps> = ({ tabs, onClose, onSuccess }) => {
+const ReportForm: FC<ReportFormProps> = ({ tabs, onClose, onSuccess }) => {
   const { user, profile } = useAuth();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -64,7 +64,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ tabs, onClose, onSuccess }) => 
     }
   }, [user, profile]);
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPhotoFile(file);
@@ -77,7 +77,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ tabs, onClose, onSuccess }) => 
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     setData((prev) => ({
@@ -86,7 +86,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ tabs, onClose, onSuccess }) => 
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 

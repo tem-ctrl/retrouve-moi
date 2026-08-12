@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, SubmitEvent, ChangeEvent, FC, ReactNode } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { buildApiEndpoint } from '@/lib/api-client';
@@ -8,7 +8,7 @@ import { ITEM_CATEGORIES } from '@/types';
 import { XIcon, CameraIcon, MapPinIcon, PackageIcon, PhoneIcon, FileTextIcon } from './icons/Icons';
 
 interface ItemReportFormProps {
-  tabs: React.ReactNode;
+  tabs: ReactNode;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -26,7 +26,7 @@ const REGIONS = [
   'Sud-Ouest',
 ];
 
-const ItemReportForm: React.FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) => {
+const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) => {
   const { user, profile } = useAuth();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -70,7 +70,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ tabs, onClose, onSucces
     }
   }, [user, profile]);
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPhotoFile(file);
@@ -83,7 +83,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ tabs, onClose, onSucces
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     setData((prev) => ({
@@ -92,7 +92,7 @@ const ItemReportForm: React.FC<ItemReportFormProps> = ({ tabs, onClose, onSucces
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 

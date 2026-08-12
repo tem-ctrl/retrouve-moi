@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { FC, useState, SubmitEvent } from 'react';
 
 import { MissingPerson } from '@/types';
 
@@ -20,7 +20,7 @@ interface PersonDetailModalProps {
   onClose: () => void;
 }
 
-const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }) => {
+const PersonDetailModal: FC<PersonDetailModalProps> = ({ person, onClose }) => {
   const [showSightingForm, setShowSightingForm] = useState(false);
   const [sightingData, setSightingData] = useState({
     reporter_name: '',
@@ -64,7 +64,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
     window.location.href = `tel:${person.contact_phone}`;
   };
 
-  const handleSightingSubmit = async (e: React.FormEvent) => {
+  const handleSightingSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 
@@ -139,7 +139,7 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
         {/* Location and Date */}
         <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-3">
           <div className="flex items-start gap-3">
-            <MapPinIcon size={20} className="text-orange-500 flex-shrink-0 mt-0.5" />
+            <MapPinIcon size={20} className="text-orange-500 shrink-0 mt-0.5" />
             <div>
               <p className="font-medium text-gray-900">Dernière localisation</p>
               <p className="text-gray-600">
@@ -148,14 +148,14 @@ const PersonDetailModal: React.FC<PersonDetailModalProps> = ({ person, onClose }
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <CalendarIcon size={20} className="text-orange-500 flex-shrink-0 mt-0.5" />
+            <CalendarIcon size={20} className="text-orange-500 shrink-0 mt-0.5" />
             <div>
               <p className="font-medium text-gray-900">Date de disparition</p>
               <p className="text-gray-600">{formatDate(person.last_seen_date)}</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <ClockIcon size={20} className="text-orange-500 flex-shrink-0 mt-0.5" />
+            <ClockIcon size={20} className="text-orange-500 shrink-0 mt-0.5" />
             <div>
               <p className="font-medium text-gray-900">Signalé le</p>
               <p className="text-gray-600">{formatDate(person.created_at)}</p>

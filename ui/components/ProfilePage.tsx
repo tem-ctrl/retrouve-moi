@@ -395,7 +395,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       alt={report.full_name}
                       width={96}
                       height={96}
-                      className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                      className="w-24 h-24 object-cover rounded-lg shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
@@ -404,13 +404,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       </div>
                       <div className="space-y-1 text-sm text-gray-500">
                         <div className="flex items-center gap-2">
-                          <MapPinIcon size={14} className="text-orange-500 flex-shrink-0" />
+                          <MapPinIcon size={14} className="text-orange-500 shrink-0" />
                           <span className="truncate">
                             {report.last_seen_location}, {report.region}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <CalendarIcon size={14} className="text-orange-500 flex-shrink-0" />
+                          <CalendarIcon size={14} className="text-orange-500 shrink-0" />
                           <span>Signalé le {formatDate(report.created_at)}</span>
                         </div>
                       </div>

@@ -90,13 +90,13 @@ const UrgentCasesSection: React.FC<UrgentCasesSectionProps> = ({
 
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600 text-sm">
-                    <MapPinIcon size={16} className="mr-2 text-red-500 flex-shrink-0" />
+                    <MapPinIcon size={16} className="mr-2 text-red-500 shrink-0" />
                     <span data-mixed-content="true">
                       {person.last_seen_location}, {person.region}
                     </span>
                   </div>
                   <div className="flex items-center text-gray-600 text-sm">
-                    <CalendarIcon size={16} className="mr-2 text-red-500 flex-shrink-0" />
+                    <CalendarIcon size={16} className="mr-2 text-red-500 shrink-0" />
                     <span data-mixed-content="true">
                       Disparu(e) le {formatDate(person.last_seen_date)}
                     </span>
