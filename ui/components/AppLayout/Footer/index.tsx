@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HeartIcon, PhoneIcon, MapPinIcon, PackageIcon, FileTextIcon } from './icons/Icons';
+import { HeartIcon, PhoneIcon, MapPinIcon, PackageIcon, FileTextIcon } from '../../icons/Icons';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
                 <HeartIcon size={28} className="text-orange-400" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">Retrouvé.cm</h3>
+                <h3 className="font-bold text-lg">Retrouve-moi</h3>
                 <p className="text-sm text-white/70">Cameroun</p>
               </div>
             </div>
@@ -182,28 +182,28 @@ const Footer: React.FC = () => {
             <h4 className="font-semibold mb-4">Urgences</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-red-400 flex-shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Police</p>
                   <p className="text-white/70 text-sm">117</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-blue-400 flex-shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-blue-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Gendarmerie</p>
                   <p className="text-white/70 text-sm">113</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-green-400 flex-shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-green-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Pompiers</p>
                   <p className="text-white/70 text-sm">118</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <MapPinIcon size={18} className="text-orange-400 flex-shrink-0 mt-0.5" />
+                <MapPinIcon size={18} className="text-orange-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Cameroun</p>
                   <p className="text-white/70 text-sm">Toutes les régions</p>
@@ -217,8 +217,8 @@ const Footer: React.FC = () => {
         <div className="border-t border-white/10 mt-8 pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm text-center sm:text-left">
-              © {currentYear} Retrouvé.cm - Portail des Signalements au Cameroun. Une initiative
-              citoyenne.
+              &copy; {currentYear} Retrouve-moi - Portail des Signalements au Cameroun. Une
+              initiative citoyenne.
             </p>
             <div className="flex gap-4 text-sm">
               <a href="#" className="text-white/60 hover:text-white transition-colors">

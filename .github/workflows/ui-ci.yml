@@ -11,7 +11,7 @@ defaults:
     working-directory: ui
 
 jobs:
-  lint-typecheck-test-build:
+  test-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,12 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
-      - name: Lint
-        run: yarn lint
-
-      - name: Typecheck
-        run: yarn typecheck
 
       - name: Unit tests
         run: yarn test

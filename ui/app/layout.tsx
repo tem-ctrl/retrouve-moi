@@ -12,22 +12,13 @@ export const metadata: Metadata = {
     'Plateforme de signalement et de recherche de personnes disparues et objets perdus/trouvés en Afrique',
 };
 
-export default function RootLayout({
-  children,
-  modal,
-}: Readonly<{
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr">
       <body className="antialiased">
         <MockServiceWorkerProvider>
           <SWRProvider>
-            <AuthProvider>
-              {children}
-              {modal}
-            </AuthProvider>
+            <AuthProvider>{children}</AuthProvider>
           </SWRProvider>
         </MockServiceWorkerProvider>
       </body>

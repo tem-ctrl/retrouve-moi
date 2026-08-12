@@ -33,6 +33,18 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 
 ## Local setup
 
+### System requirements
+
+- NodeJs >= 20
+- PHP 8.4
+- MySQL >= 8.4.10
+
+### Clone the repository
+
+```sh
+git clone https://github.com/tem-ctrl/retrouve-moi.git
+```
+
 ### API (`api/`)
 
 ```bash
@@ -63,7 +75,7 @@ The UI defaults to `http://localhost:3000`.
 
 | | API | UI |
 |---|---|---|
-| Install | `composer install` | `yarn install` |
+| Install | `composer install` | `yarn install`, `yarn playwright install` |
 | Dev server | `composer run dev` | `yarn dev` |
 | Test | `php artisan test --compact` | `yarn test` (unit), `yarn test:e2e` (Playwright) |
 | Lint/format | `vendor/bin/pint --dirty --format agent` | `yarn lint`, `yarn format` |

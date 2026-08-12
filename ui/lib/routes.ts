@@ -83,7 +83,9 @@ export const ROUTES = {
   // refactoring.md Phase 3.4.
   report: (type?: 'item') => (type === 'item' ? '/report?type=item' : '/report'),
   profile: '/profile',
-  login: '/login',
+  // Single page (login shown by default, register via ?mode=register) —
+  // mirrors the report() pattern above.
+  login: (mode?: 'register') => (mode === 'register' ? '/login?mode=register' : '/login'),
 };
 
 /**

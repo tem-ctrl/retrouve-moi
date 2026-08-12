@@ -1,17 +1,15 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 
+import AppLayout from '@/components/AppLayout';
 import EmergencyBanner from '@/components/EmergencyBanner';
-import Footer from '@/components/Footer';
 import FoundPersonsSection from '@/components/FoundPersonsSection';
-import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import HowItWorksSection from '@/components/HowItWorksSection';
 import { UserIcon, PackageIcon, MapIcon, GridIcon, SearchIcon } from '@/components/icons/Icons';
 import InteractiveMap from '@/components/InteractiveMap';
-import MobileMenu from '@/components/MobileMenu';
 import RegionsSection from '@/components/RegionsSection';
 import UrgentCasesSection from '@/components/UrgentCasesSection';
 import { useLostItems } from '@/hooks/api/useLostItems';
@@ -23,7 +21,6 @@ export default function Home() {
   const router = useRouter();
   const { data: persons } = useMissingPersons({ limit: 30 });
   const { data: items } = useLostItems({ limit: 30 });
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -43,9 +40,7 @@ export default function Home() {
   // Stable references: InteractiveMap's marker-rebuild effect depends on
   // these, and rebuilds every marker (with position jitter) whenever they
   // change identity — an inline function here would re-run that effect on
-  // every render of Home. Navigating to /missing-persons/[id] (resp.
-  // /lost-items/[id]) shows the detail as a modal-over-grid via the
-  // intercepting route in app/@modal — see refactoring.md Phase 3.5.
+  // every render of Home.
   const handleViewPersonDetails = useCallback(
     (person: MissingPerson) => {
       router.push(ROUTES.missingPersons.byId(person.id));
@@ -85,13 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Emergency Banner */}
-      <EmergencyBanner />
-
-      {/* Header */}
-      <Header onMenuClick={() => setShowMobileMenu(true)} />
-
+    <AppLayout banner={<EmergencyBanner />}>
       {/* Hero Section */}
       <HeroSection
         onReportClick={handleReportClick}
@@ -231,12 +220,6 @@ export default function Home() {
 
       {/* Found Persons Section */}
       <FoundPersonsSection persons={persons} />
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Mobile Menu */}
-      <MobileMenu isOpen={showMobileMenu} onClose={() => setShowMobileMenu(false)} />
-    </div>
+    </AppLayout>
   );
 }

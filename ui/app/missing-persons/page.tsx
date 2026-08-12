@@ -3,10 +3,8 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import { UserIcon } from '@/components/icons/Icons';
-import MobileMenu from '@/components/MobileMenu';
 import PersonCard from '@/components/ui/PersonCard';
 import SearchFilters from '@/components/ui/SearchFilters';
 import { useMissingPersonsInfinite } from '@/hooks/api/useMissingPersonsInfinite';
@@ -27,7 +25,6 @@ export default function MissingPersonsList() {
 function MissingPersonsListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const filters = filtersFromSearchParams(searchParams);
@@ -62,10 +59,8 @@ function MissingPersonsListContent() {
   const hasActiveFilters = filters.search || filters.region || filters.status || filters.gender;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header onMenuClick={() => setShowMobileMenu(true)} />
-
-      <main className="flex-1 py-8">
+    <AppLayout>
+      <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2">
@@ -166,10 +161,7 @@ function MissingPersonsListContent() {
             </div>
           )}
         </div>
-      </main>
-
-      <Footer />
-      <MobileMenu isOpen={showMobileMenu} onClose={() => setShowMobileMenu(false)} />
-    </div>
+      </div>
+    </AppLayout>
   );
 }

@@ -10,12 +10,10 @@ import {
   PhoneIcon,
   MapPinIcon,
   CalendarIcon,
-  ArrowLeftIcon,
   CheckCircleIcon,
   AlertTriangleIcon,
   SearchIcon,
   EditIcon,
-  LogOutIcon,
 } from './icons/Icons';
 import StatusBadge from './ui/StatusBadge';
 
@@ -38,7 +36,7 @@ const REGIONS = [
 ];
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
-  const { user, profile, signOut, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<'profile' | 'reports'>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -90,11 +88,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
     setLoading(false);
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    onClose();
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('fr-FR', {
@@ -111,33 +104,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-100 z-50 overflow-y-auto">
-      {/* Header */}
-      <div className="sticky top-0 bg-[#1E3A5F] text-white shadow-lg z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-              >
-                <ArrowLeftIcon size={24} />
-              </button>
-              <h1 className="text-xl font-bold">Mon Profil</h1>
-            </div>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm"
-            >
-              <LogOutIcon size={18} />
-              <span className="hidden sm:inline">Déconnexion</span>
-            </button>
-          </div>
-        </div>
+    <div className="py-8">
+      <div className="max-w-4xl mx-auto px-4 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mon Profil</h1>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-[72px] z-10">
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex gap-1">
             <button
@@ -188,7 +161,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
         {activeTab === 'profile' && (
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#1E3A5F] to-[#2d4a6f] p-6 text-white">
+              <div className="bg-linear-to-r from-[#1E3A5F] to-[#2d4a6f] p-6 text-white">
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold">
                     {profile?.full_name?.charAt(0)?.toUpperCase() ||
@@ -422,7 +395,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       alt={report.full_name}
                       width={96}
                       height={96}
-                      className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                      className="w-24 h-24 object-cover rounded-lg shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
@@ -431,13 +404,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onViewPerson }) => {
                       </div>
                       <div className="space-y-1 text-sm text-gray-500">
                         <div className="flex items-center gap-2">
-                          <MapPinIcon size={14} className="text-orange-500 flex-shrink-0" />
+                          <MapPinIcon size={14} className="text-orange-500 shrink-0" />
                           <span className="truncate">
                             {report.last_seen_location}, {report.region}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <CalendarIcon size={14} className="text-orange-500 flex-shrink-0" />
+                          <CalendarIcon size={14} className="text-orange-500 shrink-0" />
                           <span>Signalé le {formatDate(report.created_at)}</span>
                         </div>
                       </div>

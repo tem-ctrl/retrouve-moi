@@ -66,7 +66,7 @@ const UrgentCasesSection: React.FC<UrgentCasesSectionProps> = ({
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className="object-cover"
                 />
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4">
+                <div className="absolute top-0 left-0 right-0 -to-b from-black/50 to-transparent p-4">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded-full animate-pulse">
                       <AlertTriangleIcon size={16} />
@@ -90,13 +90,13 @@ const UrgentCasesSection: React.FC<UrgentCasesSectionProps> = ({
 
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600 text-sm">
-                    <MapPinIcon size={16} className="mr-2 text-red-500 flex-shrink-0" />
+                    <MapPinIcon size={16} className="mr-2 text-red-500 shrink-0" />
                     <span data-mixed-content="true">
                       {person.last_seen_location}, {person.region}
                     </span>
                   </div>
                   <div className="flex items-center text-gray-600 text-sm">
-                    <CalendarIcon size={16} className="mr-2 text-red-500 flex-shrink-0" />
+                    <CalendarIcon size={16} className="mr-2 text-red-500 shrink-0" />
                     <span data-mixed-content="true">
                       Disparu(e) le {formatDate(person.last_seen_date)}
                     </span>
