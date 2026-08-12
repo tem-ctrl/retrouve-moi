@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+import AppLayout from '@/components/AppLayout';
 import ProfilePage from '@/components/ProfilePage';
 import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/lib/routes';
@@ -33,5 +34,9 @@ export default function Profile() {
     router.push(ROUTES.missingPersons.byId(person.id));
   };
 
-  return <ProfilePage onClose={() => router.push(ROUTES.home)} onViewPerson={handleViewPerson} />;
+  return (
+    <AppLayout>
+      <ProfilePage onClose={() => router.push(ROUTES.home)} onViewPerson={handleViewPerson} />
+    </AppLayout>
+  );
 }

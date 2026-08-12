@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { mutate } from 'swr';
 
+import AppLayout from '@/components/AppLayout';
 import ItemReportForm from '@/components/ItemReportForm';
 import ReportForm from '@/components/ReportForm';
 import SuccessModal from '@/components/SuccessModal';
@@ -78,23 +79,26 @@ function ReportContent() {
     setShowSuccess(true);
   };
 
-  if (showSuccess) {
-    return <SuccessModal onClose={() => router.push(ROUTES.home)} />;
-  }
-
   const tabs = <ReportTabs active={activeTab} onSelect={selectTab} />;
 
-  return activeTab === 'item' ? (
-    <ItemReportForm
-      tabs={tabs}
-      onClose={() => router.push(ROUTES.home)}
-      onSuccess={handleItemSuccess}
-    />
-  ) : (
-    <ReportForm
-      tabs={tabs}
-      onClose={() => router.push(ROUTES.home)}
-      onSuccess={handlePersonSuccess}
-    />
+  return (
+    <AppLayout>
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {activeTab === 'item' ? (
+          <ItemReportForm
+            tabs={tabs}
+            onClose={() => router.push(ROUTES.home)}
+            onSuccess={handleItemSuccess}
+          />
+        ) : (
+          <ReportForm
+            tabs={tabs}
+            onClose={() => router.push(ROUTES.home)}
+            onSuccess={handlePersonSuccess}
+          />
+        )}
+      </div>
+      {showSuccess && <SuccessModal onClose={() => router.push(ROUTES.home)} />}
+    </AppLayout>
   );
 }
