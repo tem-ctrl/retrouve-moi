@@ -1,55 +1,38 @@
+# TLS and routing come from the nginx installed on the VPS (deploy/vps-nginx/retrouve-moi.conf).
+# ui and nginx publish their ports on 127.0.0.1 only, for it.
 services:
 
-  traefik:
-    image: traefik:v3.7
-    container_name: rm-traefik
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
-      - "./traefik/dynamic:/etc/traefik/dynamic:ro"
-      - "./traefik/letsencrypt:/letsencrypt"
-    networks:
-      - web
-
   ui:
-    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-nextjs:latest"
+    image: "ghcr.io/tem-ctrl/retrouve-moi-nextjs:latest"
     env_file:
       - ./ui/.env
     container_name: rm-ui
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ui-http.rule=Host(`retrouve-moi.com`) || Host(`www.retrouve-moi.com`)"
-      - "traefik.http.routers.ui-http.service=ui"
-      - "traefik.http.services.ui.loadbalancer.server.port=3000"
+    ports:
+      - "127.0.0.1:3000:3000"
     networks:
       - web
 
   nginx:
-    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-nginx:latest"
+    image: "ghcr.io/tem-ctrl/retrouve-moi-nginx:latest"
     container_name: rm-nginx
     restart: unless-stopped
+    # Port 80 on the host belongs to the VPS's nginx.
+    ports:
+      - "127.0.0.1:8080:80"
     depends_on:
       - php-fpm
     volumes:
       - ./api:/var/www
       - laravel_storage:/var/www/storage
       - uploads:/var/www/public/uploads
-    healthcheck:
-      test: ["CMD", "curl", "-I", "https://api.retrouve-moi.com/up"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # Health check: the image's own HEALTHCHECK (wget http://localhost/health-check).
     networks:
       - web
       - internal
 
   php-fpm:
-    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-php-fpm:latest"
+    image: "ghcr.io/tem-ctrl/retrouve-moi-php-fpm:latest"
     container_name: rm-php-fpm
     restart: unless-stopped
     volumes:
@@ -91,7 +74,7 @@ services:
   #     - internal
 
   scheduler:
-    image: "ghcr.io/${GITHUB_USERNAME}/retrouve-moi-php-fpm:latest"
+    image: "ghcr.io/tem-ctrl/retrouve-moi-php-fpm:latest"
     container_name: rm-scheduler
     restart: unless-stopped
     working_dir: /var/www

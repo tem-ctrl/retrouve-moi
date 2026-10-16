@@ -8,8 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `api/` — Laravel 13 (PHP 8.4) REST API. See `api/CLAUDE.md` for Laravel-specific guidance (Boost tool usage, Pint, PHPUnit conventions) — those rules apply whenever you're working inside `api/`.
 - `ui/` — Next.js 16 (App Router, React 19) frontend. Currently a single-page app: almost all UI state and composition lives in `ui/app/page.tsx`, which renders sections/modals from `ui/components/`.
-- `traefik/` — reverse proxy config (routing, TLS) for production.
-- `docker-compose.yml` — production orchestration (traefik, ui, nginx, php-fpm, scheduler, redis, mysql).
+- `docker-compose.yml` — production orchestration (ui, nginx, php-fpm, scheduler, redis, mysql). TLS and routing come from the nginx installed on the VPS (vps-nginx), which forwards to `127.0.0.1:3000` (ui) and `127.0.0.1:8080` (API).
 - `.github/workflows/docker-build-push.yml` — builds and pushes three GHCR images (`-nextjs`, `-php-fpm`, `-nginx`) on push to `main`.
 
 The UI and API are separate deployables that only communicate over HTTP — there is no shared package or generated client. When changing an API response shape, you must manually update the corresponding TypeScript types/usages in `ui/`.
@@ -56,4 +55,4 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 
 ## Deployment
 
-Production images are built by GitHub Actions on push to `main` and pushed to GHCR (`ghcr.io/<repo>-nextjs`, `-php-fpm`, `-nginx`), then run via `docker-compose.yml` (pulling `:latest`). There's no staging environment defined in this repo. Nginx and php-fpm share `laravel_storage` and `uploads` volumes; only `traefik` and `ui`/`nginx` are on the `web` network, everything else is on the internal-only `internal` network.
+Production images are built by GitHub Actions on push to `main` and pushed to GHCR (`ghcr.io/<repo>-nextjs`, `-php-fpm`, `-nginx`), then run via `docker-compose.yml` (pulling `:latest`). There's no staging environment defined in this repo. Nginx and php-fpm share `laravel_storage` and `uploads` volumes; `ui` and `nginx` publish ports on 127.0.0.1 for the VPS's nginx (3000 and 8080), everything else is on the internal-only `internal` network.

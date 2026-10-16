@@ -8,8 +8,7 @@ Live site: [https://retrouve-moi.com](https://retrouve-moi.com)
 
 - `api/` — Laravel 13 (PHP 8.4) REST API.
 - `ui/` — Next.js 16 (App Router, React 19) frontend.
-- `traefik/` — reverse proxy config (routing, TLS) for production.
-- `docker-compose.yml` — production orchestration (traefik, ui, nginx, php-fpm, scheduler, redis, mysql).
+- `docker-compose.yml` — production orchestration (ui, nginx, php-fpm, scheduler, redis, mysql). TLS and routing come from the nginx installed on the VPS (vps-nginx), which forwards to `127.0.0.1:3000` (ui) and `127.0.0.1:8080` (API).
 - `.github/workflows/docker-build-push.yml` — builds and pushes GHCR images on push to `main`.
 
 The UI and API are separate deployables that only communicate over HTTP — there is no shared package or generated client.
@@ -29,7 +28,7 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 - Vitest (unit), Playwright (e2e), MSW (API mocking)
 
 **Infra**
-- Docker Compose, Traefik (TLS/routing), Nginx + PHP-FPM, GitHub Actions (build & push to GHCR)
+- Docker Compose, Nginx on the VPS (TLS/routing), Nginx + PHP-FPM, GitHub Actions (build & push to GHCR)
 
 ## Local setup
 
@@ -84,3 +83,12 @@ The UI defaults to `http://localhost:3000`.
 ## Deployment
 
 Production images are built by GitHub Actions on push to `main` and pushed to GHCR (`-nextjs`, `-php-fpm`, `-nginx`), then run via `docker-compose.yml`. There is no staging environment.
+
+The VPS's nginx is the only process exposed on ports 80/443. The `ui` and `nginx` containers publish only on `127.0.0.1:3000` and `127.0.0.1:8080`, and MySQL/Redis are not published at all. To set up the VPS's nginx:
+
+```sh
+sudo cp deploy/vps-nginx/retrouve-moi.conf /etc/nginx/conf.d/retrouve-moi.conf
+sudo certbot certonly --nginx -d retrouve-moi.com -d www.retrouve-moi.com -d api.retrouve-moi.com
+sudo nginx -t && sudo systemctl reload nginx
+docker compose pull && docker compose up -d
+```
