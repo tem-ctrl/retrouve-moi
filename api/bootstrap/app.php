@@ -13,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Requests arrive via the VPS's nginx and then the container nginx; php-fpm is only
+        // reachable on the internal Docker network, so trusting any proxy is safe.
+        $middleware->trustProxies(at: '*');
     })
     // ->withExceptions(function (Exceptions $exceptions): void {
     //     $exceptions->render(function (AuthenticationException $e, $request) {
