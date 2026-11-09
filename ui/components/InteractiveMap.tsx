@@ -151,19 +151,19 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       .cluster-small {
         width: 36px;
         height: 36px;
-        background: linear-gradient(135deg, #f97316, #ea580c);
+        background: var(--brand-indigo);
         font-size: 12px;
       }
       .cluster-medium {
         width: 44px;
         height: 44px;
-        background: linear-gradient(135deg, #ef4444, #dc2626);
+        background: #2c3a7c;
         font-size: 14px;
       }
       .cluster-large {
         width: 52px;
         height: 52px;
-        background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        background: #3d4c9a;
         font-size: 16px;
       }
       .custom-marker {
@@ -179,14 +179,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       .custom-marker:hover {
         transform: scale(1.1);
       }
-      .marker-missing { background: #f97316; }
-      .marker-urgent { background: #ef4444; animation: pulse 2s infinite; }
-      .marker-found { background: #22c55e; }
-      .marker-lost { background: #3b82f6; }
-      .marker-item { background: #8b5cf6; }
+      .marker-missing { background: var(--danger); }
+      .marker-urgent { background: var(--danger); animation: pulse 2s infinite; }
+      .marker-found { background: var(--success); }
+      .marker-lost { background: var(--item); }
+      .marker-item { background: var(--item); }
       @keyframes pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(194, 65, 45, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(194, 65, 45, 0); }
       }
     `;
     document.head.appendChild(style);
@@ -393,43 +393,43 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   };
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-muted">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Carte des signalements
           </h2>
-          <p className="text-gray-600">Visualisez tous les cas signalés au Cameroun</p>
+          <p className="text-subtle">Visualisez tous les cas signalés au Cameroun</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-card rounded-2xl shadow-lg overflow-hidden">
           {/* Map Controls */}
-          <div className="p-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
+          <div className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-wrap">
               {/* Legend */}
               <div className="flex items-center gap-3 text-sm">
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                  <span className="text-gray-600">Disparu</span>
+                  <div className="w-3 h-3 rounded-full bg-primary"></div>
+                  <span className="text-subtle">Disparu</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
-                  <span className="text-gray-600">Urgent</span>
+                  <div className="w-3 h-3 rounded-full bg-danger animate-pulse"></div>
+                  <span className="text-subtle">Urgent</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-gray-600">Retrouvé</span>
+                  <div className="w-3 h-3 rounded-full bg-success"></div>
+                  <span className="text-subtle">Retrouvé</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <span className="text-gray-600">Perdu</span>
+                  <div className="w-3 h-3 rounded-full bg-info"></div>
+                  <span className="text-subtle">Perdu</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted-strong rounded-lg transition-colors text-sm font-medium"
             >
               <FilterIcon size={16} />
               Filtres
@@ -438,62 +438,62 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
           {/* Filter Panel */}
           {showFilters && (
-            <div className="p-4 bg-gray-50 border-b border-gray-100">
+            <div className="p-4 bg-muted border-b border-border">
               <div className="flex flex-wrap gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showPersons}
                     onChange={(e) => setFilters((f) => ({ ...f, showPersons: e.target.checked }))}
-                    className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
+                    className="w-4 h-4 text-primary-ink rounded focus:ring-ring"
                   />
-                  <span className="text-sm text-gray-700">Personnes</span>
+                  <span className="text-sm text-subtle">Personnes</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showItems}
                     onChange={(e) => setFilters((f) => ({ ...f, showItems: e.target.checked }))}
-                    className="w-4 h-4 text-purple-500 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-item-ink rounded focus:ring-item"
                   />
-                  <span className="text-sm text-gray-700">Objets/Documents</span>
+                  <span className="text-sm text-subtle">Objets/Documents</span>
                 </label>
-                <div className="w-px h-6 bg-gray-300"></div>
+                <div className="w-px h-6 bg-muted-strong"></div>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showMissing}
                     onChange={(e) => setFilters((f) => ({ ...f, showMissing: e.target.checked }))}
-                    className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
+                    className="w-4 h-4 text-primary-ink rounded focus:ring-ring"
                   />
-                  <span className="text-sm text-gray-700">Disparus</span>
+                  <span className="text-sm text-subtle">Disparus</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showUrgent}
                     onChange={(e) => setFilters((f) => ({ ...f, showUrgent: e.target.checked }))}
-                    className="w-4 h-4 text-red-500 rounded focus:ring-red-500"
+                    className="w-4 h-4 text-danger-ink rounded focus:ring-danger"
                   />
-                  <span className="text-sm text-gray-700">Urgents</span>
+                  <span className="text-sm text-subtle">Urgents</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showFound}
                     onChange={(e) => setFilters((f) => ({ ...f, showFound: e.target.checked }))}
-                    className="w-4 h-4 text-green-500 rounded focus:ring-green-500"
+                    className="w-4 h-4 text-success-ink rounded focus:ring-success"
                   />
-                  <span className="text-sm text-gray-700">Retrouvés</span>
+                  <span className="text-sm text-subtle">Retrouvés</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.showLost}
                     onChange={(e) => setFilters((f) => ({ ...f, showLost: e.target.checked }))}
-                    className="w-4 h-4 text-blue-500 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-info-ink rounded focus:ring-info"
                   />
-                  <span className="text-sm text-gray-700">Perdus</span>
+                  <span className="text-sm text-subtle">Perdus</span>
                 </label>
               </div>
             </div>
@@ -501,12 +501,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
           {/* Map Container */}
           <div className="relative">
-            <div ref={mapRef} className="w-full h-[500px] z-0" style={{ background: '#e5e7eb' }}>
+            <div
+              ref={mapRef}
+              className="w-full h-[500px] z-0"
+              style={{ background: 'var(--muted-strong)' }}
+            >
               {!mapLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600">Chargement de la carte...</p>
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-subtle">Chargement de la carte...</p>
                   </div>
                 </div>
               )}
@@ -514,12 +518,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
             {/* Selected Marker Info */}
             {selectedMarker && (
-              <div className="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-white rounded-xl shadow-lg p-4 z-[1000]">
+              <div className="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-card rounded-xl shadow-lg p-4 z-[1000]">
                 <button
                   onClick={() => setSelectedMarker(null)}
-                  className="absolute top-2 right-2 p-1 hover:bg-gray-100 rounded-full"
+                  className="absolute top-2 right-2 p-1 hover:bg-muted rounded-full"
                 >
-                  <XIcon size={16} className="text-gray-500" />
+                  <XIcon size={16} className="text-muted-foreground" />
                 </button>
 
                 <div className="flex gap-3">
@@ -533,24 +537,24 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                     />
                   )}
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-gray-900 truncate">{selectedMarker.title}</h4>
-                    <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
-                      <MapPinIcon size={14} className="text-orange-500" />
+                    <h4 className="font-bold text-foreground truncate">{selectedMarker.title}</h4>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                      <MapPinIcon size={14} className="text-primary-ink" />
                       <span className="truncate">{selectedMarker.location}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-2">
                       <span
                         className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                           selectedMarker.is_urgent
-                            ? 'bg-red-100 text-red-700'
+                            ? 'bg-danger-soft text-danger-ink'
                             : selectedMarker.status === 'found'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-orange-100 text-orange-700'
+                              ? 'bg-success-soft text-success-ink'
+                              : 'bg-primary-soft text-primary-ink'
                         }`}
                       >
                         {getStatusLabel(selectedMarker.status, selectedMarker.type)}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted-foreground">
                         {formatDate(selectedMarker.date)}
                       </span>
                     </div>
@@ -561,38 +565,38 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </div>
 
           {/* Stats */}
-          <div className="p-4 bg-gray-50 border-t border-gray-100">
+          <div className="p-4 bg-muted border-t border-border">
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="text-center">
-                <div className="font-bold text-2xl text-orange-600">
+                <div className="font-bold text-2xl text-primary-ink">
                   {persons.filter((p) => p.status !== 'found').length}
                 </div>
-                <div className="text-gray-500">Personnes disparues</div>
+                <div className="text-muted-foreground">Personnes disparues</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-red-600">
+                <div className="font-bold text-2xl text-danger-ink">
                   {persons.filter((p) => p.is_urgent && p.status !== 'found').length}
                 </div>
-                <div className="text-gray-500">Cas urgents</div>
+                <div className="text-muted-foreground">Cas urgents</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-blue-600">
+                <div className="font-bold text-2xl text-info-ink">
                   {items.filter((i) => i.report_type === 'lost' && i.status !== 'claimed').length}
                 </div>
-                <div className="text-gray-500">Objets perdus</div>
+                <div className="text-muted-foreground">Objets perdus</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-purple-600">
+                <div className="font-bold text-2xl text-item-ink">
                   {items.filter((i) => i.report_type === 'found' && i.status !== 'claimed').length}
                 </div>
-                <div className="text-gray-500">Objets trouvés</div>
+                <div className="text-muted-foreground">Objets trouvés</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-green-600">
+                <div className="font-bold text-2xl text-success-ink">
                   {persons.filter((p) => p.status === 'found').length +
                     items.filter((i) => i.status === 'claimed').length}
                 </div>
-                <div className="text-gray-500">Cas résolus</div>
+                <div className="text-muted-foreground">Cas résolus</div>
               </div>
             </div>
           </div>

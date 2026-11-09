@@ -6,6 +6,10 @@ const apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL || 'https://api.retrouve-
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Share-image routes read these TTFs at runtime (Satori can't use woff2).
+  outputFileTracingIncludes: {
+    '/**': ['./assets/fonts/**'],
+  },
   compress: true,
   images: {
     dangerouslyAllowLocalIP: true,

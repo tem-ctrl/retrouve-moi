@@ -24,17 +24,17 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
   };
 
   return (
-    <section className="py-12 bg-green-50">
+    <section className="py-12 bg-success-soft">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 rounded-full mb-4">
-            <CheckCircleIcon size={20} className="text-green-600" />
-            <span className="text-sm font-semibold text-green-700">Bonnes nouvelles</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-success-soft rounded-full mb-4">
+            <CheckCircleIcon size={20} className="text-success-ink" />
+            <span className="text-sm font-semibold text-success-ink">Bonnes nouvelles</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Personnes retrouvées
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-subtle max-w-2xl mx-auto">
             Grâce à la mobilisation citoyenne, ces personnes ont été retrouvées saines et sauves.
           </p>
         </div>
@@ -43,7 +43,7 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
           {foundPersons.map((person) => (
             <div
               key={person.id}
-              className="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden hover:shadow-md transition-shadow"
+              className="bg-card rounded-xl shadow-sm border border-success-line overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="relative h-40">
                 <Image
@@ -54,7 +54,7 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
                   className="object-cover"
                 />
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-success text-white text-xs font-semibold rounded-full">
                     <CheckCircleIcon size={14} />
                     Retrouvé
                   </span>
@@ -62,14 +62,14 @@ const FoundPersonsSection: React.FC<FoundPersonsSectionProps> = ({ persons }) =>
               </div>
 
               <div className="p-4">
-                <h3 className="font-bold text-gray-900 mb-2">{person.full_name}</h3>
-                <div className="space-y-1 text-sm text-gray-500">
+                <h3 className="font-bold text-foreground mb-2">{person.full_name}</h3>
+                <div className="space-y-1 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <MapPinIcon size={14} className="text-green-500" />
+                    <MapPinIcon size={14} className="text-success-ink" />
                     <span className="truncate">{person.region}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CalendarIcon size={14} className="text-green-500" />
+                    <CalendarIcon size={14} className="text-success-ink" />
                     <span>{formatDate(person.updated_at)}</span>
                   </div>
                 </div>

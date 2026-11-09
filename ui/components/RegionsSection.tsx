@@ -10,16 +10,16 @@ interface RegionsSectionProps {
 }
 
 const REGIONS_DATA = [
-  { name: 'Centre', capital: 'Yaoundé', color: 'bg-blue-500' },
-  { name: 'Littoral', capital: 'Douala', color: 'bg-orange-500' },
-  { name: 'Ouest', capital: 'Bafoussam', color: 'bg-green-500' },
-  { name: 'Nord-Ouest', capital: 'Bamenda', color: 'bg-purple-500' },
-  { name: 'Sud-Ouest', capital: 'Buéa', color: 'bg-pink-500' },
-  { name: 'Sud', capital: 'Ebolowa', color: 'bg-teal-500' },
-  { name: 'Est', capital: 'Bertoua', color: 'bg-yellow-500' },
-  { name: 'Adamaoua', capital: 'Ngaoundéré', color: 'bg-red-500' },
-  { name: 'Nord', capital: 'Garoua', color: 'bg-indigo-500' },
-  { name: 'Extrême-Nord', capital: 'Maroua', color: 'bg-cyan-500' },
+  { name: 'Centre', capital: 'Yaoundé', color: 'bg-primary' },
+  { name: 'Littoral', capital: 'Douala', color: 'bg-primary' },
+  { name: 'Ouest', capital: 'Bafoussam', color: 'bg-primary' },
+  { name: 'Nord-Ouest', capital: 'Bamenda', color: 'bg-primary' },
+  { name: 'Sud-Ouest', capital: 'Buéa', color: 'bg-primary' },
+  { name: 'Sud', capital: 'Ebolowa', color: 'bg-primary' },
+  { name: 'Est', capital: 'Bertoua', color: 'bg-primary' },
+  { name: 'Adamaoua', capital: 'Ngaoundéré', color: 'bg-primary' },
+  { name: 'Nord', capital: 'Garoua', color: 'bg-primary' },
+  { name: 'Extrême-Nord', capital: 'Maroua', color: 'bg-primary' },
 ];
 
 const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick }) => {
@@ -28,13 +28,13 @@ const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick 
   };
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-card">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Rechercher par région
           </h2>
-          <p className="text-gray-600">
+          <p className="text-subtle">
             Cliquez sur une région pour voir les signalements correspondants
           </p>
         </div>
@@ -46,17 +46,17 @@ const RegionsSection: React.FC<RegionsSectionProps> = ({ persons, onRegionClick 
               <button
                 key={region.name}
                 onClick={() => onRegionClick(region.name)}
-                className="group relative bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-all hover:shadow-md"
+                className="group relative bg-muted hover:bg-muted rounded-xl p-4 text-left transition-all hover:shadow-md"
               >
                 <div
                   className={`w-10 h-10 ${region.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}
                 >
                   <MapPinIcon size={20} className="text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{region.name}</h3>
-                <p className="text-sm text-gray-500">{region.capital}</p>
+                <h3 className="font-semibold text-foreground mb-1">{region.name}</h3>
+                <p className="text-sm text-muted-foreground">{region.capital}</p>
                 {count > 0 && (
-                  <span className="absolute top-3 right-3 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute top-3 right-3 w-6 h-6 bg-danger text-white text-xs font-bold rounded-full flex items-center justify-center">
                     {count}
                   </span>
                 )}

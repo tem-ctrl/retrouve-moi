@@ -74,10 +74,13 @@ export const ROUTES = {
   missingPersons: {
     list: '/missing-persons',
     byId: (id: number | string) => `/missing-persons/${id}`,
+    // Printable / shareable PNG poster (add ?download=1 to force a download).
+    poster: (id: number | string) => `/missing-persons/${id}/affiche`,
   },
   lostItems: {
     list: '/lost-items',
     byId: (id: number | string) => `/lost-items/${id}`,
+    poster: (id: number | string) => `/lost-items/${id}/affiche`,
   },
   // Single tabbed page (person tab default, item tab via ?type=item) — see
   // refactoring.md Phase 3.4.

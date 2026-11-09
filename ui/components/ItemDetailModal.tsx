@@ -1,6 +1,8 @@
+import { Download } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
+import { ROUTES } from '@/lib/routes';
 import { LostItem } from '@/types';
 
 import {
@@ -31,27 +33,27 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
   const getStatusBadge = () => {
     if (item.report_type === 'found') {
       return (
-        <span className="px-4 py-1.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
+        <span className="px-4 py-1.5 bg-success-soft text-success-ink text-sm font-semibold rounded-full">
           Trouvé
         </span>
       );
     }
     if (item.status === 'claimed') {
       return (
-        <span className="px-4 py-1.5 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full">
+        <span className="px-4 py-1.5 bg-info-soft text-info-ink text-sm font-semibold rounded-full">
           Réclamé
         </span>
       );
     }
     if (item.is_urgent) {
       return (
-        <span className="px-4 py-1.5 bg-red-100 text-red-700 text-sm font-semibold rounded-full animate-pulse">
+        <span className="px-4 py-1.5 bg-danger-soft text-danger-ink text-sm font-semibold rounded-full animate-pulse">
           Urgent
         </span>
       );
     }
     return (
-      <span className="px-4 py-1.5 bg-orange-100 text-orange-700 text-sm font-semibold rounded-full">
+      <span className="px-4 py-1.5 bg-primary-soft text-primary-ink text-sm font-semibold rounded-full">
         Perdu
       </span>
     );
@@ -85,7 +87,8 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
     const shareData = {
       title: `${item.report_type === 'found' ? 'Trouvé' : 'Perdu'}: ${item.item_name}`,
       text: `${item.item_name} - ${item.location}, ${item.region}. ${item.description}`,
-      url: window.location.href,
+      // Canonical detail URL: this modal is also opened from list pages.
+      url: `${window.location.origin}${ROUTES.lostItems.byId(item.id)}`,
     };
 
     if (navigator.share) {
@@ -111,28 +114,34 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
       {/* Header */}
-      <div className="border-b border-gray-100 p-4 flex items-center justify-between">
+      <div className="border-b border-border p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {getStatusBadge()}
-          <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
+          <span className="px-3 py-1 bg-muted text-subtle text-sm rounded-full">
             {getItemTypeLabel()}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleShare}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-muted rounded-full transition-colors"
             title="Partager"
           >
-            <ShareIcon size={20} className="text-gray-500" />
+            <ShareIcon size={20} className="text-muted-foreground" />
           </button>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          <a
+            href={`${ROUTES.lostItems.poster(item.id)}?download=1`}
+            download
+            className="p-2 hover:bg-muted rounded-full transition-colors"
+            title="Télécharger l'affiche"
+            aria-label="Télécharger l'affiche"
           >
-            <XIcon size={24} className="text-gray-500" />
+            <Download size={20} className="text-muted-foreground" aria-hidden />
+          </a>
+          <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
+            <XIcon size={24} className="text-muted-foreground" />
           </button>
         </div>
       </div>
@@ -152,18 +161,18 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
 
         {/* Item Info */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{item.item_name}</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{item.item_name}</h2>
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
+            <span className="px-3 py-1 bg-item-soft text-item-ink text-sm rounded-full">
               {item.item_category}
             </span>
             {item.brand && (
-              <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
+              <span className="px-3 py-1 bg-muted text-subtle text-sm rounded-full">
                 {item.brand}
               </span>
             )}
             {item.color && (
-              <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
+              <span className="px-3 py-1 bg-muted text-subtle text-sm rounded-full">
                 {item.color}
               </span>
             )}
@@ -172,57 +181,57 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
 
         {/* Location & Date */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
-            <MapPinIcon size={20} className="text-purple-500 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 bg-muted rounded-xl">
+            <MapPinIcon size={20} className="text-item-ink mt-0.5" />
             <div>
-              <div className="text-sm text-gray-500">Lieu</div>
-              <div className="font-medium text-gray-900">{item.location}</div>
-              <div className="text-sm text-gray-600">{item.region}</div>
+              <div className="text-sm text-muted-foreground">Lieu</div>
+              <div className="font-medium text-foreground">{item.location}</div>
+              <div className="text-sm text-subtle">{item.region}</div>
             </div>
           </div>
-          <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
-            <CalendarIcon size={20} className="text-purple-500 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 bg-muted rounded-xl">
+            <CalendarIcon size={20} className="text-item-ink mt-0.5" />
             <div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-muted-foreground">
                 Date {item.report_type === 'found' ? 'de découverte' : 'de perte'}
               </div>
-              <div className="font-medium text-gray-900">{formatDate(item.date_lost_found)}</div>
+              <div className="font-medium text-foreground">{formatDate(item.date_lost_found)}</div>
             </div>
           </div>
         </div>
 
         {/* Reward */}
         {item.reward && (
-          <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl mb-6">
-            <TagIcon size={20} className="text-green-600" />
+          <div className="flex items-center gap-3 p-4 bg-success-soft rounded-xl mb-6">
+            <TagIcon size={20} className="text-success-ink" />
             <div>
-              <div className="text-sm text-green-600">Récompense offerte</div>
-              <div className="font-bold text-green-700">{item.reward}</div>
+              <div className="text-sm text-success-ink">Récompense offerte</div>
+              <div className="font-bold text-success-ink">{item.reward}</div>
             </div>
           </div>
         )}
 
         {/* Description */}
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-          <p className="text-gray-600 leading-relaxed">{item.description}</p>
+          <h3 className="font-semibold text-foreground mb-2">Description</h3>
+          <p className="text-subtle leading-relaxed">{item.description}</p>
         </div>
 
         {/* Document specific info */}
         {item.item_type === 'document' && (item.document_number || item.owner_name) && (
-          <div className="mb-6 p-4 bg-blue-50 rounded-xl">
-            <h3 className="font-semibold text-blue-900 mb-3">Informations du document</h3>
+          <div className="mb-6 p-4 bg-info-soft rounded-xl">
+            <h3 className="font-semibold text-info-ink mb-3">Informations du document</h3>
             <div className="space-y-2">
               {item.owner_name && (
                 <div className="flex justify-between">
-                  <span className="text-blue-700">Nom sur le document:</span>
-                  <span className="font-medium text-blue-900">{item.owner_name}</span>
+                  <span className="text-info-ink">Nom sur le document:</span>
+                  <span className="font-medium text-info-ink">{item.owner_name}</span>
                 </div>
               )}
               {item.document_number && (
                 <div className="flex justify-between">
-                  <span className="text-blue-700">Numéro:</span>
-                  <span className="font-medium text-blue-900">{item.document_number}</span>
+                  <span className="text-info-ink">Numéro:</span>
+                  <span className="font-medium text-info-ink">{item.document_number}</span>
                 </div>
               )}
             </div>
@@ -230,9 +239,9 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
         )}
 
         {/* Reporter Info */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-xl">
-          <h3 className="font-semibold text-gray-900 mb-3">Signalé par</h3>
-          <div className="text-gray-600">
+        <div className="mb-6 p-4 bg-muted rounded-xl">
+          <h3 className="font-semibold text-foreground mb-3">Signalé par</h3>
+          <div className="text-subtle">
             <div className="font-medium">{item.reporter_name}</div>
             <div className="text-sm">Signalé le {formatDate(item.created_at)}</div>
           </div>
@@ -242,7 +251,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
         <div className="flex gap-3">
           <button
             onClick={handleCall}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-medium transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-item hover:bg-item-hover text-white rounded-xl font-medium transition-colors"
           >
             <PhoneIcon size={20} />
             Appeler
@@ -250,7 +259,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
           {item.contact_email && (
             <button
               onClick={handleEmail}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-muted hover:bg-muted-strong text-subtle rounded-xl font-medium transition-colors"
             >
               <MailIcon size={20} />
               Email

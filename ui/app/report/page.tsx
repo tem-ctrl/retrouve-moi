@@ -21,14 +21,14 @@ function ReportTabs({
   onSelect: (tab: ReportType) => void;
 }) {
   return (
-    <div className="inline-flex rounded-full bg-gray-100 p-1">
+    <div className="inline-flex rounded-full bg-muted p-1">
       <button
         type="button"
         onClick={() => onSelect('person')}
         className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
           active === 'person'
-            ? 'bg-white text-gray-900 shadow-sm'
-            : 'text-gray-500 hover:text-gray-700'
+            ? 'bg-card text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
         }`}
       >
         Personne disparue
@@ -38,8 +38,8 @@ function ReportTabs({
         onClick={() => onSelect('item')}
         className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
           active === 'item'
-            ? 'bg-white text-gray-900 shadow-sm'
-            : 'text-gray-500 hover:text-gray-700'
+            ? 'bg-card text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
         }`}
       >
         Objet perdu/trouvé

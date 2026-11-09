@@ -88,107 +88,107 @@ export default function Home() {
       />
 
       {/* Stats Section - Extended */}
-      <section className="py-8 bg-white">
+      <section className="py-8 bg-card">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-            <div className="bg-linear-to-br from-orange-50 to-orange-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-orange-600">{stats.totalPersons}</div>
-              <div className="text-xs text-orange-700">Personnes signalées</div>
+            <div className="bg-primary-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-primary-ink">{stats.totalPersons}</div>
+              <div className="text-xs text-primary-ink">Personnes signalées</div>
             </div>
-            <div className="bg-linear-to-br from-red-50 to-red-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.urgentPersons}</div>
-              <div className="text-xs text-red-700">Cas urgents</div>
+            <div className="bg-danger-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-danger-ink">{stats.urgentPersons}</div>
+              <div className="text-xs text-danger-ink">Cas urgents</div>
             </div>
-            <div className="bg-linear-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-amber-600">{stats.missingPersons}</div>
-              <div className="text-xs text-amber-700">Personnes disparues</div>
+            <div className="bg-warning-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-warning-ink">{stats.missingPersons}</div>
+              <div className="text-xs text-warning-ink">Personnes disparues</div>
             </div>
-            <div className="bg-linear-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.foundPersons}</div>
-              <div className="text-xs text-green-700">Personnes retrouvées</div>
+            <div className="bg-success-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-success-ink">{stats.foundPersons}</div>
+              <div className="text-xs text-success-ink">Personnes retrouvées</div>
             </div>
-            <div className="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.totalItems}</div>
-              <div className="text-xs text-purple-700">Objets signalés</div>
+            <div className="bg-primary-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-primary-ink">{stats.totalItems}</div>
+              <div className="text-xs text-primary-ink">Objets signalés</div>
             </div>
-            <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.lostItems}</div>
-              <div className="text-xs text-blue-700">Objets perdus</div>
+            <div className="bg-item-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-item-ink">{stats.lostItems}</div>
+              <div className="text-xs text-item-ink">Objets perdus</div>
             </div>
-            <div className="bg-linear-to-br from-teal-50 to-teal-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-teal-600">{stats.foundItems}</div>
-              <div className="text-xs text-teal-700">Objets trouvés</div>
+            <div className="bg-info-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-info-ink">{stats.foundItems}</div>
+              <div className="text-xs text-info-ink">Objets trouvés</div>
             </div>
-            <div className="bg-linear-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-emerald-600">{stats.claimedItems}</div>
-              <div className="text-xs text-emerald-700">Objets réclamés</div>
+            <div className="bg-success-soft rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-success-ink">{stats.claimedItems}</div>
+              <div className="text-xs text-success-ink">Objets réclamés</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Quick Actions */}
-      <section className="py-8 bg-gray-50">
+      <section className="py-8 bg-muted">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <button
               onClick={handleReportClick}
-              className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-orange-200"
+              className="flex items-center gap-4 p-6 bg-card rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-primary-line"
             >
-              <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
-                <UserIcon size={28} className="text-orange-600" />
+              <div className="w-14 h-14 bg-primary-soft rounded-xl flex items-center justify-center">
+                <UserIcon size={28} className="text-primary-ink" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">Signaler une disparition</div>
-                <div className="text-sm text-gray-500">Personne disparue</div>
+                <div className="font-bold text-foreground">Signaler une disparition</div>
+                <div className="text-sm text-muted-foreground">Personne disparue</div>
               </div>
             </button>
             <button
               onClick={handleItemReportClick}
-              className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-purple-200"
+              className="flex items-center gap-4 p-6 bg-card rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-item-line"
             >
-              <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center">
-                <PackageIcon size={28} className="text-purple-600" />
+              <div className="w-14 h-14 bg-item-soft rounded-xl flex items-center justify-center">
+                <PackageIcon size={28} className="text-item-ink" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">Signaler un objet</div>
-                <div className="text-sm text-gray-500">Perdu ou trouvé</div>
+                <div className="font-bold text-foreground">Signaler un objet</div>
+                <div className="text-sm text-muted-foreground">Perdu ou trouvé</div>
               </div>
             </button>
             <button
               onClick={scrollToMap}
-              className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-blue-200"
+              className="flex items-center gap-4 p-6 bg-card rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-info-line"
             >
-              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
-                <MapIcon size={28} className="text-blue-600" />
+              <div className="w-14 h-14 bg-info-soft rounded-xl flex items-center justify-center">
+                <MapIcon size={28} className="text-info-ink" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">Voir la carte</div>
-                <div className="text-sm text-gray-500">Tous les signalements</div>
+                <div className="font-bold text-foreground">Voir la carte</div>
+                <div className="text-sm text-muted-foreground">Tous les signalements</div>
               </div>
             </button>
             <button
               onClick={() => router.push(ROUTES.missingPersons.list)}
-              className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-green-200"
+              className="flex items-center gap-4 p-6 bg-card rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-success-line"
             >
-              <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
-                <GridIcon size={28} className="text-green-600" />
+              <div className="w-14 h-14 bg-success-soft rounded-xl flex items-center justify-center">
+                <GridIcon size={28} className="text-success-ink" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">Parcourir les personnes</div>
-                <div className="text-sm text-gray-500">Tous les signalements</div>
+                <div className="font-bold text-foreground">Parcourir les personnes</div>
+                <div className="text-sm text-muted-foreground">Tous les signalements</div>
               </div>
             </button>
             <button
               onClick={() => router.push(ROUTES.lostItems.list)}
-              className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-teal-200"
+              className="flex items-center gap-4 p-6 bg-card rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-item-line"
             >
-              <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center">
-                <SearchIcon size={28} className="text-teal-600" />
+              <div className="w-14 h-14 bg-item-soft rounded-xl flex items-center justify-center">
+                <SearchIcon size={28} className="text-item-ink" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">Parcourir les objets</div>
-                <div className="text-sm text-gray-500">Perdus ou trouvés</div>
+                <div className="font-bold text-foreground">Parcourir les objets</div>
+                <div className="text-sm text-muted-foreground">Perdus ou trouvés</div>
               </div>
             </button>
           </div>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" role="img" aria-label="Retrouve-moi"><title>Retrouve-moi</title>
+<g>
+  <g fill="none" stroke-width="5.5" stroke-linecap="round">
+    <path d="M15.5 38.722A17 17 0 1 1 40.421 19.6" stroke="#F5F6FA"/>
+    <path d="M40.688 27.244A17 17 0 0 1 22.814 40.959" stroke="#E0735C"/>
+  </g>
+  <circle cx="24" cy="24" r="5" fill="#E0735C"/>
+</g>
+</svg>

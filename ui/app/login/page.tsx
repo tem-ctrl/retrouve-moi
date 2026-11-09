@@ -35,12 +35,12 @@ function LoginContent() {
   return (
     <AppLayout>
       <div className="w-full md:max-w-xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
           {/* Header */}
-          <div className="bg-linear-to-r from-[#1E3A5F] to-[#2d4a6f] text-white p-6">
+          <div className="bg-linear-to-r from-chrome to-chrome-deep text-white p-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-                <UserIcon size={28} className="text-orange-400" />
+                <UserIcon size={28} className="text-kola-bright" />
               </div>
               <div>
                 <h1 className="text-xl font-bold">

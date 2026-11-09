@@ -42,42 +42,48 @@ const LoginForm: FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-danger-soft border border-danger-line rounded-lg text-danger-ink text-sm">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <label className="block text-sm font-medium text-subtle mb-1">Email</label>
         <div className="relative">
-          <MailIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <MailIcon
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="votre@email.com"
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+            className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-primary outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+        <label className="block text-sm font-medium text-subtle mb-1">Mot de passe</label>
         <div className="relative">
-          <LockIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <LockIcon
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <input
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="••••••••"
-            className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+            className="w-full pl-10 pr-12 py-3 border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-primary outline-none"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
             {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
           </button>
@@ -87,26 +93,26 @@ const LoginForm: FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
       <button
         type="submit"
         disabled={loading}
-        className="cursor-pointer w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white rounded-xl font-semibold transition-colors"
+        className="cursor-pointer w-full py-3 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-xl font-semibold transition-colors"
       >
         {loading ? 'Connexion...' : 'Se connecter'}
       </button>
 
       <div className="relative my-2">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200"></div>
+          <div className="w-full border-t border-border"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">ou</span>
+          <span className="px-2 bg-card text-muted-foreground">ou</span>
         </div>
       </div>
 
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-subtle">
         Pas encore de compte?{' '}
         <button
           type="button"
           onClick={onSwitchToRegister}
-          className="cursor-pointer text-orange-600 hover:text-orange-700 font-medium"
+          className="cursor-pointer text-primary-ink hover:text-primary-ink font-medium"
         >
           S&apos;inscrire
         </button>

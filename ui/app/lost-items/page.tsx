@@ -64,11 +64,11 @@ function LostItemsListContent() {
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2">
-              <PackageIcon size={28} className="text-purple-500" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
+              <PackageIcon size={28} className="text-item-ink" />
               Objets perdus &amp; trouvés
             </h1>
-            <p className="text-gray-600">Consultez tous les signalements d&apos;objets</p>
+            <p className="text-subtle">Consultez tous les signalements d&apos;objets</p>
           </div>
 
           <SearchFilters
@@ -80,13 +80,13 @@ function LostItemsListContent() {
           />
 
           <div className="mt-6 mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-foreground">
               {items.length} objet{items.length !== 1 ? 's' : ''}
             </h2>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                className="text-sm text-primary-ink hover:text-primary-ink font-medium"
               >
                 Effacer les filtres
               </button>
@@ -96,16 +96,13 @@ function LostItemsListContent() {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse"
-                >
-                  <div className="h-48 bg-gray-200" />
+                <div key={i} className="bg-card rounded-xl shadow-md overflow-hidden animate-pulse">
+                  <div className="h-48 bg-muted-strong" />
                   <div className="p-4 space-y-3">
-                    <div className="h-5 bg-gray-200 rounded w-3/4" />
-                    <div className="h-4 bg-gray-200 rounded w-full" />
-                    <div className="h-4 bg-gray-200 rounded w-2/3" />
-                    <div className="h-10 bg-gray-200 rounded" />
+                    <div className="h-5 bg-muted-strong rounded w-3/4" />
+                    <div className="h-4 bg-muted-strong rounded w-full" />
+                    <div className="h-4 bg-muted-strong rounded w-2/3" />
+                    <div className="h-10 bg-muted-strong rounded" />
                   </div>
                 </div>
               ))}
@@ -127,7 +124,7 @@ function LostItemsListContent() {
                   <button
                     onClick={loadMore}
                     disabled={isLoadingMore}
-                    className="px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 rounded-full font-medium transition-colors"
+                    className="px-6 py-2.5 bg-card border border-border hover:bg-muted disabled:opacity-50 text-subtle rounded-full font-medium transition-colors"
                   >
                     {isLoadingMore ? 'Chargement...' : "Charger plus d'objets"}
                   </button>
@@ -136,9 +133,9 @@ function LostItemsListContent() {
             </>
           ) : (
             <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-24 h-24 bg-muted-strong rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-12 h-12 text-gray-400"
+                  className="w-12 h-12 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -151,11 +148,13 @@ function LostItemsListContent() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun résultat trouvé</h3>
-              <p className="text-gray-500 mb-4">Essayez de modifier vos critères de recherche</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Aucun résultat trouvé</h3>
+              <p className="text-muted-foreground mb-4">
+                Essayez de modifier vos critères de recherche
+              </p>
               <button
                 onClick={clearFilters}
-                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+                className="px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg font-medium transition-colors"
               >
                 Réinitialiser les filtres
               </button>
