@@ -50,15 +50,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Menu Panel */}
-      <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-xl animate-slide-left">
+      <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-card shadow-xl animate-slide-left">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <h2 className="font-bold text-gray-900">Menu</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <XIcon size={24} className="text-gray-500" />
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <h2 className="font-bold text-foreground">Menu</h2>
+          <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
+            <XIcon size={24} className="text-muted-foreground" />
           </button>
         </div>
 
@@ -68,17 +65,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             {menuItems.map((item, index) => {
               const className = `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                 item.highlight === 'orange'
-                  ? 'bg-orange-50 text-orange-700 hover:bg-orange-100'
+                  ? 'bg-primary-soft text-primary-ink hover:bg-primary-soft'
                   : item.highlight === 'purple'
-                    ? 'bg-purple-50 text-purple-700 hover:bg-purple-100'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-item-soft text-item-ink hover:bg-item-soft'
+                    : 'text-subtle hover:bg-muted'
               }`;
               const iconClassName =
                 item.highlight === 'orange'
-                  ? 'text-orange-500'
+                  ? 'text-primary-ink'
                   : item.highlight === 'purple'
-                    ? 'text-purple-500'
-                    : 'text-gray-500';
+                    ? 'text-item-ink'
+                    : 'text-muted-foreground';
               const content = (
                 <>
                   <span className={iconClassName}>{item.icon}</span>
@@ -104,34 +101,34 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Quick Stats */}
-        <div className="mx-4 p-4 bg-gray-50 rounded-xl mb-4">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Statistiques</h3>
+        <div className="mx-4 p-4 bg-muted rounded-xl mb-4">
+          <h3 className="font-semibold text-foreground mb-3 text-sm">Statistiques</h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="text-center">
-              <div className="text-lg font-bold text-orange-600">Personnes</div>
-              <div className="text-xs text-gray-500">Disparues</div>
+              <div className="text-lg font-bold text-primary-ink">Personnes</div>
+              <div className="text-xs text-muted-foreground">Disparues</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-purple-600">Objets</div>
-              <div className="text-xs text-gray-500">Perdus/Trouvés</div>
+              <div className="text-lg font-bold text-item-ink">Objets</div>
+              <div className="text-xs text-muted-foreground">Perdus/Trouvés</div>
             </div>
           </div>
         </div>
 
         {/* Emergency Numbers */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100 bg-gray-50">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Numéros d&apos;urgence</h3>
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border bg-muted">
+          <h3 className="font-semibold text-foreground mb-3 text-sm">Numéros d&apos;urgence</h3>
           <div className="grid grid-cols-2 gap-2">
             <a
               href="tel:117"
-              className="flex items-center gap-2 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 bg-danger-soft text-danger-ink rounded-lg text-sm font-medium"
             >
               <PhoneIcon size={16} />
               Police: 117
             </a>
             <a
               href="tel:113"
-              className="flex items-center gap-2 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 bg-info-soft text-info-ink rounded-lg text-sm font-medium"
             >
               <PhoneIcon size={16} />
               Gend.: 113

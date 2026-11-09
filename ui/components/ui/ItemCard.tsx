@@ -31,7 +31,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
       case 'document':
         return (
           <svg
-            className="w-8 h-8 text-blue-500"
+            className="w-8 h-8 text-info-ink"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -47,7 +47,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
       case 'object':
         return (
           <svg
-            className="w-8 h-8 text-purple-500"
+            className="w-8 h-8 text-item-ink"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
       case 'animal':
         return (
           <svg
-            className="w-8 h-8 text-amber-500"
+            className="w-8 h-8 text-warning-ink"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
       case 'vehicle':
         return (
           <svg
-            className="w-8 h-8 text-gray-500"
+            className="w-8 h-8 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -95,7 +95,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
       default:
         return (
           <svg
-            className="w-8 h-8 text-gray-500"
+            className="w-8 h-8 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -114,27 +114,27 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
   const getStatusBadge = () => {
     if (item.report_type === 'found') {
       return (
-        <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+        <span className="px-3 py-1 bg-success-soft text-success-ink text-xs font-semibold rounded-full">
           Trouvé
         </span>
       );
     }
     if (item.status === 'claimed') {
       return (
-        <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+        <span className="px-3 py-1 bg-info-soft text-info-ink text-xs font-semibold rounded-full">
           Réclamé
         </span>
       );
     }
     if (item.is_urgent) {
       return (
-        <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full animate-pulse">
+        <span className="px-3 py-1 bg-danger-soft text-danger-ink text-xs font-semibold rounded-full animate-pulse">
           Urgent
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">
+      <span className="px-3 py-1 bg-primary-soft text-primary-ink text-xs font-semibold rounded-full">
         Perdu
       </span>
     );
@@ -165,7 +165,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
           : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop';
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
+    <div className="bg-card rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-border group">
       <div className="relative h-48">
         <Image
           src={item.photo_url || defaultImage}
@@ -182,45 +182,45 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
 
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.item_name}</h3>
+          <h3 className="text-lg font-bold text-foreground line-clamp-1">{item.item_name}</h3>
         </div>
 
         <div className="flex items-center gap-2 mb-3">
-          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+          <span className="px-2 py-0.5 bg-muted text-subtle text-xs rounded-full">
             {getItemTypeLabel()}
           </span>
-          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+          <span className="px-2 py-0.5 bg-muted text-subtle text-xs rounded-full">
             {item.item_category}
           </span>
         </div>
 
         <div className="space-y-2 mb-4">
-          <div className="flex items-center text-gray-600 text-sm">
-            <MapPinIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
+          <div className="flex items-center text-subtle text-sm">
+            <MapPinIcon size={16} className="mr-2 text-primary-ink flex-shrink-0" />
             <span className="truncate">
               {item.location}, {item.region}
             </span>
           </div>
 
-          <div className="flex items-center text-gray-600 text-sm">
-            <CalendarIcon size={16} className="mr-2 text-orange-500 flex-shrink-0" />
+          <div className="flex items-center text-subtle text-sm">
+            <CalendarIcon size={16} className="mr-2 text-primary-ink flex-shrink-0" />
             <span>{formatDate(item.date_lost_found)}</span>
           </div>
 
           {item.reward && (
-            <div className="flex items-center text-green-600 text-sm font-medium">
+            <div className="flex items-center text-success-ink text-sm font-medium">
               <TagIcon size={16} className="mr-2 flex-shrink-0" />
               <span>Récompense: {item.reward}</span>
             </div>
           )}
         </div>
 
-        <p className="text-sm text-gray-500 mb-4 line-clamp-2">{item.description}</p>
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{item.description}</p>
 
         <div className="flex gap-2">
           <button
             onClick={() => onViewDetails(item)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-muted hover:bg-muted-strong text-subtle rounded-lg transition-colors text-sm font-medium"
           >
             Voir détails
             <ArrowRightIcon size={16} />
@@ -228,7 +228,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onViewDetails, onContact }) =
 
           <button
             onClick={() => onContact(item.contact_phone)}
-            className="p-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            className="p-2.5 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors"
             title="Appeler"
           >
             <PhoneIcon size={18} />

@@ -51,6 +51,8 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 - `components/ui/` holds shadcn/ui-style primitives (Radix-based) plus a few domain components that don't quite fit ui-primitive naming (`ItemCard`, `PersonCard`, `SearchFilters`, `StatsCard`, `StatusBadge`) — check there before adding a new generic UI component.
 - Domain components (`Header`, `HeroSection`, `ReportForm`, `ItemReportForm`, modals, etc.) live directly under `components/`.
 - UI copy is in French; keep new user-facing strings consistent with that.
+- Visual identity ("Fil": indigo ndop + kola red, Familjen Grotesk + Atkinson Hyperlegible) is documented in `ui/BRAND.md`. Use the semantic color tokens from `app/globals.css` (`bg-card`, `text-muted-foreground`, `bg-primary`, `text-danger-ink`, `bg-success-soft`…), never raw Tailwind palette classes like `bg-orange-500` or `text-gray-600`: the tokens carry both light and dark themes (`next-themes`, class strategy). Use `components/brand/Logo.tsx` for the logo.
+- Share images (link previews and downloadable posters) are generated with `next/og` from `lib/og/templates.tsx`; see the `opengraph-image.tsx` and `affiche/route.tsx` files under `app/missing-persons/[id]` and `app/lost-items/[id]`.
 - Path alias `@/*` maps to the `ui/` root (see `tsconfig.json`).
 
 ## Deployment

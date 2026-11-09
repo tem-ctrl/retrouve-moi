@@ -1,24 +1,21 @@
 import React from 'react';
 
-import { HeartIcon, PhoneIcon, MapPinIcon, PackageIcon, FileTextIcon } from '../../icons/Icons';
+import Logo from '@/components/brand/Logo';
+
+import { PhoneIcon, MapPinIcon, PackageIcon, FileTextIcon } from '../../icons/Icons';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1E3A5F] text-white">
+    <footer className="bg-chrome text-chrome-foreground">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-                <HeartIcon size={28} className="text-orange-400" />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">Retrouve-moi</h3>
-                <p className="text-sm text-white/70">Cameroun</p>
-              </div>
+            <div className="flex flex-col gap-1 mb-4">
+              <Logo tone="reversed" size={40} />
+              <p className="text-sm text-white/70 pl-[50px]">Cameroun</p>
             </div>
             <p className="text-white/70 text-sm leading-relaxed mb-4">
               Une plateforme citoyenne dédiée à la recherche des personnes disparues et des objets
@@ -62,7 +59,7 @@ const Footer: React.FC = () => {
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
                 >
                   <svg
-                    className="w-4 h-4 text-orange-400"
+                    className="w-4 h-4 text-kola-bright"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -82,7 +79,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
                 >
-                  <PackageIcon size={16} className="text-purple-400" />
+                  <PackageIcon size={16} className="text-item-bright" />
                   Objets perdus
                 </a>
               </li>
@@ -91,7 +88,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
                 >
-                  <FileTextIcon size={16} className="text-blue-400" />
+                  <FileTextIcon size={16} className="text-info-bright" />
                   Documents égarés
                 </a>
               </li>
@@ -101,7 +98,7 @@ const Footer: React.FC = () => {
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
                 >
                   <svg
-                    className="w-4 h-4 text-green-400"
+                    className="w-4 h-4 text-success-bright"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -122,7 +119,7 @@ const Footer: React.FC = () => {
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
                 >
                   <svg
-                    className="w-4 h-4 text-amber-400"
+                    className="w-4 h-4 text-warning-bright"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -182,28 +179,28 @@ const Footer: React.FC = () => {
             <h4 className="font-semibold mb-4">Urgences</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-red-400 shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-danger-bright shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Police</p>
                   <p className="text-white/70 text-sm">117</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-blue-400 shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-info-bright shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Gendarmerie</p>
                   <p className="text-white/70 text-sm">113</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <PhoneIcon size={18} className="text-green-400 shrink-0 mt-0.5" />
+                <PhoneIcon size={18} className="text-success-bright shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Pompiers</p>
                   <p className="text-white/70 text-sm">118</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <MapPinIcon size={18} className="text-orange-400 shrink-0 mt-0.5" />
+                <MapPinIcon size={18} className="text-kola-bright shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Cameroun</p>
                   <p className="text-white/70 text-sm">Toutes les régions</p>
@@ -217,8 +214,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-white/10 mt-8 pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm text-center sm:text-left">
-              &copy; {currentYear} Retrouve-moi - Portail des Signalements au Cameroun. Une
-              initiative citoyenne.
+              &copy; {currentYear} Retrouve-moi, Cameroun. Une initiative citoyenne.
             </p>
             <div className="flex gap-4 text-sm">
               <a href="#" className="text-white/60 hover:text-white transition-colors">

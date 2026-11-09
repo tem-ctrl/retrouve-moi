@@ -159,15 +159,15 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
       {/* Header */}
-      <div className="border-b border-gray-100 p-4 flex items-center justify-between">
+      <div className="border-b border-border p-4 flex items-center justify-between">
         <div>
           {tabs}
-          <p className="text-sm text-gray-500 mt-1.5">Étape {step} sur 3</p>
+          <p className="text-sm text-muted-foreground mt-1.5">Étape {step} sur 3</p>
         </div>
-        <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <XIcon size={24} className="text-gray-500" />
+        <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
+          <XIcon size={24} className="text-muted-foreground" />
         </button>
       </div>
 
@@ -178,7 +178,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
             <div
               key={s}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                s <= step ? 'bg-purple-500' : 'bg-gray-200'
+                s <= step ? 'bg-item' : 'bg-muted-strong'
               }`}
             />
           ))}
@@ -190,11 +190,11 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
         {step === 1 && (
           <div className="space-y-6">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <PackageIcon size={32} className="text-purple-600" />
+              <div className="w-16 h-16 bg-item-soft rounded-full flex items-center justify-center mx-auto mb-3">
+                <PackageIcon size={32} className="text-item-ink" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Type de signalement</h3>
-              <p className="text-gray-500 text-sm">Décrivez l&apos;objet perdu ou trouvé</p>
+              <h3 className="text-xl font-bold text-foreground">Type de signalement</h3>
+              <p className="text-muted-foreground text-sm">Décrivez l&apos;objet perdu ou trouvé</p>
             </div>
 
             {/* Report Type Selection */}
@@ -204,13 +204,13 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                 onClick={() => setData((prev) => ({ ...prev, report_type: 'lost' }))}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   data.report_type === 'lost'
-                    ? 'border-orange-500 bg-orange-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-primary bg-primary-soft'
+                    : 'border-border hover:border-input'
                 }`}
               >
                 <div className="text-3xl mb-2">
                   <svg
-                    className="w-8 h-8 mx-auto text-orange-500"
+                    className="w-8 h-8 mx-auto text-primary-ink"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -223,21 +223,21 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     />
                   </svg>
                 </div>
-                <div className="font-semibold text-gray-900">J&apos;ai perdu</div>
-                <div className="text-xs text-gray-500">Je recherche un objet</div>
+                <div className="font-semibold text-foreground">J&apos;ai perdu</div>
+                <div className="text-xs text-muted-foreground">Je recherche un objet</div>
               </button>
               <button
                 type="button"
                 onClick={() => setData((prev) => ({ ...prev, report_type: 'found' }))}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   data.report_type === 'found'
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-success bg-success-soft'
+                    : 'border-border hover:border-input'
                 }`}
               >
                 <div className="text-3xl mb-2">
                   <svg
-                    className="w-8 h-8 mx-auto text-green-500"
+                    className="w-8 h-8 mx-auto text-success-ink"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -250,14 +250,14 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     />
                   </svg>
                 </div>
-                <div className="font-semibold text-gray-900">J&apos;ai trouvé</div>
-                <div className="text-xs text-gray-500">Je signale une trouvaille</div>
+                <div className="font-semibold text-foreground">J&apos;ai trouvé</div>
+                <div className="text-xs text-muted-foreground">Je signale une trouvaille</div>
               </button>
             </div>
 
             {/* Item Type Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-subtle mb-2">
                 Type d&apos;objet *
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -280,16 +280,16 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     }
                     className={`p-3 rounded-xl border-2 transition-all text-center ${
                       data.item_type === type
-                        ? 'border-purple-500 bg-purple-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-item bg-item-soft'
+                        : 'border-border hover:border-input'
                     }`}
                   >
-                    {Icon && <Icon size={24} className="mx-auto mb-1 text-purple-500" />}
+                    {Icon && <Icon size={24} className="mx-auto mb-1 text-item-ink" />}
                     {emoji && (
                       <div className="text-xl mb-1">
                         {type === 'animal' && (
                           <svg
-                            className="w-6 h-6 mx-auto text-amber-500"
+                            className="w-6 h-6 mx-auto text-warning-ink"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -304,7 +304,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                         )}
                         {type === 'vehicle' && (
                           <svg
-                            className="w-6 h-6 mx-auto text-gray-500"
+                            className="w-6 h-6 mx-auto text-muted-foreground"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -319,7 +319,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                         )}
                         {type === 'other' && (
                           <svg
-                            className="w-6 h-6 mx-auto text-gray-500"
+                            className="w-6 h-6 mx-auto text-muted-foreground"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -334,7 +334,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                         )}
                       </div>
                     )}
-                    <div className="text-xs font-medium text-gray-700">{label}</div>
+                    <div className="text-xs font-medium text-subtle">{label}</div>
                   </button>
                 ))}
               </div>
@@ -352,24 +352,27 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="relative w-32 h-32 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors overflow-hidden group"
+                className="relative w-32 h-32 rounded-xl bg-muted border-2 border-dashed border-input hover:border-item transition-colors overflow-hidden group"
               >
                 {photoPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element -- local FileReader data URL, not a next/image-optimizable remote source
                   <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full">
-                    <CameraIcon size={32} className="text-gray-400 group-hover:text-purple-500" />
-                    <span className="text-xs text-gray-500 mt-1">Ajouter photo</span>
+                    <CameraIcon
+                      size={32}
+                      className="text-muted-foreground group-hover:text-item-ink"
+                    />
+                    <span className="text-xs text-muted-foreground mt-1">Ajouter photo</span>
                   </div>
                 )}
               </button>
-              <p className="text-xs text-gray-500 mt-2">Photo optionnelle</p>
+              <p className="text-xs text-muted-foreground mt-2">Photo optionnelle</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-subtle mb-1">
                   Nom de l&apos;objet *
                 </label>
                 <input
@@ -379,21 +382,19 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                   onChange={handleChange}
                   required
                   placeholder="Ex: iPhone 14 Pro, CNI, Clés de voiture..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                  className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                 />
               </div>
 
               {data.item_type && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Catégorie *
-                  </label>
+                  <label className="block text-sm font-medium text-subtle mb-1">Catégorie *</label>
                   <select
                     name="item_category"
                     value={data.item_category}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none bg-card"
                   >
                     <option value="">Sélectionner une catégorie</option>
                     {getCategories().map((cat) => (
@@ -409,7 +410,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
               {data.item_type === 'document' && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-subtle mb-1">
                       Numéro du document
                     </label>
                     <input
@@ -418,11 +419,11 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                       value={data.document_number}
                       onChange={handleChange}
                       placeholder="Si visible"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-subtle mb-1">
                       Nom du propriétaire
                     </label>
                     <input
@@ -431,7 +432,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                       value={data.owner_name}
                       onChange={handleChange}
                       placeholder="Si visible"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                     />
                   </div>
                 </div>
@@ -441,25 +442,25 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
               {(data.item_type === 'object' || data.item_type === 'vehicle') && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+                    <label className="block text-sm font-medium text-subtle mb-1">Marque</label>
                     <input
                       type="text"
                       name="brand"
                       value={data.brand}
                       onChange={handleChange}
                       placeholder="Ex: Apple, Samsung..."
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Couleur</label>
+                    <label className="block text-sm font-medium text-subtle mb-1">Couleur</label>
                     <input
                       type="text"
                       name="color"
                       value={data.color}
                       onChange={handleChange}
                       placeholder="Ex: Noir, Blanc..."
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                     />
                   </div>
                 </div>
@@ -472,11 +473,11 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
         {step === 2 && (
           <div className="space-y-6">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <MapPinIcon size={32} className="text-purple-600" />
+              <div className="w-16 h-16 bg-item-soft rounded-full flex items-center justify-center mx-auto mb-3">
+                <MapPinIcon size={32} className="text-item-ink" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Lieu et circonstances</h3>
-              <p className="text-gray-500 text-sm">
+              <h3 className="text-xl font-bold text-foreground">Lieu et circonstances</h3>
+              <p className="text-muted-foreground text-sm">
                 {data.report_type === 'found'
                   ? 'Où avez-vous trouvé cet objet?'
                   : 'Où avez-vous perdu cet objet?'}
@@ -485,7 +486,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Lieu *</label>
+                <label className="block text-sm font-medium text-subtle mb-1">Lieu *</label>
                 <input
                   type="text"
                   name="location"
@@ -493,19 +494,19 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                   onChange={handleChange}
                   required
                   placeholder="Ex: Marché Central, Douala"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                  className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Région *</label>
+                  <label className="block text-sm font-medium text-subtle mb-1">Région *</label>
                   <select
                     name="region"
                     value={data.region}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none bg-card"
                   >
                     <option value="">Sélectionner une région</option>
                     {REGIONS.map((region) => (
@@ -517,7 +518,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-subtle mb-1">
                     Date {data.report_type === 'found' ? 'de découverte' : 'de perte'} *
                   </label>
                   <input
@@ -527,13 +528,13 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     onChange={handleChange}
                     required
                     max={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-subtle mb-1">
                   Description détaillée *
                 </label>
                 <textarea
@@ -543,29 +544,29 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                   required
                   rows={4}
                   placeholder="Décrivez l'objet et les circonstances..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none"
+                  className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none resize-none"
                 />
               </div>
 
               {data.report_type === 'lost' && (
                 <>
-                  <div className="flex items-center gap-3 p-4 bg-red-50 rounded-xl">
+                  <div className="flex items-center gap-3 p-4 bg-danger-soft rounded-xl">
                     <input
                       type="checkbox"
                       id="is_urgent"
                       name="is_urgent"
                       checked={data.is_urgent}
                       onChange={handleChange}
-                      className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                      className="w-5 h-5 text-danger-ink border-input rounded focus:ring-danger"
                     />
-                    <label htmlFor="is_urgent" className="text-sm text-gray-700">
-                      <span className="font-medium text-red-600">Urgent</span> - Objet de grande
+                    <label htmlFor="is_urgent" className="text-sm text-subtle">
+                      <span className="font-medium text-danger-ink">Urgent</span> - Objet de grande
                       valeur ou important
                     </label>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-subtle mb-1">
                       Récompense (optionnel)
                     </label>
                     <input
@@ -574,7 +575,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                       value={data.reward}
                       onChange={handleChange}
                       placeholder="Ex: 10 000 FCFA"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                     />
                   </div>
                 </>
@@ -587,16 +588,16 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
         {step === 3 && (
           <div className="space-y-6">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <PhoneIcon size={32} className="text-purple-600" />
+              <div className="w-16 h-16 bg-item-soft rounded-full flex items-center justify-center mx-auto mb-3">
+                <PhoneIcon size={32} className="text-item-ink" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Informations de contact</h3>
-              <p className="text-gray-500 text-sm">Comment vous contacter?</p>
+              <h3 className="text-xl font-bold text-foreground">Informations de contact</h3>
+              <p className="text-muted-foreground text-sm">Comment vous contacter?</p>
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 bg-purple-50 rounded-xl">
-                <h4 className="font-medium text-purple-900 mb-3">Contact principal</h4>
+              <div className="p-4 bg-item-soft rounded-xl">
+                <h4 className="font-medium text-item-ink mb-3">Contact principal</h4>
                 <div className="space-y-3">
                   <input
                     type="tel"
@@ -605,7 +606,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     onChange={handleChange}
                     required
                     placeholder="Téléphone principal *"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                   <input
                     type="email"
@@ -613,15 +614,15 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     value={data.contact_email}
                     onChange={handleChange}
                     placeholder="Email (optionnel)"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                 </div>
               </div>
 
-              <div className="p-4 bg-gray-50 rounded-xl">
-                <h4 className="font-medium text-gray-900 mb-3">
+              <div className="p-4 bg-muted rounded-xl">
+                <h4 className="font-medium text-foreground mb-3">
                   Vos informations (déclarant)
-                  {user && <span className="text-green-600 text-sm ml-2">- Connecté</span>}
+                  {user && <span className="text-success-ink text-sm ml-2">- Connecté</span>}
                 </h4>
                 <div className="space-y-3">
                   <input
@@ -631,7 +632,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     onChange={handleChange}
                     required
                     placeholder="Votre nom complet *"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                   <input
                     type="tel"
@@ -640,7 +641,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     onChange={handleChange}
                     required
                     placeholder="Votre téléphone *"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                   <input
                     type="email"
@@ -648,7 +649,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
                     value={data.reporter_email}
                     onChange={handleChange}
                     placeholder="Votre email (optionnel)"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-item focus:border-item outline-none"
                   />
                 </div>
               </div>
@@ -662,7 +663,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
             <button
               type="button"
               onClick={prevStep}
-              className="flex-1 py-3 px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+              className="flex-1 py-3 px-6 bg-muted hover:bg-muted-strong text-subtle rounded-xl font-medium transition-colors"
             >
               Précédent
             </button>
@@ -673,7 +674,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
               type="button"
               onClick={nextStep}
               disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)}
-              className="flex-1 py-3 px-6 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors"
+              className="flex-1 py-3 px-6 bg-item hover:bg-item-hover disabled:bg-muted-strong disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors"
             >
               Suivant
             </button>
@@ -681,7 +682,7 @@ const ItemReportForm: FC<ItemReportFormProps> = ({ tabs, onClose, onSuccess }) =
             <button
               type="submit"
               disabled={!isStep3Valid || submitting}
-              className="flex-1 py-3 px-6 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors"
+              className="flex-1 py-3 px-6 bg-item hover:bg-item-hover disabled:bg-muted-strong disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors"
             >
               {submitting ? 'Envoi en cours...' : 'Publier le signalement'}
             </button>

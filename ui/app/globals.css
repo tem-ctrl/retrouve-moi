@@ -3,40 +3,111 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Retrouve-moi — direction « Fil »
+ * Palette drawn from ndop (indigo resist-dyed cloth of Cameroon's Grassfields)
+ * with kola-nut red as the warm accent. See ui/BRAND.md for usage rules.
+ *
+ * Components use the semantic tokens below, never raw Tailwind palette
+ * colors, so both themes stay consistent. Each semantic hue comes as:
+ *   bg-X / hover:bg-X-hover   solid fill (white text on top, AA in both themes)
+ *   text-X-ink                text of that hue on page/card surfaces
+ *   bg-X-soft                 tinted background (badges, callouts)
+ *   border-X-line             soft border for tinted areas
+ *   text-X-bright             text of that hue on the indigo "chrome" (header, hero, footer)
+ * Hues: primary (indigo, actions), danger (kola, missing/urgent/errors),
+ * success (leaf, found), item (ochre, lost objects), info (light indigo), warning.
+ */
+
 @theme inline {
+  --font-sans: var(--font-body), 'Segoe UI', system-ui, sans-serif;
+  --font-display: var(--font-heading), 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+  --color-subtle: var(--subtle);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--danger);
+
+  --color-chrome: var(--chrome);
+  --color-chrome-deep: var(--chrome-deep);
+  --color-chrome-foreground: var(--chrome-foreground);
+  /* Brand accent constants: kola on light surfaces, kola-bright on chrome. */
+  --color-kola: var(--brand-kola);
+  --color-kola-bright: #f0957f;
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-line: var(--primary-line);
+  --color-primary-bright: var(--primary-bright);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-line: var(--danger-line);
+  --color-danger-bright: var(--danger-bright);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-ink: var(--success-ink);
+  --color-success-soft: var(--success-soft);
+  --color-success-line: var(--success-line);
+  --color-success-bright: var(--success-bright);
+
+  --color-item: var(--item);
+  --color-item-hover: var(--item-hover);
+  --color-item-ink: var(--item-ink);
+  --color-item-soft: var(--item-soft);
+  --color-item-line: var(--item-line);
+  --color-item-bright: var(--item-bright);
+
+  --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-ink: var(--info-ink);
+  --color-info-soft: var(--info-soft);
+  --color-info-line: var(--info-line);
+  --color-info-bright: var(--info-bright);
+
+  --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-ink: var(--warning-ink);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-line: var(--warning-line);
+  --color-warning-bright: var(--warning-bright);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--card);
+  --color-sidebar-foreground: var(--foreground);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: var(--primary-foreground);
+  --color-sidebar-accent: var(--muted);
+  --color-sidebar-accent-foreground: var(--foreground);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--ring);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -46,73 +117,161 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* Fixed brand values (identical in both themes) — for logos, posters, icons. */
 :root {
-  --radius: 0.625rem;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --brand-indigo: #1f2a5c;
+  --brand-kola: #c2412d;
+  --brand-kola-on-dark: #e0735c;
+  --brand-coton: #f5f6fa;
+  --radius: 0.75rem;
+}
+
+:root {
+  --background: #f6f7fb;
+  --foreground: #171a26;
+  --subtle: #3c4360;
+  --card: #ffffff;
+  --card-foreground: #171a26;
+  --popover: #ffffff;
+  --popover-foreground: #171a26;
+  --muted: #eef0f6;
+  --muted-strong: #e1e4ee;
+  --muted-foreground: #5a6179;
+  --secondary: #eef0f6;
+  --secondary-foreground: #1f2a5c;
+  --accent: #eef0f6;
+  --accent-foreground: #1f2a5c;
+  --border: #e1e4ee;
+  --input: #cdd2e0;
+  --ring: #3d4c9a;
+
+  --chrome: #1f2a5c;
+  --chrome-deep: #182148;
+  --chrome-foreground: #f5f6fa;
+
+  --primary: #1f2a5c;
+  --primary-hover: #2c3a7c;
+  --primary-foreground: #ffffff;
+  --primary-ink: #2c3a7c;
+  --primary-soft: #e6e9f5;
+  --primary-line: #c6cde8;
+  --primary-bright: #b3bef5;
+
+  --danger: #b83a27;
+  --danger-hover: #9c3020;
+  --danger-ink: #a0321f;
+  --danger-soft: #fbeae6;
+  --danger-line: #f2c6bc;
+  --danger-bright: #f0957f;
+
+  --success: #25734a;
+  --success-hover: #1d5e3c;
+  --success-ink: #1f6440;
+  --success-soft: #e3f3ea;
+  --success-line: #b6dfc6;
+  --success-bright: #86d9a8;
+
+  --item: #8c5a0e;
+  --item-hover: #74490a;
+  --item-ink: #7a4e0b;
+  --item-soft: #f8eedc;
+  --item-line: #ebd3a8;
+  --item-bright: #f2c27a;
+
+  --info: #3d4c9a;
+  --info-hover: #33418a;
+  --info-ink: #33418a;
+  --info-soft: #e6e9f5;
+  --info-line: #c6cde8;
+  --info-bright: #b3bef5;
+
+  --warning: #8f5a00;
+  --warning-hover: #774b00;
+  --warning-ink: #7a4d00;
+  --warning-soft: #fdf3d8;
+  --warning-line: #f0d999;
+  --warning-bright: #f5cf70;
+
+  --chart-1: #1f2a5c;
+  --chart-2: #c2412d;
+  --chart-3: #25734a;
+  --chart-4: #8c5a0e;
+  --chart-5: #7180bf;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0f1324;
+  --foreground: #e8eaf3;
+  --subtle: #c3c8dc;
+  --card: #171c33;
+  --card-foreground: #e8eaf3;
+  --popover: #1b2140;
+  --popover-foreground: #e8eaf3;
+  --muted: #1e2440;
+  --muted-strong: #283052;
+  --muted-foreground: #9aa1bd;
+  --secondary: #1e2440;
+  --secondary-foreground: #e8eaf3;
+  --accent: #232b52;
+  --accent-foreground: #e8eaf3;
+  --border: #283052;
+  --input: #333b60;
+  --ring: #8e9be0;
+
+  --chrome: #161d40;
+  --chrome-deep: #10162f;
+  --chrome-foreground: #f5f6fa;
+
+  --primary: #4657b0;
+  --primary-hover: #5466c0;
+  --primary-foreground: #ffffff;
+  --primary-ink: #a7b3f0;
+  --primary-soft: #232b52;
+  --primary-line: #39437a;
+  --primary-bright: #b3bef5;
+
+  --danger: #c2412d;
+  --danger-hover: #d0503b;
+  --danger-ink: #f29a86;
+  --danger-soft: #3a1e1d;
+  --danger-line: #5e2c25;
+  --danger-bright: #f0957f;
+
+  --success: #25734a;
+  --success-hover: #2d8657;
+  --success-ink: #7fd3a2;
+  --success-soft: #163126;
+  --success-line: #24513b;
+  --success-bright: #86d9a8;
+
+  --item: #8c5a0e;
+  --item-hover: #a06812;
+  --item-ink: #e8b86a;
+  --item-soft: #352914;
+  --item-line: #5a4320;
+  --item-bright: #f2c27a;
+
+  --info: #4657b0;
+  --info-hover: #5466c0;
+  --info-ink: #9fb0f5;
+  --info-soft: #232b52;
+  --info-line: #39437a;
+  --info-bright: #b3bef5;
+
+  --warning: #8f5a00;
+  --warning-hover: #a46800;
+  --warning-ink: #f0c25a;
+  --warning-soft: #33280f;
+  --warning-line: #5a4519;
+  --warning-bright: #f5cf70;
+
+  --chart-1: #8e9be0;
+  --chart-2: #e0735c;
+  --chart-3: #7fd3a2;
+  --chart-4: #e8b86a;
+  --chart-5: #c3c8dc;
+
+  color-scheme: dark;
 }
 
 @layer base {
@@ -120,9 +279,27 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
   }
   button {
     @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  /* Ndop-inspired band: a thin strip of the textile motif, used sparingly (hero edge, posters). */
+  .ndop-band {
+    background-color: var(--brand-indigo);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cg fill='none' stroke='%23F5F6FA' stroke-width='1.6'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M0 0l5 5M24 0l-5 5M0 24l5-5M24 24l-5-5'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='1.2' fill='%23F5F6FA'/%3E%3C/svg%3E");
+    background-size: 24px 24px;
+    background-repeat: repeat-x;
+    background-position: center;
   }
 }

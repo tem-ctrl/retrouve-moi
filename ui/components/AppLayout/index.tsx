@@ -20,7 +20,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, banner }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
-    <div className="min-h-dvh bg-gray-100 flex flex-col">
+    <div className="min-h-dvh bg-background flex flex-col">
       {banner}
       <div className="contents lg:flex lg:min-h-dvh flex-col flex-1">
         <Header onMenuClick={() => setShowMobileMenu(true)} />
