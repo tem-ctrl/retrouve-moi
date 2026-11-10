@@ -61,17 +61,17 @@ class AuthController extends Controller
         return response()->json([
             'user' => UserResource::make($user),
             'token' => $token,
-        ], 201);
+        ], 200);
     }
 
     /**
      * Sign out user.
      */
-    public function signout(): JsonResponse
+    public function signout(): Response
     {
         auth('sanctum')->user()?->tokens()->delete();
 
-        return response()->json([])->noContent();
+        return response()->noContent();
     }
 
     /**
