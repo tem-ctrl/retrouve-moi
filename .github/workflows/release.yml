@@ -1,0 +1,35 @@
+name: Release
+
+# Runs when a PR is merged to main (any push to main): CI → build and push images → deploy to
+# the VPS. Each step only runs if the previous one succeeded. The steps are reusable workflows,
+# so each can also be run on its own from the Actions tab.
+on:
+  push:
+    branches: [main]
+
+# One release at a time; a newer push waits for the running one instead of cancelling it.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  docker:
+    needs: ci
+    uses: ./.github/workflows/docker-build-push.yml
+    permissions:
+      contents: read
+      packages: write
+
+  deploy:
+    needs: docker
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: read

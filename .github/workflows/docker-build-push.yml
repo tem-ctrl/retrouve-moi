@@ -1,177 +1,70 @@
-name: Build and Push Docker Images to Github Container Registry
+name: Docker Build Push
 
+# Builds the production images and pushes them to GitHub Container Registry, tagged with the
+# commit SHA (for rollbacks) and `latest` (what deploy.yml runs). Called by release.yml after CI
+# passes on main; can also be run by hand.
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
   workflow_dispatch:
-    inputs:
-      image_tag:
-        description: 'Image tag (default: latest)'
-        required: false
-        default: 'latest'
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+# Never cancelled: a cancelled build would stop the release that called it.
+concurrency:
+  group: docker-build-push-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  build-and-push-nextjs:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - image: nextjs
+            context: ./ui
+            file: ./ui/Dockerfile
+            target: ""
+          - image: php-fpm
+            context: ./api
+            file: ./api/docker/php-fpm/Dockerfile
+            target: production
+          - image: nginx
+            context: ./api
+            file: ./api/docker/nginx/Dockerfile
+            target: ""
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v5
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+      - uses: docker/setup-buildx-action@v4
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v4
+      - uses: docker/login-action@v4
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for Next.js image
-        id: meta-nextjs
+      - id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-nextjs
+          images: ghcr.io/${{ github.repository }}-${{ matrix.image }}
           tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
+            type=raw,value=${{ github.sha }}
+            type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Next.js image
-        uses: docker/build-push-action@v7
+      - uses: docker/build-push-action@v7
         with:
-          context: ./ui
-          file: ./ui/Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          target: ${{ matrix.target }}
           push: true
-          tags: ${{ steps.meta-nextjs.outputs.tags }}
-          labels: ${{ steps.meta-nextjs.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # One cache scope per image, so the three builds don't overwrite each other's cache.
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+          # NEXT_PUBLIC_* values are inlined into the UI bundle at build time. Unused by the API images.
           build-args: |
-            NODE_VERSION=24.18.0-slim
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'https://api.retrouve-moi.com/api' }}
-
-  build-and-push-php-fpm:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata for PHP-FPM image
-        id: meta-php-fpm
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-php-fpm
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
-
-      - name: Build and push PHP-FPM image
-        uses: docker/build-push-action@v7
-        with:
-          context: ./api
-          file: ./api/docker/php-fpm/Dockerfile
-          target: production
-          push: true
-          tags: ${{ steps.meta-php-fpm.outputs.tags }}
-          labels: ${{ steps.meta-php-fpm.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            PHP_VERSION=php:8.4-fpm
-
-  build-and-push-nginx:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata for Nginx image
-        id: meta-nginx
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-nginx
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
-
-      - name: Build and push Nginx image
-        uses: docker/build-push-action@v7
-        with:
-          context: ./api
-          file: ./api/docker/nginx/Dockerfile
-          push: true
-          tags: ${{ steps.meta-nginx.outputs.tags }}
-          labels: ${{ steps.meta-nginx.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            NGINX_VERSION=nginx:alpine
-
-  deployment-summary:
-    needs: [
-      build-and-push-nextjs,
-      build-and-push-nginx,
-      build-and-push-php-fpm
-    ]
-    runs-on: ubuntu-latest
-    if: success()
-
-    steps:
-      - name: Create deployment summary
-        run: |
-          echo "✅ Docker image built and pushed to GHCR successfully!"
-          echo ""
-          echo "📦 Next.js Image:"
-          echo "   ghcr.io/${{ env.IMAGE_NAME }}-nextjs:latest"
-          echo ""
-          echo "📦 Nginx Image:"
-          echo "   ghcr.io/${{ env.IMAGE_NAME }}-nginx:latest"
-          echo ""
-          echo "📦 PHP-FPM Image:"
-          echo "   ghcr.io/${{ env.IMAGE_NAME }}-php-fpm:latest"

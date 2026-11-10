@@ -9,7 +9,7 @@ Live site: [https://retrouve-moi.com](https://retrouve-moi.com)
 - `api/` — Laravel 13 (PHP 8.4) REST API.
 - `ui/` — Next.js 16 (App Router, React 19) frontend.
 - `docker-compose.yml` — production orchestration (ui, nginx, php-fpm, scheduler, redis, mysql). TLS and routing come from the nginx installed on the VPS (vps-nginx), which forwards to `127.0.0.1:3000` (ui) and `127.0.0.1:8080` (API).
-- `.github/workflows/docker-build-push.yml` — builds and pushes GHCR images on push to `main`.
+- `.github/workflows/` — on push to `main`: CI → build and push GHCR images → deploy to the VPS. See [docs/deployment.md](docs/deployment.md).
 
 The UI and API are separate deployables that only communicate over HTTP — there is no shared package or generated client.
 
@@ -28,7 +28,7 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 - Vitest (unit), Playwright (e2e), MSW (API mocking)
 
 **Infra**
-- Docker Compose, Nginx on the VPS (TLS/routing), Nginx + PHP-FPM, GitHub Actions (build & push to GHCR)
+- Docker Compose, Nginx on the VPS (TLS/routing), Nginx + PHP-FPM, GitHub Actions (CI, build & push to GHCR, SSH deploy)
 
 ## Local setup
 

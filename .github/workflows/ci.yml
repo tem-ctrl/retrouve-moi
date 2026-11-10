@@ -1,0 +1,97 @@
+name: CI
+
+# Runs on PRs, and on main as the first step of release.yml.
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: ui/yarn.lock
+
+      - run: corepack enable yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Format
+        run: yarn format:check
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Unit tests
+        run: yarn test
+
+      - name: Build
+        run: yarn build
+
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: api
+    # Matches the database settings in phpunit.xml.
+    services:
+      mysql:
+        image: mysql:8.0.45
+        env:
+          MYSQL_DATABASE: report_missing_test
+          MYSQL_USER: report
+          MYSQL_PASSWORD: missing
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_mysql, intl, zip, bcmath, redis
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: composer-${{ hashFiles('api/composer.lock') }}
+          restore-keys: composer-
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Tests
+        run: php artisan test --compact

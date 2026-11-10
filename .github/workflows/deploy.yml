@@ -1,0 +1,97 @@
+name: Deploy
+
+# Deploys the `latest` images built by docker-build-push.yml to the VPS over SSH. Called by
+# release.yml after a merge to main; can also be run by hand. See docs/deployment.md.
+# The `production` environment holds:
+#   secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY (private key), VPS_KNOWN_HOSTS (`ssh-keyscan <host>` output)
+#   variables: VPS_PORT (optional, default 22), DEPLOY_PATH (optional, default /opt/retrouve-moi)
+on:
+  workflow_call:
+    secrets:
+      VPS_HOST:
+        required: true
+      VPS_USER:
+        required: true
+      VPS_SSH_KEY:
+        required: true
+      VPS_KNOWN_HOSTS:
+        required: true
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://retrouve-moi.com
+    env:
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/opt/retrouve-moi' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ vars.VPS_PORT || '22' }}
+        run: |
+          [ -n "$VPS_HOST" ] || { echo "Required production environment secret VPS_HOST is empty" >&2; exit 1; }
+          [ -n "$VPS_USER" ] || { echo "Required production environment secret VPS_USER is empty" >&2; exit 1; }
+          [ -n "$SSH_KEY" ] || { echo "Required production environment secret VPS_SSH_KEY is empty" >&2; exit 1; }
+          [ -n "$KNOWN_HOSTS" ] || { echo "Required production environment secret VPS_KNOWN_HOSTS is empty" >&2; exit 1; }
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host vps
+            HostName $VPS_HOST
+            Port $VPS_PORT
+            User $VPS_USER
+            IdentityFile ~/.ssh/id_deploy
+            IdentitiesOnly yes
+            BatchMode yes
+            StrictHostKeyChecking yes
+            ConnectTimeout 15
+          EOF
+
+      # Fails the job early, with a clear message, if the server can't be reached or the deploy
+      # directory isn't set up.
+      - name: Check the SSH connection
+        run: |
+          ssh vps bash -s -- "$DEPLOY_PATH" <<'EOF'
+          for f in api/.env ui/.env; do
+            test -f "$1/$f" || { echo "$1/$f is missing: see docs/deployment.md" >&2; exit 1; }
+          done
+          EOF
+
+      - name: Upload compose file
+        run: scp docker-compose.yml "vps:$DEPLOY_PATH/docker-compose.yml"
+
+      - name: Pull and restart
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+        # The registry login only lasts for this job. `--wait` fails if a container doesn't
+        # become healthy. Each ssh call closes its connection when its command ends.
+        run: |
+          printf '%s\n' "$GHCR_TOKEN" | ssh vps docker login ghcr.io -u "$ACTOR" --password-stdin
+          ssh vps bash -s -- "$DEPLOY_PATH" <<'EOF'
+          set -euo pipefail
+          trap 'docker logout ghcr.io >/dev/null' EXIT
+          cd "$1"
+          docker compose up -d --pull always --remove-orphans \
+            --wait --wait-timeout 180
+          docker image prune -f
+          EOF

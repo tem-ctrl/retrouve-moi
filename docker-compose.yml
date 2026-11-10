@@ -1,3 +1,7 @@
+# Production stack. The Deploy workflow (.github/workflows/deploy.yml) copies this file to the
+# deploy directory on the VPS, next to api/.env and ui/.env, and runs `docker compose up -d`.
+# See docs/deployment.md.
+#
 # TLS and routing come from the nginx installed on the VPS (deploy/vps-nginx/retrouve-moi.conf).
 # ui and nginx publish their ports on 127.0.0.1 only, for it.
 services:
@@ -10,6 +14,16 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
     networks:
       - web
 
@@ -22,8 +36,8 @@ services:
       - "127.0.0.1:8080:80"
     depends_on:
       - php-fpm
+    # public/ comes from the image; only the uploads are shared with php-fpm.
     volumes:
-      - ./api:/var/www
       - laravel_storage:/var/www/storage
       - uploads:/var/www/public/uploads
     # Health check: the image's own HEALTHCHECK (wget http://localhost/health-check).
@@ -47,6 +61,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+      # The entrypoint runs the migrations before starting php-fpm.
+      start_period: 60s
     depends_on:
       mysql:
         condition: service_healthy
