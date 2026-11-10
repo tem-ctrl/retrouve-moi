@@ -61,7 +61,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => UserResource::make($user),
             'token' => $token,
-        ], 201);
+        ], 200);
     }
 
     /**

@@ -51,7 +51,7 @@ describe('AuthContext', () => {
       http.post(`${env.NEXT_PUBLIC_API_URL}/auth/signin`, () =>
         HttpResponse.json(
           { user: { id: 1, email: userFixtures[0].email }, token: 'fresh-token' },
-          { status: 201 },
+          { status: 200 },
         ),
       ),
     );
