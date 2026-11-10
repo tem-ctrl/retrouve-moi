@@ -5,9 +5,9 @@
 # TLS and routing come from the nginx installed on the VPS (deploy/vps-nginx/retrouve-moi.conf).
 # ui and nginx publish their ports on 127.0.0.1 only, for it.
 
-# Prevent docker from assigning namespace based on folder name, which would cause all volumes
-# and networks to be recreated on each deploy.
-name: retrouve-moi
+# Fixed project name: it prefixes the volumes (report-missing_mysql_data, …) whatever the
+# directory the stack runs from. Changing it points the stack at new, empty volumes.
+name: report-missing
 
 services:
 
