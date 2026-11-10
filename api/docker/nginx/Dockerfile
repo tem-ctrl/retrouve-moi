@@ -39,9 +39,10 @@ RUN chown -R nginx:nginx /var/www/public /var/cache/nginx /var/log/nginx /var/ru
 # Expose port 80
 EXPOSE 80
 
-# Health check
+# Health check. Use 127.0.0.1, not localhost: in Alpine localhost resolves to ::1 first and
+# nginx.conf only listens on IPv4 (`listen 80`), so the check would always be refused.
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost/health-check || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/health-check || exit 1
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

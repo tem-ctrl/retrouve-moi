@@ -45,7 +45,7 @@ services:
     volumes:
       - laravel_storage:/var/www/storage
       - uploads:/var/www/public/uploads
-    # Health check: the image's own HEALTHCHECK (wget http://localhost/health-check).
+    # Health check: the image's own HEALTHCHECK (wget http://127.0.0.1/health-check).
     networks:
       - web
       - internal
