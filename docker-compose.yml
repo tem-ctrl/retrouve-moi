@@ -7,7 +7,7 @@
 
 # Prevent docker from assigning namespace based on folder name, which would cause all volumes
 # and networks to be recreated on each deploy.
-namespace: retrouve-moi
+name: retrouve-moi
 
 services:
 
