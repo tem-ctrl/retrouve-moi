@@ -33,7 +33,7 @@ class UploadServeTest extends TestCase
         $response = $this->get('/uploads/mp/test-serve.png');
 
         $response->assertOk();
-        $this->assertSame('fake-image-content', $response->getContent());
+        $this->assertSame('fake-image-content', $response->streamedContent());
     }
 
     public function test_upload_route_returns_404_for_missing_file(): void

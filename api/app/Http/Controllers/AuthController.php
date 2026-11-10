@@ -67,11 +67,11 @@ class AuthController extends Controller
     /**
      * Sign out user.
      */
-    public function signout(): JsonResponse
+    public function signout(): Response
     {
         auth('sanctum')->user()?->tokens()->delete();
 
-        return response()->json([])->noContent();
+        return response()->noContent();
     }
 
     /**

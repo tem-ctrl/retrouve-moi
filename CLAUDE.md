@@ -35,10 +35,10 @@ The UI and API are separate deployables that only communicate over HTTP — ther
 ## Architecture
 
 ### API (Laravel)
-- Stateless REST API under `/api` (Sanctum token auth — see `routes/api.php`). No web views beyond the default welcome page and a public file-serving route for uploads (`routes/web.php`).
+- Stateless REST API under `/api` (Sanctum token auth — see `routes/api.php`). `routes/web.php` is not registered; the only non-API route is the public file-serving route for uploads (`routes/uploads.php`, loaded without middleware via `withRouting(then:)` in `bootstrap/app.php`).
 - Resources: `MissingPerson`, `LostItem`, `Sighting`, `User`. Controllers live in `app/Http/Controllers`, validation in `app/Http/Requests`, response shaping in `app/Http/Resources` (only `LostItem`, `MissingPerson`, `User` have Resources currently — `Sighting` responses are returned raw).
 - Relationships: `User` hasMany `MissingPerson`/`LostItem`/`Sighting`; `MissingPerson` hasMany `Sighting`.
-- File uploads (avatars, person/item photos) go through `app/Services/FileUploadService.php` and are served back via `app/Services/ImageUrlService.php` plus the `/uploads/{directory}/{filename}` route in `routes/web.php`; in production these are backed by the `uploads` Docker volume shared between `nginx` and `php-fpm`.
+- File uploads (avatars, person/item photos) go through `app/Services/FileUploadService.php` and are served back via `app/Services/ImageUrlService.php` plus the `/uploads/{directory}/{filename}` route in `routes/uploads.php`; in production these are backed by the `uploads` Docker volume shared between `nginx` and `php-fpm`.
 - Auth is custom (`AuthController`) rather than Laravel Breez/Fortify — signup/signin/signin-by-phone/OTP/password reset, all issuing Sanctum tokens. Phone/OTP sign-in endpoints exist in routes but are not yet implemented on the frontend (`AuthContext.signInWithPhone`/`verifyOtp` are stubs).
 - Scheduled tasks run via a dedicated `scheduler` container (`php artisan schedule:run` loop), not cron on the host.
 - `api/CLAUDE.md` (Laravel Boost-generated) governs code style, testing conventions, and tool usage within `api/` — read it before making backend changes.
